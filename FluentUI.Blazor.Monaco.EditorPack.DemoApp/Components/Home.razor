@@ -1,0 +1,103 @@
+﻿@page "/"
+
+<PageTitle>Monaco EditorPack Demo</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="24">
+    
+    <FluentLabel Typo="Typography.H1">
+        FluentUI Blazor Monaco EditorPack
+    </FluentLabel>
+
+    <FluentLabel Typo="Typography.Body">
+        A comprehensive Monaco Editor integration for Blazor with FluentUI components.
+    </FluentLabel>
+
+    <FluentCard>
+        <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
+            <FluentLabel Typo="Typography.H3">
+                Key Features
+            </FluentLabel>
+            
+            <FluentStack Orientation="Orientation.Vertical" VerticalGap="16">
+                <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
+                    <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                            Monaco Markdown Editor
+                        </FluentLabel>
+                        <FluentLabel Typo="Typography.Body">
+                            Full-featured Markdown editing with live preview, syntax highlighting, and CSS class IntelliSense with color swatches
+                        </FluentLabel>
+                    </FluentStack>
+                </FluentStack>
+                
+                <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
+                    <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                            Monaco CSS Editor
+                        </FluentLabel>
+                        <FluentLabel Typo="Typography.Body">
+                            Advanced CSS editing with FluentUI design token IntelliSense, color decorators, and auto-completion
+                        </FluentLabel>
+                    </FluentStack>
+                </FluentStack>
+                
+                <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
+                    <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                            FluentUI Theme Integration
+                        </FluentLabel>
+                        <FluentLabel Typo="Typography.Body">
+                            Automatically adapts to FluentUI light/dark themes with design token harvesting
+                        </FluentLabel>
+                    </FluentStack>
+                </FluentStack>
+                
+                <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
+                    <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
+                    <FluentStack Orientation="Orientation.Vertical">
+                        <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                            State Management
+                        </FluentLabel>
+                        <FluentLabel Typo="Typography.Body">
+                            Built-in Memento pattern for undo/redo support and modified state tracking
+                        </FluentLabel>
+                    </FluentStack>
+                </FluentStack>
+            </FluentStack>
+        </FluentStack>
+    </FluentCard>
+    
+    <FluentCard>
+        <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
+            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
+                <FluentIcon Value="@(new Icons.Regular.Size24.Info())" Color="Color.Accent" />
+                <FluentLabel Typo="Typography.H4">
+                    Test the Editors
+                </FluentLabel>
+            </FluentStack>
+            
+            <FluentLabel>
+                Navigate to the <FluentAnchor Href="monaco-demo" Appearance="Appearance.Hypertext">Monaco Demo</FluentAnchor> page to test the Markdown and CSS editors.
+            </FluentLabel>
+            
+            <FluentDivider />
+            
+            <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                Features to test:
+            </FluentLabel>
+            
+            <FluentStack Orientation="Orientation.Vertical" VerticalGap="4" Style="padding-left: 8px;">
+                <FluentLabel Typo="Typography.Body">• Monaco Markdown Editor with live preview</FluentLabel>
+                <FluentLabel Typo="Typography.Body">• Monaco CSS Editor with FluentUI design token IntelliSense</FluentLabel>
+                <FluentLabel Typo="Typography.Body">• Toolbar commands and keyboard shortcuts</FluentLabel>
+                <FluentLabel Typo="Typography.Body">• Modified state tracking and undo/redo</FluentLabel>
+                <FluentLabel Typo="Typography.Body">• FluentUI theme integration with automatic dark/light mode</FluentLabel>
+                <FluentLabel Typo="Typography.Body">• CSS class IntelliSense with color swatches</FluentLabel>
+            </FluentStack>
+        </FluentStack>
+    </FluentCard>
+
+</FluentStack>

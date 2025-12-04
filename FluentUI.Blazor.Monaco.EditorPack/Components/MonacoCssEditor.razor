@@ -1,0 +1,167 @@
+@namespace FluentUI.Blazor.Monaco.EditorPack.Components
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<div class="css-editor-container">
+    <div id="@editorId_" class="monaco-editor-wrapper"></div>
+    @if (editorSession_?.IsModified == true)
+    {
+        <FluentBadge Content="•" color="Accent" class="modified-indicator" />
+    }
+    @if (!isInitialized_)
+    {
+        <div class="loading-overlay">
+            <FluentProgressRing />
+        </div>
+    }
+</div>
+
+<style>
+    .css-editor-container {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        min-height: 400px;
+    }
+
+    .monaco-editor-wrapper {
+        height: 100%;
+        width: 100%;
+    }
+
+    .modified-indicator {
+        position: absolute;
+        top: 4px;
+        right: 8px;
+        font-size: 1.2rem;
+        line-height: 1;
+        z-index: 10;
+    }
+
+    .loading-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 5;
+    }
+
+    /* Monaco editor scrollbar styling - make it visible and theme-aware */
+    /* Scoped to CSS editor only */
+    .css-editor-container .monaco-editor .decorationsOverviewRuler {
+        opacity: 1 !important;
+    }
+    
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
+        opacity: 1 !important;
+        background: transparent !important;
+    }
+    
+    /* Vertical scrollbar - always visible */
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.vertical {
+        opacity: 1 !important;
+    }
+    
+    /* Horizontal scrollbar - completely hidden */
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.horizontal {
+        display: none !important;
+    }
+    
+    /* Default scrollbar colors for light theme - clearly visible */
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
+        background: rgba(121, 121, 121, 0.4) !important;
+        border-radius: 4px !important;
+        transition: background 0.1s ease !important;
+    }
+    
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
+        background: rgba(100, 100, 100, 0.7) !important;
+    }
+    
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:active {
+        background: rgba(0, 0, 0, 0.7) !important;
+    }
+    
+    /* Make vertical scrollbar more visible */
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.vertical {
+        width: 14px !important;
+        right: 0 !important;
+    }
+    
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.vertical > .slider {
+        width: 10px !important;
+        right: 2px !important;
+        border-radius: 5px !important;
+        min-height: 20px !important;
+    }
+    
+    /* Horizontal scrollbar sizing */
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.horizontal {
+        height: 14px !important;
+        bottom: 0 !important;
+    }
+    
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.horizontal > .slider {
+        height: 10px !important;
+        bottom: 2px !important;
+        border-radius: 5px !important;
+        min-width: 20px !important;
+    }
+    
+    /* Add subtle shadow to scrollbar for better visibility */
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.vertical > .slider {
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    /* Ensure scrollbar track is visible */
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
+        background: rgba(0, 0, 0, 0.02) !important;
+    }
+    
+    .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar:hover {
+        background: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Dark theme scrollbar adjustments */
+    @@media (prefers-color-scheme: dark) {
+        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
+            background: rgba(191, 191, 191, 0.4) !important;
+        }
+        
+        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
+            background: rgba(191, 191, 191, 0.6) !important;
+        }
+        
+        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:active {
+            background: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
+            background: rgba(255, 255, 255, 0.02) !important;
+        }
+        
+        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar:hover {
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+    }
+
+    /* Explicit dark theme support via data attribute */
+    body[data-theme="dark"] .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
+        background: rgba(191, 191, 191, 0.4) !important;
+    }
+    
+    body[data-theme="dark"] .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
+        background: rgba(191, 191, 191, 0.6) !important;
+    }
+    
+    body[data-theme="dark"] .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:active {
+        background: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    body[data-theme="dark"] .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
+        background: rgba(255, 255, 255, 0.02) !important;
+    }
+    
+    body[data-theme="dark"] .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar:hover {
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+</style>

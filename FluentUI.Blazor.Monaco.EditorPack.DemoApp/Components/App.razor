@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <ResourcePreloader />
+    <link rel="stylesheet" href="@Assets["app.css"]" />
+    <link rel="stylesheet" href="_content/FluentUI.Blazor.Monaco.EditorPack/css/markdownPreview.css" />
+    <link rel="stylesheet" href="@Assets["FluentUI.Blazor.Monaco.EditorPack.DemoApp.styles.css"]" />
+    <ImportMap />
+    
+    <script type="module" src="js/CacheStorageAccessor.js"></script>
+
+    <!-- FluentUI Blazor Components -->
+    <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
+    <script src="_content/Microsoft.FluentUI.AspNetCore.Components/js/loading-theme.js" type="text/javascript"></script>
+    
+    <HeadOutlet />
+</head>
+
+<body>
+    <loading-theme storage-name="theme" random-color="true"></loading-theme>
+    
+    <Routes />
+    <ReconnectModal />
+    
+    <script src="@Assets["_framework/blazor.web.js"]"></script>
+    
+    <!-- Monaco Editor Package - Required Scripts -->
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/fluentUIDesignTokens.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/cssClassHarvester.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditorTheme.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditor.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownEditor.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownToolbar.js"></script>
+</body>
+
+</html>
+

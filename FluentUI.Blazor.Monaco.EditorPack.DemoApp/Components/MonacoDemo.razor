@@ -1,0 +1,397 @@
+@page "/monaco-demo"
+@inject IJSRuntime JsRuntime
+@rendermode InteractiveServer
+
+@* ReSharper disable CssNotResolved *@
+@* ReSharper disable CssBrowserCompatibility *@
+
+<PageTitle>Monaco Editors Demo</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="20" Style="max-width: 100%; width: 100%;">
+    
+<FluentStack Orientation="Orientation.Horizontal">
+    
+    <FluentLabel Typo="Typography.H1">
+        Monaco Editors Demo
+    </FluentLabel>
+    <SiteSettings/>
+</FluentStack>
+    
+<FluentLabel Typo="Typography.Body">
+        Explore the Monaco Markdown and CSS editors with live preview and IntelliSense.
+    </FluentLabel>
+
+    <FluentTabs ActiveTabId="@activeTabId_" OnTabChange="HandleTabChange">
+        <FluentTab Id="markdown-tab" Label="Markdown Editor" Icon="@(new Icons.Regular.Size24.DocumentEdit())">
+            <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px;">
+                
+                <FluentCard>
+                    <div style="height: calc(100vh - 200px); width: 100%; min-height: 500px;">
+                        <MonacoMarkdownEditor @ref="markdownEditor_"
+                                              Markdown="@MarkdownContent"
+                                              MarkdownChanged="@OnMarkdownChanged"
+                                              ExternalCss="@BuildAggregatedCss()"
+                                              Css="">
+                            <LeftContent>
+                                <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Start" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
+                                    <FluentIcon Value="@(new Icons.Regular.Size20.DocumentEdit())" />
+                                    <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                        Markdown Content
+                                    </FluentLabel>
+                                </FluentStack>
+                            </LeftContent>
+                            <RightContent>
+                                <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8" HorizontalAlignment="HorizontalAlignment.End">
+                                    @if (markdownEditor_?.IsModified ?? false)
+                                    {
+                                        <FluentBadge Appearance="Appearance.Accent" BackgroundColor="var(--accent-fill-rest)">
+                                            Modified
+                                        </FluentBadge>
+                                    }
+                                    <FluentButton Appearance="Appearance.Accent" 
+                                                  OnClick="SaveMarkdown"
+                                                  IconStart="@(new Icons.Regular.Size20.Save())"
+                                                  Disabled="@(!(markdownEditor_?.IsModified ?? false))">
+                                        Save
+                                    </FluentButton>
+                                    <FluentButton Appearance="Appearance.Neutral" 
+                                                  OnClick="ResetMarkdown"
+                                                  IconStart="@(new Icons.Regular.Size20.ArrowUndo())"
+                                                  Disabled="@(!(markdownEditor_?.IsModified ?? false))">
+                                        Reset
+                                    </FluentButton>
+                                </FluentStack>
+                            </RightContent>
+                        </MonacoMarkdownEditor>
+                    </div>
+                </FluentCard>
+                
+                <FluentCard Style="background: var(--neutral-layer-2);">
+                    <FluentStack Orientation="Orientation.Vertical" VerticalGap="8">
+                        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
+                            <FluentIcon Value="@(new Icons.Regular.Size24.Info())" Color="Color.Accent" />
+                            <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                Markdown Editor Features:
+                            </FluentLabel>
+                        </FluentStack>
+                        <FluentStack Orientation="Orientation.Vertical" VerticalGap="4" Style="padding-left: 8px;">
+                            <FluentLabel Typo="Typography.Body">• Live preview with Markdig rendering</FluentLabel>
+                            <FluentLabel Typo="Typography.Body">• CSS class IntelliSense with <code>{`{.className}`}</code> syntax</FluentLabel>
+                            <FluentLabel Typo="Typography.Body">• Color swatches for CSS classes with color properties</FluentLabel>
+                            <FluentLabel Typo="Typography.Body">• Toolbar with formatting commands</FluentLabel>
+                            <FluentLabel Typo="Typography.Body">• Undo/Redo with modified state tracking</FluentLabel>
+                        </FluentStack>
+                    </FluentStack>
+                </FluentCard>
+            </FluentStack>
+        </FluentTab>
+
+        <FluentTab Id="css-tab" Label="CSS Editor" Icon="@(new Icons.Regular.Size24.Code())">
+            <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px; width: 80vw; max-width: 80vw;">
+                <FluentCard Style="width: 100%; max-width: none;">
+                    <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
+                        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
+                            <FluentIcon Value="@(new Icons.Regular.Size20.Code())" />
+                            <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                Custom CSS Styles
+                            </FluentLabel>
+                        </FluentStack>
+                        
+                        <div style="height: 600px; width: 100%; border: 1px solid var(--neutral-stroke-rest); border-radius: var(--control-corner-radius);">
+                            <MonacoCssEditor @ref="cssEditor_"
+                                             Css="@customCss_"
+                                             CssChanged="@OnCssChanged"
+                                             Placeholder="/* Enter your custom CSS here... */" />
+                        </div>
+                        
+                        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8">
+                            @if (cssEditor_?.IsModified ?? false)
+                            {
+                                <FluentBadge Appearance="Appearance.Accent" BackgroundColor="var(--accent-fill-rest)">
+                                    Modified
+                                </FluentBadge>
+                            }
+                            <FluentButton Appearance="Appearance.Accent" 
+                                          OnClick="SaveCss"
+                                          IconStart="@(new Icons.Regular.Size20.Save())"
+                                          Disabled="@(!(cssEditor_?.IsModified ?? false))">
+                                Save CSS
+                            </FluentButton>
+                            <FluentButton Appearance="Appearance.Neutral" 
+                                          OnClick="ResetCss"
+                                          IconStart="@(new Icons.Regular.Size20.ArrowUndo())"
+                                          Disabled="@(!(cssEditor_?.IsModified ?? false))">
+                                Reset CSS
+                            </FluentButton>
+                        </FluentStack>
+                    </FluentStack>
+                </FluentCard>
+                
+                <FluentCard Style="background: var(--neutral-layer-2);">
+                    <FluentStack Orientation="Orientation.Vertical" VerticalGap="8">
+                        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
+                            <FluentIcon Value="@(new Icons.Regular.Size24.Info())" Color="Color.Accent" />
+                            <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                CSS Editor Features:
+                            </FluentLabel>
+                        </FluentStack>
+                        <FluentStack Orientation="Orientation.Vertical" VerticalGap="4" Style="padding-left: 8px;">
+                            <FluentLabel Typo="Typography.Body">• FluentUI design token IntelliSense with <code>var(--token-name)</code></FluentLabel>
+                            <FluentLabel Typo="Typography.Body">• Color decorators and swatches for color values</FluentLabel>
+                            <FluentLabel Typo="Typography.Body">• Auto-completion for CSS properties and values</FluentLabel>
+                            <FluentLabel Typo="Typography.Body">• Theme-aware syntax highlighting</FluentLabel>
+                            <FluentLabel Typo="Typography.Body">• Real-time CSS validation</FluentLabel>
+                        </FluentStack>
+                    </FluentStack>
+                </FluentCard>
+            </FluentStack>
+        </FluentTab>
+
+        <FluentTab Id="about-tab" Label="About" Icon="@(new Icons.Regular.Size24.Info())">
+            <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px;">
+                <FluentCard>
+                    <FluentStack Orientation="Orientation.Vertical" VerticalGap="16">
+                        <FluentLabel Typo="Typography.H3">
+                            About Monaco Editor Pack
+                        </FluentLabel>
+                        
+                        <FluentLabel Typo="Typography.Body">
+                            The FluentUI Blazor Monaco Editor Pack provides a comprehensive integration of the Monaco Editor 
+                            (the editor that powers VS Code) with FluentUI Blazor components.
+                        </FluentLabel>
+                        
+                        <FluentDivider />
+                        
+                        <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
+                            <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                Key Features
+                            </FluentLabel>
+                            
+                            <FluentStack Orientation="Orientation.Vertical" VerticalGap="8">
+                                <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
+                                    <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
+                                    <FluentLabel Typo="Typography.Body">
+                                        Local Monaco Editor files (no CDN dependency)
+                                    </FluentLabel>
+                                </FluentStack>
+                                
+                                <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
+                                    <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
+                                    <FluentLabel Typo="Typography.Body">
+                                        FluentUI theme integration with automatic dark/light mode
+                                    </FluentLabel>
+                                </FluentStack>
+                                
+                                <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
+                                    <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
+                                    <FluentLabel Typo="Typography.Body">
+                                        CSS class IntelliSense with color swatches
+                                    </FluentLabel>
+                                </FluentStack>
+                                
+                                <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
+                                    <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
+                                    <FluentLabel Typo="Typography.Body">
+                                        FluentUI design token harvesting and IntelliSense
+                                    </FluentLabel>
+                                </FluentStack>
+                                
+                                <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
+                                    <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
+                                    <FluentLabel Typo="Typography.Body">
+                                        Memento pattern for undo/redo state management
+                                    </FluentLabel>
+                                </FluentStack>
+                            </FluentStack>
+                        </FluentStack>
+                        
+                        <FluentDivider />
+                        
+                        <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
+                            <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                Installation
+                            </FluentLabel>
+                            
+                            <FluentLabel Typo="Typography.Body">
+                                Add the package to your Blazor project:
+                            </FluentLabel>
+                            
+                            <FluentCard Style="background: var(--neutral-layer-2); padding: 12px;">
+                                <code>dotnet add package FluentUI.Blazor.Monaco.EditorPack</code>
+                            </FluentCard>
+                            
+                            <FluentLabel Typo="Typography.Body">
+                                Register services in <code>Program.cs</code>:
+                            </FluentLabel>
+                            
+                            <FluentCard Style="background: var(--neutral-layer-2); padding: 12px;">
+                                <code>builder.Services.AddMonacoEditorPack();</code>
+                            </FluentCard>
+                        </FluentStack>
+                    </FluentStack>
+                </FluentCard>
+            </FluentStack>
+        </FluentTab>
+    </FluentTabs>
+
+</FluentStack>
+
+@code {
+    private MonacoMarkdownEditor? markdownEditor_;
+    private MonacoCssEditor? cssEditor_;
+    private string activeTabId_ = "markdown-tab";
+
+    private async Task HandleTabChange(FluentTab tab)
+    {
+        activeTabId_ = tab.Id ?? "markdown-tab";
+
+        // Force a small delay to ensure the tab content is rendered before initializing editors
+        await Task.Delay(100);
+
+        // If switching to CSS editor tab, trigger layout recalculation
+        if (activeTabId_ == "css-tab" && cssEditor_ != null)
+        {
+            await JsRuntime.InvokeVoidAsync("eval", "if(window.monaco) { window.monaco.editor.getModels().forEach(m => { const e = window.monaco.editor.getEditors().find(ed => ed.getModel() === m); if(e) e.layout(); }); }");
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private string MarkdownContent { get; set; } = @"# Welcome to Monaco Editor Pack
+
+This is a **demo**{.blue-text} of the Monaco Editor components for Blazor.
+
+## Features
+
+- Full Monaco Editor integration
+- Markdown editing with live preview
+- CSS editing with IntelliSense
+- Undo/Redo support with Memento pattern
+- FluentUI theme integration
+
+## Try It Out
+
+Edit this markdown content and see the preview update in real-time!
+
+1. Try applying the `.highlight` class to text: **highlighted text**{.highlight}
+
+1. Or the `.error` class: **error text**{.error}
+
+1. Navigate to the CSS tab above, add a new CSS class, then return here and use {<.className>} syntax to apply the class to some text
+
+### Code Example
+
+```csharp
+public class Demo
+{
+    public string Message { get; set; } = ""Hello, Monaco!"";
+}
+```
+
+| Header 1 | Header 2 | Header 3 |
+| -------- | -------- | -------- |
+| Cell 1   | Cell 2   | Cell 3   |
+| Cell 4   | Cell 5   | Cell 6   |
+
+> Programs are meant to be read by humans and only incidentally for computers to execute.  --Donald Knuth
+---
+
+*Powered by Monaco Editor and FluentUI Blazor*
+";
+
+    // Aggregate external CSS (simulating what a real app would do)
+    private const string ExternalCss = @"
+/* Global CSS styles */
+body {{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}}
+
+h1 {{
+    color: var(--accent-fill-rest);
+}}
+
+/* Page-specific CSS */
+.demo-container {{
+    max-width: 1200px;
+    margin: 0 auto;
+}}";
+
+    // Build aggregated CSS combining external and custom CSS for IntelliSense
+    private string BuildAggregatedCss()
+    {
+        return $"{ExternalCss}\n\n{customCss_}";
+    }
+
+    private string customCss_ = @"/* Custom CSS with FluentUI design tokens */
+.highlight {
+    background-color: var(--accent-fill-rest);
+    color: var(--neutral-foreground-on-accent);
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+.blue-text {
+    color: var(--accent-fill-rest);
+    font-weight: 600;
+}
+
+.error {
+    color: var(--error);
+    font-weight: bold;
+}
+
+.success {
+    color: var(--success);
+}
+
+.warning {
+    color: var(--warning);
+}
+
+hr {
+    background-color: var(--warning) !important;
+    height: 5px;
+}
+
+";
+
+    private async Task OnMarkdownChanged(string newValue)
+    {
+        MarkdownContent = newValue;
+        await Task.CompletedTask;
+    }
+
+    private async Task OnCssChanged(string newValue)
+    {
+        customCss_ = newValue;
+        await Task.CompletedTask;
+    }
+    
+    private void SaveMarkdown()
+    {
+        markdownEditor_?.Commit();
+        // In a real app, you would save to database here
+    }
+
+    private async Task ResetMarkdown()
+    {
+        if (markdownEditor_ != null)
+        {
+            await markdownEditor_.CancelAsync();
+        }
+    }
+
+    private void SaveCss()
+    {
+        cssEditor_?.Commit();
+        // In a real app, you would save to database here
+    }
+
+    private async Task ResetCss()
+    {
+        if (cssEditor_ != null)
+        {
+            await cssEditor_.CancelAsync();
+        }
+    }
+}

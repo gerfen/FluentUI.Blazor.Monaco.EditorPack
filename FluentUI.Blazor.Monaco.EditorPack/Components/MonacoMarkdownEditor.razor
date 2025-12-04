@@ -1,0 +1,346 @@
+@using FluentUI.Blazor.Monaco.EditorPack.Memento
+
+<style>
+    .monaco-markdown-editor-container {
+        display: flex;
+        flex-direction: column;
+        /* Fill parent container */
+        height: 100%;
+        width: 100%;
+        min-height: 400px; /* Keep as safety fallback */
+    }
+
+    /* Ensure FluentLayout fills container */
+    .monaco-markdown-editor-container > fluent-layout {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        height: 100%;
+    }
+
+    /* Header stays at top */
+    .monaco-markdown-editor-container > fluent-layout > fluent-header {
+        flex: 0 0 auto;
+    }
+
+    .editor-header {
+        background: var(--neutral-layer-1) !important;
+        border-bottom: 1px solid var(--neutral-stroke-rest);
+        min-height: 48px;
+        padding: 8px 12px;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Splitter fills remaining space */
+    .monaco-markdown-editor-container > fluent-layout > fluent-splitter {
+        flex: 1 1 auto;
+        min-height: 0;
+        height: 100%; /* Explicit height for splitter */
+    }
+
+    /* Both panels should fill splitter height */
+    .monaco-editor-panel,
+    .preview-panel {
+        height: calc(100vh - 240px);
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .monaco-editor-panel {
+        position: relative;
+        overflow: visible; /* Changed from hidden to allow hover widget to show */
+        display: flex;
+        flex-direction: column;
+        z-index: 1; /* Ensure proper stacking context */
+    }
+
+    .monaco-editor-container {
+        flex: 1 1 auto;
+        width: 100%;
+        overflow: hidden; /* Keep hidden for editor scrolling */
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Monaco editor scrollbar styling - make it visible like the preview pane */
+    /* Scoped to markdown editor only */
+    .monaco-markdown-editor-container .monaco-editor .decorationsOverviewRuler {
+        opacity: 1 !important;
+    }
+    
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
+        opacity: 1 !important;
+        background: transparent !important;
+    }
+    
+    /* Default scrollbar colors - clearly visible */
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
+        background: rgba(121, 121, 121, 0.4) !important;
+        border-radius: 4px !important;
+        transition: background 0.1s ease !important;
+    }
+    
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
+        background: rgba(100, 100, 100, 0.7) !important;
+    }
+    
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:active {
+        background: rgba(0, 0, 0, 0.7) !important;
+    }
+    
+    /* Make vertical scrollbar more visible and match preview pane size */
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.vertical {
+        width: 14px !important;
+        right: 0 !important;
+    }
+    
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.vertical > .slider {
+        width: 10px !important;
+        right: 2px !important;
+        border-radius: 5px !important;
+        min-height: 20px !important;
+    }
+    
+    /* Horizontal scrollbar - completely hidden */
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.horizontal {
+        display: none !important;
+    }
+    
+    /* Add subtle shadow to scrollbar for better visibility */
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar.vertical > .slider {
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    /* Ensure scrollbar track is visible */
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
+        background: rgba(0, 0, 0, 0.02) !important;
+    }
+    
+    .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar:hover {
+        background: rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Dark theme scrollbar adjustments */
+    @@media (prefers-color-scheme: dark) {
+        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
+            background: rgba(191, 191, 191, 0.4) !important;
+        }
+        
+        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
+            background: rgba(191, 191, 191, 0.6) !important;
+        }
+        
+        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:active {
+            background: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
+            background: rgba(255, 255, 255, 0.02) !important;
+        }
+        
+        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar:hover {
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+    }
+
+    /* Explicit dark theme support via data attribute */
+    body[data-theme="dark"] .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
+        background: rgba(191, 191, 191, 0.4) !important;
+    }
+    
+    body[data-theme="dark"] .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
+        background: rgba(191, 191, 191, 0.6) !important;
+    }
+    
+    body[data-theme="dark"] .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:active {
+        background: rgba(255, 255, 255, 0.8) !important;
+    }
+    
+    body[data-theme="dark"] .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
+        background: rgba(255, 255, 255, 0.02) !important;
+    }
+    
+    body[data-theme="dark"] .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar:hover {
+        background: rgba(255, 255, 255, 0.05) !important;
+    }
+    
+    /* Ensure Monaco hover widgets appear above everything with natural positioning */
+    /* Scoped to markdown editor */
+    .monaco-markdown-editor-container .monaco-hover {
+        z-index: 100000 !important;
+        max-height: 600px !important;
+        overflow-y: auto !important;
+    }
+    
+    /* Make hover content area scrollable */
+    .monaco-markdown-editor-container .monaco-hover-content {
+        max-height: 580px !important;
+        overflow-y: auto !important;
+    }
+    
+    /* Ensure hover renders outside overflow:hidden container */
+    .monaco-markdown-editor-container .monaco-editor .overflow-guard {
+        overflow: visible !important;
+    }
+    
+    /* Style for resolved color values - add color indicator */
+    .monaco-markdown-editor-container .monaco-hover-content code {
+        padding: 2px 4px;
+        border-radius: 3px;
+        background-color: var(--neutral-layer-3);
+    }
+    
+    /* Color value highlighting */
+    .monaco-markdown-editor-container .monaco-hover-content strong:has(+ code) {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .preview-panel {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .preview-panel-header {
+        flex: 0 0 auto;
+        width: 100%;
+        background: var(--neutral-layer-1);
+        border-bottom: 1px solid var(--neutral-stroke-rest);
+        padding: 8px 12px;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .preview-panel-content {
+        flex: 1 1 auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 1rem;
+        background-color: var(--neutral-fill-layer-rest);
+    }
+
+    /* Markdown Preview Styles */
+    .preview-panel-content pre {
+        background-color: var(--neutral-layer-3, #f5f5f5);
+        border: 1px solid var(--neutral-stroke-rest, #e0e0e0);
+        border-radius: 4px;
+        padding: 1rem;
+        overflow-x: auto;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 0.9em;
+        line-height: 1.5;
+    }
+
+    .preview-panel-content code {
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 0.9em;
+    }
+
+    .preview-panel-content pre code {
+        background-color: transparent;
+        padding: 0;
+        border: none;
+    }
+
+    .preview-panel-content :not(pre) > code {
+        background-color: var(--neutral-layer-3, #f5f5f5);
+        border: 1px solid var(--neutral-stroke-rest, #e0e0e0);
+        border-radius: 3px;
+        padding: 0.2em 0.4em;
+    }
+
+    .preview-panel-content hr {
+        border: none;
+        border-top: 2px solid var(--neutral-stroke-divider-rest, #d0d0d0);
+        margin: 2rem 0;
+    }
+
+    /* Dark theme support */
+    @@media (prefers-color-scheme: dark) {
+        .preview-panel-content pre {
+            background-color: var(--neutral-layer-3, #2d2d2d);
+            border-color: var(--neutral-stroke-rest, #3d3d3d);
+        }
+
+        .preview-panel-content :not(pre) > code {
+            background-color: var(--neutral-layer-3, #2d2d2d);
+            border-color: var(--neutral-stroke-rest, #3d3d3d);
+        }
+
+        .preview-panel-content hr {
+            border-top-color: var(--neutral-stroke-divider-rest, #4d4d4d);
+        }
+    }
+
+    body[data-theme="dark"] .preview-panel-content pre {
+        
+        background-color: var(--neutral-layer-3);
+        border-color: var(--neutral-stroke-rest);
+    }
+
+    body[data-theme="dark"] .preview-panel-content :not(pre) > code {
+        background-color: var(--neutral-layer-3);
+        border-color: var(--neutral-stroke-rest);
+    }
+
+    body[data-theme="dark"] .preview-panel-content hr {
+        border-top-color: var(--neutral-stroke-divider-rest);
+    }
+</style>
+
+<div class="monaco-markdown-editor-container">
+    <FluentLayout>
+        <FluentHeader Class="editor-header">
+            <FluentGrid Style="width: 99%">
+                <FluentGridItem xs="6">
+                    @LeftContent
+                </FluentGridItem>
+                <FluentGridItem xs="6">
+                    @RightContent
+                </FluentGridItem>
+            </FluentGrid>
+        </FluentHeader>
+        <FluentSplitter Orientation="Orientation.Horizontal" 
+                        BarSize="6" 
+                        Panel1Size="55%"
+                        Panel1MinSize="10%" 
+                        Panel2MinSize="10%">
+            <Panel1>
+                <div class="monaco-editor-panel">
+                    @* Markdown Toolbar *@
+                    <MarkdownToolbar EditorId="@editorId_" />
+                    
+                    @if (IsModified)
+                    {
+                        <div class="modified-badge">•</div>
+                    }
+                    @if (!isInitialized_)
+                    {
+                        <div class="loading-overlay">
+                            <FluentProgressRing />
+                        </div>
+                    }
+                    <div id="@editorId_" class="monaco-editor-container"></div>
+                </div>
+            </Panel1>
+            <Panel2>
+                <div class="preview-panel">
+                    <div class="preview-panel-header">
+                        <FluentLabel Style="font-weight: 600; font-size: 0.875rem;">
+                            Preview
+                        </FluentLabel>
+                    </div>
+                    <div class="preview-panel-content">
+                        @Html
+                    </div>
+                </div>
+            </Panel2>
+        </FluentSplitter>
+    </FluentLayout>
+</div>

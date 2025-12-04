@@ -1,0 +1,123 @@
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<div class="markdown-toolbar">
+    <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="4" Wrap="true">
+        @* Format Group *@
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Bold", "Ctrl+B")"
+                      OnClick="@(() => ExecuteCommand("markdown.bold"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.TextBold())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Italic", "Ctrl+I")"
+                      OnClick="@(() => ExecuteCommand("markdown.italic"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.TextItalic())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Strikethrough", "Ctrl+Shift+X")"
+                      OnClick="@(() => ExecuteCommand("markdown.strikethrough"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.TextStrikethrough())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Inline Code", "Ctrl+E")"
+                      OnClick="@(() => ExecuteCommand("markdown.code"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.Code())" />
+        </FluentButton>
+
+        <FluentDivider Orientation="Orientation.Vertical" Style="height: 24px; margin: 0 4px;" />
+
+        @* Headings Group *@
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Heading 1", "Ctrl+Alt+1")"
+                      OnClick="@(() => ExecuteCommand("markdown.h1"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.TextHeader1())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Heading 2", "Ctrl+Alt+2")"
+                      OnClick="@(() => ExecuteCommand("markdown.h2"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.TextHeader2())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Heading 3", "Ctrl+Alt+3")"
+                      OnClick="@(() => ExecuteCommand("markdown.h3"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.TextHeader3())" />
+        </FluentButton>
+
+        <FluentDivider Orientation="Orientation.Vertical" Style="height: 24px; margin: 0 4px;" />
+
+        @* Lists Group *@
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Bullet List", "Ctrl+Shift+L")"
+                      OnClick="@(() => ExecuteCommand("markdown.bulletList"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.TextBulletList())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Numbered List", "Ctrl+Shift+O")"
+                      OnClick="@(() => ExecuteCommand("markdown.numberedList"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.TextNumberListLtr())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Quote", "Ctrl+Shift+Q")"
+                      OnClick="@(() => ExecuteCommand("markdown.quote"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.TextQuote())" />
+        </FluentButton>
+
+        <FluentDivider Orientation="Orientation.Vertical" Style="height: 24px; margin: 0 4px;" />
+
+        @* Insert Group *@
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Insert Link", "Ctrl+K")"
+                      OnClick="@(() => ExecuteCommand("markdown.link"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.Link())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Insert Image", "Ctrl+Shift+I")"
+                      OnClick="@(() => ExecuteCommand("markdown.image"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.Image())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Insert Table", "Ctrl+Shift+T")"
+                      OnClick="@(() => ExecuteCommand("markdown.table"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.Table())" />
+        </FluentButton>
+
+        <FluentDivider Orientation="Orientation.Vertical" Style="height: 24px; margin: 0 4px;" />
+
+        @* Other Group *@
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Code Block", "Ctrl+Shift+C")"
+                      OnClick="@(() => ExecuteCommand("markdown.codeBlock"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.CodeBlock())" />
+        </FluentButton>
+        
+        <FluentButton Appearance="Appearance.Stealth" 
+                      IconOnly="true"
+                      Title="@GetTooltip("Horizontal Rule", "Ctrl+Alt+-")"
+                      OnClick="@(() => ExecuteCommand("markdown.horizontalRule"))">
+            <FluentIcon Value="@(new Icons.Regular.Size20.LineHorizontal1())" />
+        </FluentButton>
+    </FluentStack>
+</div>

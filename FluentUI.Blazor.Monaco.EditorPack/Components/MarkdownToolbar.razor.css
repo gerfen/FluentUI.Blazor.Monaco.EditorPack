@@ -1,0 +1,38 @@
+/* Markdown Toolbar - FluentUI Blazor Component */
+
+.markdown-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 12px;
+    background: var(--neutral-layer-1) !important;
+    border-bottom: 1px solid var(--neutral-stroke-rest);
+    min-height: 44px;
+    align-items: center;
+}
+
+/* FluentButton styling */
+.markdown-toolbar ::deep fluent-button {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+}
+
+.markdown-toolbar ::deep fluent-button::part(control) {
+    padding: 4px;
+    border-radius: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .markdown-toolbar {
+        padding: 4px;
+        gap: 2px;
+    }
+
+    .markdown-toolbar ::deep fluent-button {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+    }
+}
