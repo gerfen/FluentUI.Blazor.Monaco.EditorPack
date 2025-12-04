@@ -1,5 +1,4 @@
-﻿
-// ------------------------------------------------------------------------
+﻿// ------------------------------------------------------------------------
 // MIT License - Copyright (c) Microsoft Corporation. All rights reserved.
 // ------------------------------------------------------------------------
 
@@ -17,7 +16,7 @@ public partial class SiteSettingsPanel
 
     private CookieConsent? _cookie;
     private string? _status;
-    private bool _popVisible, _popNIVisible;
+    private bool _popVisible;
     private bool _ltr = true;
     private FluentDesignTheme? _theme;
 
@@ -30,41 +29,29 @@ public partial class SiteSettingsPanel
     [Inject]
     public required GlobalState GlobalState { get; set; }
 
-    public DesignThemeModes Mode { get; set; }
+    // Initialize with defaults to prevent null reference issues
+    public DesignThemeModes Mode { get; set; } = DesignThemeModes.System;
 
     public OfficeColor? OfficeColor { get; set; }
 
-    public string? NeutralColor { get; set; }
+    public string? NeutralColor { get; set; } = DEFAULT_NEUTRAL_COLOR;
 
     public LocalizationDirection? Direction { get; set; }
 
     private static IEnumerable<DesignThemeModes> AllModes => Enum.GetValues<DesignThemeModes>();
 
-    private static IEnumerable<OfficeColor?> AllOfficeColors
+    protected override void OnInitialized()
     {
-        get
-        {
-            return Enum.GetValues<OfficeColor>().Select(i => (OfficeColor?)i);
-        }
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        if (firstRender)
-        {
-            Direction = GlobalState.Dir;
-            _ltr = !Direction.HasValue || Direction.Value == LocalizationDirection.LeftToRight;
-
-            NeutralColor = GlobalState.NeutralColor;
-            // Same default values is used for light and dark theme
-            NeutralColor ??= DEFAULT_NEUTRAL_COLOR;
-        }
-
+        // Initialize from GlobalState before first render
+        Direction = GlobalState.Dir;
+        _ltr = !Direction.HasValue || Direction.Value == LocalizationDirection.LeftToRight;
+        NeutralColor = GlobalState.NeutralColor ?? DEFAULT_NEUTRAL_COLOR;
+        
+        base.OnInitialized();
     }
 
     protected void HandleDirectionChanged(bool isLeftToRight)
     {
-
         _ltr = isLeftToRight;
         Direction = isLeftToRight ? LocalizationDirection.LeftToRight : LocalizationDirection.RightToLeft;
     }
@@ -74,7 +61,7 @@ public partial class SiteSettingsPanel
         var msg = "Site settings reset and cache cleared!";
 
         await CacheStorageAccessor.RemoveAllAsync();
-        _theme?.ClearLocalStorageAsync();
+        await (_theme?.ClearLocalStorageAsync() ?? Task.CompletedTask);
 
         Logger.LogInformation(msg);
         _status = msg;
@@ -100,6 +87,5 @@ public partial class SiteSettingsPanel
             Microsoft.FluentUI.AspNetCore.Components.OfficeColor.Default => "#036ac4",
             _ => color.ToAttributeValue(),
         };
-
     }
 }

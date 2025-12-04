@@ -1,4 +1,3 @@
-
 using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Components;
 using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Components.Infrastructure;
 using FluentUI.Blazor.Monaco.EditorPack.Extensions;
@@ -12,8 +11,15 @@ builder.AddServiceDefaults();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddHttpClient();
+
+
 builder.Services.AddFluentUIComponents();
 builder.Services.AddFluentUIServices();
+
+// Register FluentDesignTheme as a scoped service (recommended for advanced scenarios)
+builder.Services.AddScoped<FluentDesignTheme>();
 
 // Add Monaco Editor Pack services (includes HtmlSanitizer configuration)
 builder.Services.AddMonacoEditorPack();

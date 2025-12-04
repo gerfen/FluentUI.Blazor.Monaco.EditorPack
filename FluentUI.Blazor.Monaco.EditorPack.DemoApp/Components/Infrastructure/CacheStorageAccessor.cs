@@ -2,7 +2,7 @@ using Microsoft.FluentUI.AspNetCore.Components.Utilities;
 using Microsoft.JSInterop;
 
 namespace FluentUI.Blazor.Monaco.EditorPack.DemoApp.Components.Infrastructure;
-public class CacheStorageAccessor(IJSRuntime js, IAppVersionService vs) : JSModule(js, "./_content/CivicWin.Web/js/CacheStorageAccessor.js")
+public class CacheStorageAccessor(IJSRuntime js, IAppVersionService vs) : JSModule(js, "./_content/FluentUI.Blazor.Monaco.EditorPack.DemoApp/js/CacheStorageAccessor.js")
 {
     private readonly IAppVersionService vs = vs;
     private string? CurrentCacheVersion = default;

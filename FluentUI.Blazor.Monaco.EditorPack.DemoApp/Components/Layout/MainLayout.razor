@@ -1,13 +1,14 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="content">
-	@Body
+    <CookieConsent/>
+    @Body
 
-    <FluentToastProvider MaxToastCount="10" />
-    <FluentDialogProvider />
-    <FluentTooltipProvider />
-    <FluentKeyCodeProvider />
-    <FluentMenuProvider />
+    <FluentToastProvider MaxToastCount="10"/>
+    <FluentDialogProvider/>
+    <FluentTooltipProvider/>
+    <FluentKeyCodeProvider/>
+    <FluentMenuProvider/>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
