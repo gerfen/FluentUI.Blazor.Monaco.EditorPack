@@ -359,9 +359,9 @@ hr {
 
 ";
 
-    private async Task OnMarkdownChanged(string newValue)
+    private async Task OnMarkdownChanged(string? newValue)
     {
-        if (MarkdownContent != newValue)
+        if (newValue != null && MarkdownContent != newValue)
         {
             MarkdownContent = newValue;
         }
@@ -369,7 +369,7 @@ hr {
         await Task.CompletedTask;
     }
 
-    private async Task OnCssChanged(string newValue)
+    private async Task OnCssChanged(string? newValue)
     {
         if (newValue != null && customCss_ != newValue)
         {
