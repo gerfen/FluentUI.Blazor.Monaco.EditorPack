@@ -277,6 +277,7 @@ window.fluentUIDesignTokens = {
     async refreshTokens() {
         console.log('[FluentUI Tokens] Refreshing tokens...');
         this._harvestedTokens = null;
+        this._harvestInProgress = false; // Reset in-progress flag to force re-harvest
         return await this.harvestTokens();
     },
 
@@ -428,8 +429,13 @@ window.fluentUIDesignTokens = {
     }
 };
 
+
+// DISABLED AUTO-HARVEST: Triggers FluentUI colorContrast recursion bug
+// Tokens are now harvested on-demand when Monaco editors initialize
+// or when explicitly called via refreshTokens()
+
 // Auto-harvest tokens when DOM is ready
-if (document.readyState === 'loading') {
+/*if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         console.log('[FluentUI Tokens] DOM loaded, scheduling harvest...');
         // Wait a bit for FluentUI to initialize
@@ -443,6 +449,6 @@ if (document.readyState === 'loading') {
     setTimeout(() => {
         window.fluentUIDesignTokens.harvestTokens();
     }, 500);
-}
+}*/
 
 console.log('[FluentUI Tokens] Module loaded and ready');

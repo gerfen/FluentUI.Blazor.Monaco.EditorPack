@@ -704,13 +704,87 @@ window.monacoCssEditor = {
             return;
         }
 
+        // First, refresh design tokens to get new color values
+        if (window.fluentUIDesignTokens) {
+            await window.fluentUIDesignTokens.refreshTokens();
+            console.log('[MonacoCss] Design tokens refreshed for new theme');
+        }
+
         // Redefine theme with new FluentUI values
         const themeName = await this.defineFluentUITheme('fluentui-css-auto-updated');
         
         // Apply updated theme
         monaco.editor.setTheme(themeName);
         
+        // Force refresh of color decorations to pick up new design token values
+        this.refreshColorDecorations(state.editor);
+        
         console.log('[MonacoCss] Theme updated for editor:', containerId);
+    },
+    
+    /**
+     * Refresh color decorations in the CSS editor
+     * This forces Monaco to re-evaluate CSS variable colors from design tokens
+     */
+    refreshColorDecorations: function(editor) {
+        if (!editor) return;
+        
+        try {
+            // Get the model
+            const model = editor.getModel();
+            if (!model) return;
+            
+            // Find the editor state by searching through all editors
+            let editorState = null;
+            for (const [containerId, state] of this.editors.entries()) {
+                if (state.editor === editor) {
+                    editorState = state;
+                    break;
+                }
+            }
+            
+            // Save cursor position and selection
+            const position = editor.getPosition();
+            const selection = editor.getSelection();
+            const content = model.getValue();
+            
+            // Set flag to prevent change notifications if we found the state
+            if (editorState) {
+                editorState.isProgrammaticChange = true;
+            }
+            
+            // Force Monaco to re-evaluate ALL color providers by creating a new model
+            // This is more reliable than setValue() for CSS variables
+            const oldModel = model;
+            const uri = oldModel.uri;
+            const language = oldModel.getLanguageId();
+            
+            // Dispose old model
+            oldModel.dispose();
+            
+            // Create new model (forces all providers to re-run)
+            const newModel = monaco.editor.createModel(content, language, uri);
+            editor.setModel(newModel);
+            
+            // Reset flag after a short delay if we found the state
+            if (editorState) {
+                setTimeout(() => {
+                    editorState.isProgrammaticChange = false;
+                }, 100);
+            }
+            
+            // Restore cursor position and selection
+            if (position) {
+                editor.setPosition(position);
+            }
+            if (selection) {
+                editor.setSelection(selection);
+            }
+            
+            console.log('[MonacoCss] Color decorations refreshed via model recreation');
+        } catch (error) {
+            console.error('[MonacoCss] Error refreshing color decorations:', error);
+        }
     },
 
     /**
@@ -736,6 +810,32 @@ window.monacoCssEditor = {
             this.dispose(containerId);
         });
         console.log('[MonacoCss] All editors disposed');
+    },
+    
+    /**
+     * Manually refresh all Monaco CSS editor themes
+     * Useful when FluentUI colors change without triggering DOM attribute changes
+     * This should be called from Blazor components after color updates
+     */
+    refreshAllEditorThemes: async function() {
+        console.log('[MonacoCss] Manually refreshing all CSS editor themes');
+        
+        // First, refresh design tokens to get new color values
+        if (window.fluentUIDesignTokens) {
+            await window.fluentUIDesignTokens.refreshTokens();
+            console.log('[MonacoCss] Design tokens refreshed');
+        }
+        
+        // Then update all Monaco CSS editors
+        const updatePromises = [];
+        this.editors.forEach((state, containerId) => {
+            if (state?.editor) {
+                updatePromises.push(this.updateTheme(containerId));
+            }
+        });
+        
+        await Promise.all(updatePromises);
+        console.log('[MonacoCss] All CSS editor themes refreshed');
     }
 };
 

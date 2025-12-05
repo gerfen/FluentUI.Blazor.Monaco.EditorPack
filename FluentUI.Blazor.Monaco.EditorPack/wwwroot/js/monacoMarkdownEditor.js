@@ -725,7 +725,7 @@ window.monacoMarkdownEditor = {
     },
 
     // Set theme
-    setTheme: function(editorId, themeName) {
+    setTheme: function(editorId, themeName = 'fluentui-auto') {
         const editorData = this.editors[editorId];
         if (!editorData?.editor) {
             console.error('[MonacoMarkdownEditor] Editor not found:', editorId);
@@ -975,6 +975,32 @@ window.monacoMarkdownEditor = {
             this.dispose(editorId);
         });
         console.log('[MonacoMarkdownEditor] All editors disposed');
+    },
+    
+    /**
+     * Manually refresh all Monaco editor themes
+     * Useful when FluentUI colors change without triggering DOM attribute changes
+     * This should be called from Blazor components after color updates
+     */
+    refreshAllEditorThemes: async function() {
+        console.log('[MonacoMarkdown] Manually refreshing all editor themes');
+        
+        // First, refresh design tokens to get new color values
+        if (window.fluentUIDesignTokens) {
+            await window.fluentUIDesignTokens.refreshTokens();
+            console.log('[MonacoMarkdown] Design tokens refreshed');
+        }
+        
+        // Then update all Monaco editors
+        const updatePromises = [];
+        this.editors.forEach((state, containerId) => {
+            if (state?.editor) {
+                updatePromises.push(this.updateTheme(containerId));
+            }
+        });
+        
+        await Promise.all(updatePromises);
+        console.log('[MonacoMarkdown] All editor themes refreshed');
     }
 };
 
