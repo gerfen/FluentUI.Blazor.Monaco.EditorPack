@@ -84,7 +84,7 @@ public partial class CookieConsent()
     {
         if (_cookieState?.AcceptAnalytics == true)
         {
-            await CookieConsentService.InitAnalyticsAsync(GA_MEASUREMENT_ID, MC_PROIOJECT_ID);
+            //await CookieConsentService.InitAnalyticsAsync(GA_MEASUREMENT_ID, MC_PROIOJECT_ID);
         }
     }
 }

@@ -1,7 +1,5 @@
-﻿@using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Components.Cookies
-@implements IDialogContentComponent
+﻿@implements IDialogContentComponent
 
-<CookieConsent @ref="@_cookie"/>
 <div>
     <FluentDesignTheme @ref=_theme
                        @bind-Mode="@Mode"
@@ -22,7 +20,8 @@
                       Width="100%"
                       Items="@(OfficeColorUtilities.AllColors.Cast<OfficeColor?>())"
                       Height="200px"
-                      @bind-SelectedOption="@OfficeColor">
+                      SelectedOption="@OfficeColor"
+                      SelectedOptionChanged="@(async (OfficeColor? newColor) => await OnColorChangedAsync(newColor))">
             <OptionTemplate>
                 <FluentStack>
                     <FluentIcon Value="@(new Icons.Filled.Size20.RectangleLandscape())"
@@ -39,23 +38,20 @@
             <Header>Reset site settings</Header>
             <Body>
                 <p>
-                    This site stores settings for the theme and color in the browser's local storage.
+                    This site stores settings for the theme and color and downloaded samples, emoji and icons in the browser' cache and local storage.
                 </p>
                 <p>
-                    You can check the contents of the cache and storage in the browser's developer tools. 
-                    If you are using Edge or Chrome, you can do this by going to the Application tab and 
-                    then clicking on the Cache Storage or Local Storage section.<br />
-                    In Firefox, you can do this by going to the Storage tab and then clicking on the 
-                    Cache Storage or Local Storage section.
+                    You can check the contents of the cache and storage in the browser's developer tools. If you are using Edge or Chrome, you can do this by
+                    going to the Application tab and then clicking on the Cache Storage or Local Storage section.<br />
+                    In Firefox, you can do this by going to the Storage tab and then clicking on the Cache Storage or Local Storage section.
+                </p>
+
+                <p>
+                    If you feel like you're not seeing the latest and greatest of samples, emoji or icons, or you want to clear out the stored theme and color,
+                    click the button below to clear the cache and reset to system theme with a random color.
                 </p>
                 <p>
-                    If you feel like you're not seeing the latest and greatest of samples, emoji or icons, 
-                    or you want to clear out the stored theme and color, click the button below to clear 
-                    the cache and reset to system theme with a random color.
-                </p>
-                <p>
-                    <strong>Don't worry, this will <strong>only</strong> reset stored data for 
-                    <strong>this</strong> site. It will not clear any of your browser's cache for other sites!</strong>
+                    <strong>Don't worry, this will <strong>only</strong> reset stored data for <strong>this</strong> site. It will not clear any of your browser's cache for other sites!</strong>
                 </p>
             </Body>
         </FluentPopover>

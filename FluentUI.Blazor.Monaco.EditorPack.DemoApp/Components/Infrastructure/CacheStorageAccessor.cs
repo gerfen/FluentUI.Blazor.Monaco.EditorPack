@@ -2,7 +2,8 @@ using Microsoft.FluentUI.AspNetCore.Components.Utilities;
 using Microsoft.JSInterop;
 
 namespace FluentUI.Blazor.Monaco.EditorPack.DemoApp.Components.Infrastructure;
-public class CacheStorageAccessor(IJSRuntime js, IAppVersionService vs) : JSModule(js, "./_content/FluentUI.Blazor.Monaco.EditorPack.DemoApp/js/CacheStorageAccessor.js")
+
+public class CacheStorageAccessor(IJSRuntime js, IAppVersionService vs) : JSModule(js, "./js/CacheStorageAccessor.js")
 {
     private readonly IAppVersionService vs = vs;
     private string? CurrentCacheVersion = default;
@@ -38,6 +39,7 @@ public class CacheStorageAccessor(IJSRuntime js, IAppVersionService vs) : JSModu
 
         return result;
     }
+    
     private async ValueTask<string> InternalGetAsync(HttpRequestMessage requestMessage)
     {
         var requestMethod = requestMessage.Method.Method;
@@ -59,6 +61,7 @@ public class CacheStorageAccessor(IJSRuntime js, IAppVersionService vs) : JSModu
     {
         await InvokeVoidAsync("removeAll");
     }
+    
     private static async ValueTask<string> GetRequestBodyAsync(HttpRequestMessage requestMessage)
     {
         var requestBody = string.Empty;
@@ -89,7 +92,7 @@ public class CacheStorageAccessor(IJSRuntime js, IAppVersionService vs) : JSModu
                 requestBody,
                 vs.Version);
         }
-        //
+        
         CurrentCacheVersion = vs.Version;
     }
 }

@@ -14,12 +14,9 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddHttpClient();
 
-
+// Add FluentUI Components (includes GlobalState service)
 builder.Services.AddFluentUIComponents();
 builder.Services.AddFluentUIServices();
-
-// Register FluentDesignTheme as a scoped service (recommended for advanced scenarios)
-builder.Services.AddScoped<FluentDesignTheme>();
 
 // Add Monaco Editor Pack services (includes HtmlSanitizer configuration)
 builder.Services.AddMonacoEditorPack();

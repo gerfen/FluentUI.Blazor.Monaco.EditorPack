@@ -54,7 +54,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<CookieConsentService>();
         services.AddHttpClient<IStaticAssetService, ServerStaticAssetService>();
         // services.AddSingleton<DemoNavProvider>();
-        services.AddScoped<FluentDesignTheme>();
+
+        // REMOVED: services.AddScoped<FluentDesignTheme>();
+        // FluentDesignTheme components should be declared in Razor markup only,
+        // not registered as services. Multiple instances with the same StorageName
+        // cause circular dependencies in the design token system.
 
         return services;
     }

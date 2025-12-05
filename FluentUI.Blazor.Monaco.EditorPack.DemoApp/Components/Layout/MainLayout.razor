@@ -1,15 +1,42 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
 
-<div class="content">
-    <CookieConsent/>
-    <FluentMessageBarProvider Section="@App.MESSAGES_TOP" Style="padding-bottom: 1rem;"/>
-    @Body
-    <FluentToastProvider MaxToastCount="10"/>
-    <FluentDialogProvider/>
-    <FluentTooltipProvider/>
-    <FluentKeyCodeProvider/>
-    <FluentMenuProvider/>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <FluentLayout>
+            <FluentHeader Fixed="true" Style="z-index: 1000;">
+                <FluentSpacer/>
+                <SiteSettings/>
+            </FluentHeader>
+            <FluentBodyContent Class="body-content">
+                <CookieConsent/>
+                <FluentMessageBarProvider Section="@App.MESSAGES_TOP" Style="padding-bottom: 1rem;"/>
+                @Body
+                <FluentToastProvider MaxToastCount="10"/>
+                <FluentDialogProvider/>
+                <FluentTooltipProvider/>
+                <FluentKeyCodeProvider/>
+                <FluentMenuProvider/>
+            </FluentBodyContent>
+        </FluentLayout>
+    </Authorized>
+    <NotAuthorized>
+        <FluentHeader Fixed="true" Style="z-index: 1000;">
+                <FluentSpacer/>
+                <SiteSettings/>
+            </FluentHeader>
+        <FluentBodyContent Class="body-content">
+            <CookieConsent/>
+            <FluentMessageBarProvider Section="@App.MESSAGES_TOP" Style="padding-bottom: 1rem;"/>
+            @Body
+            <FluentToastProvider MaxToastCount="10"/>
+            <FluentDialogProvider/>
+            <FluentTooltipProvider/>
+            <FluentKeyCodeProvider/>
+            <FluentMenuProvider/>
+        </FluentBodyContent>
+    </NotAuthorized>
+</AuthorizeView>
 
 <div id="blazor-error-ui" data-nosnippet>
     An unhandled error has occurred.

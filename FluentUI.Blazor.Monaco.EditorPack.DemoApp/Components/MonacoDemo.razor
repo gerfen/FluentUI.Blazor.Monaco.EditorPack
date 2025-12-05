@@ -14,7 +14,7 @@
     <FluentLabel Typo="Typography.H1">
         Monaco Editors Demo
     </FluentLabel>
-    <SiteSettings/>
+  
 </FluentStack>
     
 <FluentLabel Typo="Typography.Body">
@@ -25,48 +25,47 @@
         <FluentTab Id="markdown-tab" Label="Markdown Editor" Icon="@(new Icons.Regular.Size24.DocumentEdit())">
             <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px;">
                 
-                <FluentCard>
-                    <div style="height: calc(100vh - 200px); width: 100%; min-height: 500px;">
-                        <MonacoMarkdownEditor @ref="markdownEditor_"
-                                              Markdown="@MarkdownContent"
-                                              MarkdownChanged="@OnMarkdownChanged"
-                                              ExternalCss="@BuildAggregatedCss()"
-                                              Css="">
-                            <LeftContent>
-                                <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Start" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
-                                    <FluentIcon Value="@(new Icons.Regular.Size20.DocumentEdit())" />
-                                    <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
-                                        Markdown Content
-                                    </FluentLabel>
-                                </FluentStack>
-                            </LeftContent>
-                            <RightContent>
-                                <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8" HorizontalAlignment="HorizontalAlignment.End">
-                                    @if (markdownEditor_?.IsModified ?? false)
-                                    {
-                                        <FluentBadge Appearance="Appearance.Accent" BackgroundColor="var(--accent-fill-rest)">
-                                            Modified
-                                        </FluentBadge>
-                                    }
-                                    <FluentButton Appearance="Appearance.Accent" 
-                                                  OnClick="SaveMarkdown"
-                                                  IconStart="@(new Icons.Regular.Size20.Save())"
-                                                  Disabled="@(!(markdownEditor_?.IsModified ?? false))">
-                                        Save
-                                    </FluentButton>
-                                    <FluentButton Appearance="Appearance.Neutral" 
-                                                  OnClick="ResetMarkdown"
-                                                  IconStart="@(new Icons.Regular.Size20.ArrowUndo())"
-                                                  Disabled="@(!(markdownEditor_?.IsModified ?? false))">
-                                        Reset
-                                    </FluentButton>
-                                </FluentStack>
-                            </RightContent>
-                        </MonacoMarkdownEditor>
-                    </div>
-                </FluentCard>
+                <div style="height: calc(100vh - 200px); width: 100%; min-height: 500px;">
+                    <MonacoMarkdownEditor @ref="markdownEditor_"
+                                          Markdown="@MarkdownContent"
+                                          MarkdownChanged="@OnMarkdownChanged"
+                                          ExternalCss="@BuildAggregatedCss()"
+                                          Css=""
+                                          Id="test">
+                        <LeftContent>
+                            <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Start" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
+                                <FluentIcon Value="@(new Icons.Regular.Size20.DocumentEdit())" />
+                                <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                    Markdown Content
+                                </FluentLabel>
+                            </FluentStack>
+                        </LeftContent>
+                        <RightContent>
+                            <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8" HorizontalAlignment="HorizontalAlignment.End">
+                                @if (markdownEditor_?.IsModified ?? false)
+                                {
+                                    <FluentBadge Appearance="Appearance.Accent" BackgroundColor="var(--accent-fill-rest)">
+                                        Modified
+                                    </FluentBadge>
+                                }
+                                <FluentButton Appearance="Appearance.Accent" 
+                                              OnClick="SaveMarkdown"
+                                              IconStart="@(new Icons.Regular.Size20.Save())"
+                                              Disabled="@(!(markdownEditor_?.IsModified ?? false))">
+                                    Save
+                                </FluentButton>
+                                <FluentButton Appearance="Appearance.Neutral" 
+                                              OnClick="ResetMarkdown"
+                                              IconStart="@(new Icons.Regular.Size20.ArrowUndo())"
+                                              Disabled="@(!(markdownEditor_?.IsModified ?? false))">
+                                    Reset
+                                </FluentButton>
+                            </FluentStack>
+                        </RightContent>
+                    </MonacoMarkdownEditor>
+                </div>
                 
-                <FluentCard Style="background: var(--neutral-layer-2);">
+                <div style="background: var(--neutral-layer-2); padding: 16px; border-radius: 4px;">
                     <FluentStack Orientation="Orientation.Vertical" VerticalGap="8">
                         <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
                             <FluentIcon Value="@(new Icons.Regular.Size24.Info())" Color="Color.Accent" />
@@ -82,13 +81,13 @@
                             <FluentLabel Typo="Typography.Body">• Undo/Redo with modified state tracking</FluentLabel>
                         </FluentStack>
                     </FluentStack>
-                </FluentCard>
+                </div>
             </FluentStack>
         </FluentTab>
 
         <FluentTab Id="css-tab" Label="CSS Editor" Icon="@(new Icons.Regular.Size24.Code())">
             <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px; width: 80vw; max-width: 80vw;">
-                <FluentCard Style="width: 100%; max-width: none;">
+                <div style="width: 100%; max-width: none; background: var(--neutral-layer-1); padding: 16px; border-radius: 4px;">
                     <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
                         <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
                             <FluentIcon Value="@(new Icons.Regular.Size20.Code())" />
@@ -125,9 +124,9 @@
                             </FluentButton>
                         </FluentStack>
                     </FluentStack>
-                </FluentCard>
+                </div>
                 
-                <FluentCard Style="background: var(--neutral-layer-2);">
+                <div style="background: var(--neutral-layer-2); padding: 16px; border-radius: 4px;">
                     <FluentStack Orientation="Orientation.Vertical" VerticalGap="8">
                         <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
                             <FluentIcon Value="@(new Icons.Regular.Size24.Info())" Color="Color.Accent" />
@@ -143,13 +142,13 @@
                             <FluentLabel Typo="Typography.Body">• Real-time CSS validation</FluentLabel>
                         </FluentStack>
                     </FluentStack>
-                </FluentCard>
+                </div>
             </FluentStack>
         </FluentTab>
 
         <FluentTab Id="about-tab" Label="About" Icon="@(new Icons.Regular.Size24.Info())">
             <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px;">
-                <FluentCard>
+                <div style="background: var(--neutral-layer-1); padding: 20px; border-radius: 4px;">
                     <FluentStack Orientation="Orientation.Vertical" VerticalGap="16">
                         <FluentLabel Typo="Typography.H3">
                             About Monaco Editor Pack
@@ -159,6 +158,12 @@
                             The FluentUI Blazor Monaco Editor Pack provides a comprehensive integration of the Monaco Editor 
                             (the editor that powers VS Code) with FluentUI Blazor components.
                         </FluentLabel>
+                        
+                        <FluentMessageBar Intent="MessageIntent.Warning" Style="margin: 12px 0;">
+                            <strong>Note:</strong> Console warnings about "Maximum call stack size exceeded" are from a known FluentUI Web Components bug 
+                            (<a href="https://github.com/microsoft/fluentui-blazor/issues/4244" target="_blank">issue #4244</a>) 
+                            and do not affect editor functionality. This will be resolved in FluentUI Blazor 4.14+.
+                        </FluentMessageBar>
                         
                         <FluentDivider />
                         
@@ -216,20 +221,20 @@
                                 Add the package to your Blazor project:
                             </FluentLabel>
                             
-                            <FluentCard Style="background: var(--neutral-layer-2); padding: 12px;">
+                            <div style="background: var(--neutral-layer-2); padding: 12px; border-radius: 4px;">
                                 <code>dotnet add package FluentUI.Blazor.Monaco.EditorPack</code>
-                            </FluentCard>
+                            </div>
                             
                             <FluentLabel Typo="Typography.Body">
                                 Register services in <code>Program.cs</code>:
                             </FluentLabel>
                             
-                            <FluentCard Style="background: var(--neutral-layer-2); padding: 12px;">
+                            <div style="background: var(--neutral-layer-2); padding: 12px; border-radius: 4px;">
                                 <code>builder.Services.AddMonacoEditorPack();</code>
-                            </FluentCard>
+                            </div>
                         </FluentStack>
                     </FluentStack>
-                </FluentCard>
+                </div>
             </FluentStack>
         </FluentTab>
     </FluentTabs>
@@ -357,13 +362,21 @@ hr {
 
     private async Task OnMarkdownChanged(string newValue)
     {
-        MarkdownContent = newValue;
+        if (MarkdownContent != newValue)
+        {
+            MarkdownContent = newValue;
+        }
+
         await Task.CompletedTask;
     }
 
     private async Task OnCssChanged(string newValue)
     {
-        customCss_ = newValue;
+        if (newValue != null && customCss_ != newValue)
+        {
+            customCss_ = newValue;
+        }
+
         await Task.CompletedTask;
     }
     
