@@ -38,8 +38,40 @@ builder.Services.AddMonacoEditorPack();
 ```
 
 This extension method automatically configures:
-- `IHtmlSanitizer` with support for `style` tags, `class`, and `id` attributes
+- `IHtmlSanitizer` with support for `style` tags, as well as  `class`, `id`, `iframe` and `mailto` attributes
 - All required dependencies for Monaco editors
+
+### Updating App.razor
+Add the following in the ```<head>``` of ```App.razor```
+```html
+<head>
+   <link rel="stylesheet" href="_content/FluentUI.Blazor.Monaco.EditorPack/css/markdownPreview.css" />
+
+   <!-- ensure the rendermode is set as follows -->
+    <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: true)" />
+ </head>
+```
+
+Add the following inside of ```<body>```
+
+```html
+  <body>
+    <!-- Monaco Editor Package - Required Scripts -->
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/fluentUIDesignTokens.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/cssClassHarvester.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditorTheme.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditor.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownEditor.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownToolbar.js"></script>
+    <script>
+  </body>
+```
+
+
+
+
+> see [App.razor](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/master/FluentUI.Blazor.Monaco.EditorPack.DemoApp/Components/App.razor) in the supplied demo application found on GitHub
 
 ## Usage
 
@@ -136,4 +168,4 @@ Both editors automatically adapt to FluentUI theme changes:
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT License - see [LICENSE](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/master/LICENSE.txt) file for details

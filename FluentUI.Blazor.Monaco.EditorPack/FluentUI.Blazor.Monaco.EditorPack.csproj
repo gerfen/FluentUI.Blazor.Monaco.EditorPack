@@ -8,16 +8,26 @@
     
     <!-- Package Metadata -->
     <PackageId>FluentUI.Blazor.Monaco.EditorPack</PackageId>
-    <Version>0.1.6-preview</Version>
+    <Version>0.1.8-preview</Version>
     <Authors>Michael Gerfen</Authors>
     <Company>Evolution Software Design, Inc.</Company>
     <Description>Monaco-based Markdown and CSS editors for Blazor with FluentUI integration. Includes IntelliSense, syntax highlighting, and theme support.</Description>
     <PackageTags>blazor;monaco;editor;markdown;css;fluentui;intellisense</PackageTags>
-    <PackageProjectUrl>https://github.com/goschock/CivicWin</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/goschock/CivicWin</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    
+    <!-- Copyright -->
+    <Copyright>Copyright © 2025 Michael Gerfen</Copyright>
+
+    <!-- Release Notes -->
+    <PackageReleaseNotes>
+	    Initial release.
+	    Supports ServerInteractive.
+    </PackageReleaseNotes>
+
     
     <!-- Enable static web assets -->
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
