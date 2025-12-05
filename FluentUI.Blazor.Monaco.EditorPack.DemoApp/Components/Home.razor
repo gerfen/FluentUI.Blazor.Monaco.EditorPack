@@ -1,15 +1,13 @@
 ﻿@page "/"
+@using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Services
+@inject PageTitleService PageTitleService
 
-<PageTitle>Monaco EditorPack Demo</PageTitle>
+<PageTitle>FluentUI Blazor Monaco EditorPack Demo</PageTitle>
 
 <FluentStack Orientation="Orientation.Vertical" VerticalGap="24">
-    
-    <FluentLabel Typo="Typography.H1">
-        FluentUI Blazor Monaco EditorPack
-    </FluentLabel>
 
-    <FluentLabel Typo="Typography.Body">
-        A comprehensive Monaco Editor integration for Blazor with FluentUI components.
+    <FluentLabel Typo="Typography.Body" Style="margin-top: 2rem">
+        Markdown and CSS editors utlizing Monaco and FluentUI-Blazor
     </FluentLabel>
 
     <FluentCard>
@@ -23,7 +21,7 @@
                     <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
                     <FluentStack Orientation="Orientation.Vertical">
                         <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
-                            Monaco Markdown Editor
+                            Markdown Editor
                         </FluentLabel>
                         <FluentLabel Typo="Typography.Body">
                             Full-featured Markdown editing with live preview, syntax highlighting, and CSS class IntelliSense with color swatches
@@ -35,7 +33,7 @@
                     <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
                     <FluentStack Orientation="Orientation.Vertical">
                         <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
-                            Monaco CSS Editor
+                            CSS Editor
                         </FluentLabel>
                         <FluentLabel Typo="Typography.Body">
                             Advanced CSS editing with FluentUI design token IntelliSense, color decorators, and auto-completion
@@ -80,7 +78,7 @@
             </FluentStack>
             
             <FluentLabel>
-                Navigate to the <FluentAnchor Href="monaco-demo" Appearance="Appearance.Hypertext">Monaco Demo</FluentAnchor> page to test the Markdown and CSS editors.
+                Navigate to the <FluentAnchor Href="editors-demo" Appearance="Appearance.Hypertext">Editors Demo</FluentAnchor> page to test the Markdown and CSS editors.
             </FluentLabel>
             
             <FluentDivider />
@@ -101,3 +99,10 @@
     </FluentCard>
 
 </FluentStack>
+
+@code {
+    protected override void OnInitialized()
+    {
+        PageTitleService.CurrentTitle = "FluentUI-Blazor Monaco EditorPack Demo";
+    }
+}

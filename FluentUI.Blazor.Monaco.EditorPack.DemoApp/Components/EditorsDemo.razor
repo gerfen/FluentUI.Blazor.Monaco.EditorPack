@@ -1,24 +1,18 @@
-@page "/monaco-demo"
+@page "/editors-demo"
+@using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Services
 @inject IJSRuntime JsRuntime
+@inject PageTitleService PageTitleService
 @rendermode InteractiveServer
 
 @* ReSharper disable CssNotResolved *@
 @* ReSharper disable CssBrowserCompatibility *@
 
-<PageTitle>Monaco Editors Demo</PageTitle>
+<PageTitle>Editors Demo</PageTitle>
 
-<FluentStack Orientation="Orientation.Vertical" VerticalGap="20" Style="max-width: 100%; width: 100%;">
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="24">
     
-<FluentStack Orientation="Orientation.Horizontal">
-    
-    <FluentLabel Typo="Typography.H1">
-        Monaco Editors Demo
-    </FluentLabel>
-  
-</FluentStack>
-    
-<FluentLabel Typo="Typography.Body">
-        Explore the Monaco Markdown and CSS editors with live preview and IntelliSense.
+    <FluentLabel Typo="Typography.Body" Style="margin-top: 2rem">
+        Explore the Markdown and CSS editors with live preview and IntelliSense.
     </FluentLabel>
 
     <FluentTabs ActiveTabId="@activeTabId_" OnTabChange="HandleTabChange">
@@ -159,7 +153,7 @@
                             (the editor that powers VS Code) with FluentUI Blazor components.
                         </FluentLabel>
                         
-                        <FluentMessageBar Intent="MessageIntent.Warning" Style="margin: 12px 0;">
+                        <FluentMessageBar Intent="MessageIntent.Warning" Style="margin: 12px 0; background-color: var(--neutral-layer-3); color: var(--neutral-foreground-rest);">
                             <strong>Note:</strong> Console warnings about "Maximum call stack size exceeded" are from a known FluentUI Web Components bug 
                             (<a href="https://github.com/microsoft/fluentui-blazor/issues/4244" target="_blank">issue #4244</a>) 
                             and do not affect editor functionality. This will be resolved in FluentUI Blazor 4.14+.
@@ -246,6 +240,11 @@
     private MonacoCssEditor? cssEditor_;
     private string activeTabId_ = "markdown-tab";
 
+    protected override void OnInitialized()
+    {
+        PageTitleService.CurrentTitle = "Editors Demo";
+    }
+
     private async Task HandleTabChange(FluentTab tab)
     {
         activeTabId_ = tab.Id ?? "markdown-tab";
@@ -264,7 +263,7 @@
 
     private string MarkdownContent { get; set; } = @"# Welcome to Monaco Editor Pack
 
-This is a **demo**{.blue-text} of the Monaco Editor components for Blazor.
+This is a **demo**{.theme-text} of the FluentUI Monaco Editor components for Blazor.
 
 ## Features
 
@@ -301,7 +300,7 @@ public class Demo
 > Programs are meant to be read by humans and only incidentally for computers to execute.  --Donald Knuth
 ---
 
-*Powered by Monaco Editor and FluentUI Blazor*
+*Powered by Monaco Editor and FluentUI-Blazor*
 ";
 
     // Aggregate external CSS (simulating what a real app would do)
@@ -327,7 +326,7 @@ h1 {{
         return $"{ExternalCss}\n\n{customCss_}";
     }
 
-    private string customCss_ = @"/* Custom CSS with FluentUI design tokens */
+    private string customCss_ = @"/* Custom CSS with FluentUI-Blazor design tokens */
 .highlight {
     background-color: var(--accent-fill-rest);
     color: var(--neutral-foreground-on-accent);
@@ -335,7 +334,7 @@ h1 {{
     border-radius: 2px;
 }
 
-.blue-text {
+.theme-text {
     color: var(--accent-fill-rest);
     font-weight: 600;
 }

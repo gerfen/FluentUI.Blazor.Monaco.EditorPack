@@ -1,5 +1,6 @@
 using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Components;
 using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Components.Infrastructure;
+using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Services;
 using FluentUI.Blazor.Monaco.EditorPack.Extensions;
 using Microsoft.FluentUI.AspNetCore.Components;
 
@@ -20,6 +21,9 @@ builder.Services.AddFluentUIServices();
 
 // Add Monaco Editor Pack services (includes HtmlSanitizer configuration)
 builder.Services.AddMonacoEditorPack();
+
+// Add PageTitle service
+builder.Services.AddScoped<PageTitleService>();
 
 var app = builder.Build();
 
