@@ -2,6 +2,8 @@
 
 A comprehensive Razor Class Library (RCL) that provides Monaco Editor integration for Blazor applications with FluentUI components.
 
+[![NuGet](https://img.shields.io/nuget/v/FluentUI.Blazor.Monaco.EditorPack.svg)](https://www.nuget.org/api/v2/package/FluentUI.Blazor.Monaco.EditorPack/0.1.8-preview/)
+
 ## Features
 
 - **Monaco Markdown Editor** - Full-featured Markdown editor with live preview
