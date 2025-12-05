@@ -286,7 +286,11 @@ window.monacoCssEditor = {
         const selectionBackground = this.getFluentUIToken('--accent-fill-rest') || (isLightMode ? '#0078d4' : '#264f78');
         const cursorColor = this.getFluentUIToken('--accent-fill-rest') || (isLightMode ? '#000000' : '#aeafad');
         const commentColor = this.getFluentUIToken('--neutral-foreground-hint') || (isLightMode ? '#008000' : '#6a9955');
-        const hoverBackground = this.getFluentUIToken('--neutral-fill-secondary-hover') || (isLightMode ? '#f3f2f1' : '#2a2d2e');
+        // Use the most subtle hover state for IntelliSense selection - try multiple tokens in order of preference
+        const hoverBackground = this.getFluentUIToken('--neutral-fill-hover') || 
+                                this.getFluentUIToken('--neutral-fill-secondary-hover') || 
+                                this.getFluentUIToken('--neutral-layer-card-container') ||
+                                (isLightMode ? '#f5f5f5' : '#2a2a2a');
         const borderColor = this.getFluentUIToken('--neutral-stroke-layer-rest') || (isLightMode ? '#8a8886' : '#454545');
         
         // Define custom theme for CSS editor
@@ -326,7 +330,7 @@ window.monacoCssEditor = {
                 'editorSuggestWidget.background': editorBackground,
                 'editorSuggestWidget.foreground': foregroundColor,
                 'editorSuggestWidget.border': borderColor,
-                'editorSuggestWidget.selectedBackground': hoverBackground,
+                'editorSuggestWidget.selectedBackground': hoverBackground + (isLightMode ? '40' : '30'),  // Add transparency for subtlety (25-19% opacity)
                 'editorSuggestWidget.selectedForeground': foregroundColor,
                 'editorSuggestWidget.highlightForeground': selectionBackground,
                 'editorSuggestWidget.focusHighlightForeground': selectionBackground,
@@ -378,19 +382,23 @@ window.monacoCssEditor = {
 
             // Register ADDITIONAL completion provider for CSS that SUPPLEMENTS built-in IntelliSense
             monaco.languages.registerCompletionItemProvider('css', {
+                triggerCharacters: ['-', '('],  // Trigger on - and ( for var(
                 provideCompletionItems: async function(model, position) {
                     const lineContent = model.getLineContent(position.lineNumber);
                     const textBeforeCursor = lineContent.substring(0, position.column - 1);
                     
-                    // Only provide FluentUI tokens when inside var() or when typing --
-                    // This allows built-in CSS IntelliSense to work normally
-                    const isInVarFunction = /var\(\s*--[\w-]*$/.test(textBeforeCursor);
-                    const isTypingCssVariable = /:\s*--[\w-]*$/.test(textBeforeCursor) || /\(\s*--[\w-]*$/.test(textBeforeCursor);
+                    console.log('[MonacoCss] Completion provider CALLED. Text before cursor:', textBeforeCursor);
                     
-                    if (!isInVarFunction && !isTypingCssVariable) {
-                        // Return empty to let built-in CSS IntelliSense work
+                    // ONLY provide FluentUI tokens when inside var() function
+                    // Match: var(--  or  var( --  or  var(  --
+                    const isInVarFunction = /var\s*\(\s*-*$/.test(textBeforeCursor);
+                    
+                    if (!isInVarFunction) {
+                        console.log('[MonacoCss] Not in var() context, skipping');
                         return { suggestions: [] };
                     }
+                    
+                    console.log('[MonacoCss] Inside var() context, providing tokens');
                     
                     const word = model.getWordUntilPosition(position);
                     const range = {
@@ -401,13 +409,20 @@ window.monacoCssEditor = {
                     };
                     
                     // Get Fluent UI tokens as completion items
-                    const tokens = await window.fluentUIDesignTokens.toMonacoCompletionItems();
+                    let tokens = [];
+                    try {
+                        tokens = await window.fluentUIDesignTokens.toMonacoCompletionItems();
+                        console.log('[MonacoCss] Completion provider returned ' + tokens.length + ' tokens');
+                    } catch (error) {
+                        console.error('[MonacoCss] Error getting completion tokens:', error);
+                        return { suggestions: [] };
+                    }
                     
                     // Add range to each token
                     tokens.forEach(function(token) {
                         token.range = range;
-                        // Lower sort text to prioritize after built-in suggestions
-                        token.sortText = 'z' + (token.label || '');
+                        // Use '0_' prefix to sort FluentUI tokens FIRST
+                        token.sortText = '0_' + (token.label || '');
                     });
                     
                     return {
@@ -418,7 +433,7 @@ window.monacoCssEditor = {
 
             // Register hover provider for CSS variables
             monaco.languages.registerHoverProvider('css', {
-                provideHover: async function(model, position) {
+                provideHover: async function(model, position, token) {
                     const word = model.getWordAtPosition(position);
                     if (!word || !word.word.startsWith('--')) {
                         return null;
@@ -464,6 +479,15 @@ window.monacoCssEditor = {
         try {
             // Ensure Monaco is loaded
             await this.loadMonaco();
+            
+            // IMPORTANT: Harvest tokens BEFORE configuring anything
+            // This ensures tokens are available for IntelliSense on first load
+            if (window.fluentUIDesignTokens && !this.fluentUITokenProvidersRegistered) {
+                console.log('[MonacoCss] Pre-harvesting Fluent UI tokens before editor init...');
+                await window.fluentUIDesignTokens.harvestTokens();
+                const stats = await window.fluentUIDesignTokens.getStats();
+                console.log('[MonacoCss] Pre-harvest complete:', stats);
+            }
             
             // Configure CSS language defaults (color decorators, lint rules, etc.)
             this.configureCssLanguageDefaults();
