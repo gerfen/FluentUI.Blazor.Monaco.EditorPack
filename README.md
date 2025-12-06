@@ -19,6 +19,10 @@ A comprehensive Razor Class Library (RCL) that provides Monaco Editor integratio
   - Auto-completion for CSS properties
   - Theme-aware editor colors
 
+![Markdown Editor screenshot](assets/MarkdownEditor.png)
+
+![Css Editor screenshot](assets/CssEditor.png)
+
 ## Installation
 
 ### NuGet Package
