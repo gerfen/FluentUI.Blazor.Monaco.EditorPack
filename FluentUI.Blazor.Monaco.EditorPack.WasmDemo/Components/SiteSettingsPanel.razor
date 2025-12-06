@@ -1,0 +1,141 @@
+@using Microsoft.FluentUI.AspNetCore.Components.Extensions
+@implements IDialogContentComponent
+@inject IJSRuntime JSRuntime
+
+<FluentDesignTheme @ref="_theme"
+                   @bind-Mode="@Mode"
+                   @bind-OfficeColor="@OfficeColor"
+                   StorageName="theme" />
+
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="16">
+    <FluentSelect Label="Theme"
+                  Width="100%"
+                  Style="margin-bottom: 20px;"
+                  Items="@AllModes"
+                  @bind-SelectedOption="@Mode" />
+
+    <FluentSelect Label="Color"
+                  Style="margin-bottom: 20px;"
+                  Width="100%"
+                  Items="@(OfficeColorUtilities.AllColors.Cast<OfficeColor?>())"
+                  Height="200px"
+                  SelectedOption="@OfficeColor"
+                  SelectedOptionChanged="@(async (OfficeColor? newColor) => await OnColorChangedAsync(newColor))">
+        <OptionTemplate>
+            <FluentStack>
+                <FluentIcon Value="@(new Icons.Filled.Size20.RectangleLandscape())"
+                            Color="Color.Custom"
+                            CustomColor="@GetCustomColor(@context)" />
+                <FluentLabel>@context</FluentLabel>
+            </FluentStack>
+        </OptionTemplate>
+    </FluentSelect>
+
+    <FluentDivider Style="width: 100%; margin: 1rem 0" />
+
+    <FluentLabel Typo="Typography.Body">
+        Theme and color changes apply immediately to the Monaco editors and FluentUI components.
+    </FluentLabel>
+
+    <FluentButton Appearance="Appearance.Accent"
+                  Style="width: 150px; margin-top: 1rem;"
+                  OnClick="@ResetSettingsAsync">
+        Reset Settings
+    </FluentButton>
+
+    @if (!string.IsNullOrEmpty(_status))
+    {
+        <FluentLabel Typo="Typography.Body" Style="margin-top: 1rem; font-style: italic;">
+            <strong>@_status</strong>
+        </FluentLabel>
+    }
+</FluentStack>
+
+@code {
+    private FluentDesignTheme? _theme;
+    private string? _status;
+
+    public DesignThemeModes Mode { get; set; } = DesignThemeModes.System;
+    public OfficeColor? OfficeColor { get; set; }
+
+    private static IEnumerable<DesignThemeModes> AllModes => Enum.GetValues<DesignThemeModes>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            // Try to load saved theme mode from localStorage
+            var savedMode = await JSRuntime.InvokeAsync<string?>("eval", 
+                "localStorage.getItem('theme-mode')");
+            
+            if (!string.IsNullOrEmpty(savedMode) && Enum.TryParse<DesignThemeModes>(savedMode, out var mode))
+            {
+                Mode = mode;
+            }
+        }
+        catch
+        {
+            Mode = DesignThemeModes.System;
+        }
+    }
+
+    private static string? GetCustomColor(OfficeColor? color)
+    {
+        return color switch
+        {
+            null => OfficeColorUtilities.GetRandom(true).ToAttributeValue(),
+            Microsoft.FluentUI.AspNetCore.Components.OfficeColor.Default => "#036ac4",
+            _ => color.ToAttributeValue(),
+        };
+    }
+
+    private async Task OnColorChangedAsync(OfficeColor? newColor)
+    {
+        OfficeColor = newColor;
+        
+        // Give FluentDesignTheme time to apply the new color
+        await Task.Delay(100);
+
+        try
+        {
+            // Trigger Monaco Markdown editor theme refresh
+            await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.refreshAllEditorThemes");
+            Console.WriteLine("Monaco Markdown editor themes refreshed after color change");
+            
+            // Trigger Monaco CSS editor theme refresh
+            await JSRuntime.InvokeVoidAsync("monacoCssEditor.refreshAllEditorThemes");
+            Console.WriteLine("Monaco CSS editor themes refreshed after color change");
+            
+            _status = "Color updated successfully";
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to refresh Monaco editor themes: {ex.Message}");
+            _status = "Color updated (editor refresh pending)";
+        }
+    }
+
+    private async Task ResetSettingsAsync()
+    {
+        try
+        {
+            if (_theme != null)
+            {
+                await _theme.ClearLocalStorageAsync();
+            }
+
+            _status = "Settings reset! Reloading page...";
+            StateHasChanged();
+
+            // Reload page to apply reset
+            await Task.Delay(500);
+            await JSRuntime.InvokeVoidAsync("location.reload");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error resetting site settings: {ex.Message}");
+            _status = "Error resetting settings. Please try again.";
+        }
+    }
+}

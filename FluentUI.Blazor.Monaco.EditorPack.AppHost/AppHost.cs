@@ -1,16 +1,11 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-//var apiService = builder.AddProject<Projects.FluentUI_Blazor_Monaco_EditorPack_AspireApp_ApiService>("apiservice")
-//    .WithHttpHealthCheck("/health");
-
-//builder.AddProject<Projects.FluentUI_Blazor_Monaco_EditorPack_AspireApp_Web>("webfrontend")
-//    .WithExternalHttpEndpoints()
-//    .WithHttpHealthCheck("/health")
-//    .WithReference(apiService)
-//    .WaitFor(apiService);
-
-builder.AddProject<Projects.FluentUI_Blazor_Monaco_EditorPack_DemoApp>("webfrontend")
+// Server Interactive Demo (Blazor Server with SignalR)
+builder.AddProject<Projects.FluentUI_Blazor_Monaco_EditorPack_DemoApp>("server-demo")
     .WithExternalHttpEndpoints();
-   // .WithHttpHealthCheck("/health");
+
+// WebAssembly Demo (Client-side only, static hosting)
+builder.AddProject<Projects.FluentUI_Blazor_Monaco_EditorPack_WasmDemo>("wasm-demo")
+    .WithExternalHttpEndpoints();
 
 builder.Build().Run();

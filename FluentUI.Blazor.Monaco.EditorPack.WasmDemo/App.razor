@@ -1,0 +1,18 @@
+@namespace FluentUI.Blazor.Monaco.EditorPack.WasmDemo
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.FluentUI.AspNetCore.Components
+
+<FluentDesignTheme StorageName="theme" Mode="DesignThemeModes.System" />
+
+<Router AppAssembly="typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="typeof(FluentUI.Blazor.Monaco.EditorPack.WasmDemo.Components.Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="typeof(FluentUI.Blazor.Monaco.EditorPack.WasmDemo.Components.Layout.MainLayout)">
+            <FluentUI.Blazor.Monaco.EditorPack.WasmDemo.Components.Pages.NotFound />
+        </LayoutView>
+    </NotFound>
+</Router>

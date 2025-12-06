@@ -5,5 +5,6 @@
   <Project Path="FluentUI.Blazor.Monaco.EditorPack.AppHost/FluentUI.Blazor.Monaco.EditorPack.AppHost.csproj" />
   <Project Path="FluentUI.Blazor.Monaco.EditorPack.DemoApp/FluentUI.Blazor.Monaco.EditorPack.DemoApp.csproj" />
   <Project Path="FluentUI.Blazor.Monaco.EditorPack.ServiceDefaults/FluentUI.Blazor.Monaco.EditorPack.ServiceDefaults.csproj" />
+  <Project Path="FluentUI.Blazor.Monaco.EditorPack.WasmDemo/FluentUI.Blazor.Monaco.EditorPack.WasmDemo.csproj" />
   <Project Path="FluentUI.Blazor.Monaco.EditorPack/FluentUI.Blazor.Monaco.EditorPack.csproj" />
 </Solution>

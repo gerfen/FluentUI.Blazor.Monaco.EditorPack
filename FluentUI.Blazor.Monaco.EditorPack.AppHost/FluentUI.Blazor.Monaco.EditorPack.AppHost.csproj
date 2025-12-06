@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack.DemoApp\FluentUI.Blazor.Monaco.EditorPack.DemoApp.csproj" />
+    <ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack.WasmDemo\FluentUI.Blazor.Monaco.EditorPack.WasmDemo.csproj" />
   </ItemGroup>
 
 </Project>
