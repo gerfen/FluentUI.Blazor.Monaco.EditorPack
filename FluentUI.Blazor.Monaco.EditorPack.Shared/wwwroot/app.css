@@ -142,6 +142,121 @@ code {
     font-size: 1.0rem;
 }
 
+/* Markdown Preview Styles */
+.markdown-preview {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.markdown-preview h1,
+.markdown-preview h2,
+.markdown-preview h3,
+.markdown-preview h4,
+.markdown-preview h5,
+.markdown-preview h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.markdown-preview h1 {
+    font-size: 2rem;
+    border-bottom: 1px solid var(--neutral-stroke-divider-rest);
+    padding-bottom: 0.3rem;
+}
+
+.markdown-preview h2 {
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--neutral-stroke-divider-rest);
+    padding-bottom: 0.3rem;
+}
+
+.markdown-preview h3 {
+    font-size: 1.25rem;
+}
+
+.markdown-preview p {
+    margin-bottom: 1rem;
+}
+
+.markdown-preview ul,
+.markdown-preview ol {
+    padding-left: 2rem;
+    margin-bottom: 1rem;
+}
+
+.markdown-preview li {
+    margin-bottom: 0.25rem;
+}
+
+.markdown-preview code {
+    background-color: var(--neutral-layer-3);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+.markdown-preview pre {
+    background-color: var(--neutral-layer-3);
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+}
+
+.markdown-preview pre code {
+    background-color: transparent;
+    padding: 0;
+}
+
+.markdown-preview blockquote {
+    border-left: 4px solid var(--accent-fill-rest);
+    margin: 1rem 0;
+    padding-left: 1rem;
+    color: var(--neutral-foreground-rest);
+    opacity: 0.8;
+}
+
+.markdown-preview table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.markdown-preview th,
+.markdown-preview td {
+    border: 1px solid var(--neutral-stroke-rest);
+    padding: 0.5rem;
+    text-align: left;
+}
+
+.markdown-preview th {
+    background-color: var(--neutral-layer-2);
+    font-weight: 600;
+}
+
+.markdown-preview a {
+    color: var(--accent-fill-rest);
+    text-decoration: none;
+}
+
+.markdown-preview a:hover {
+    text-decoration: underline;
+}
+
+.markdown-preview hr {
+    border: none;
+    border-top: 1px solid var(--neutral-stroke-divider-rest);
+    margin: 2rem 0;
+}
+
+.markdown-preview img {
+    max-width: 100%;
+    height: auto;
+}
+
 @media (max-width: 600px) {
     .header-gutters {
         margin: 0.5rem 3rem 0.5rem 1.5rem !important;
