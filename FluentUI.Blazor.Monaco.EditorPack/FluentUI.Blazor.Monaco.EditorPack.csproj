@@ -38,6 +38,11 @@
     <SupportedPlatform Include="browser" />
   </ItemGroup>
 
+  <!-- Include root README.md in package -->
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <PackageReference Include="HtmlSanitizer" Version="9.0.886" />
     <PackageReference Include="Markdig" Version="0.41.3" />
@@ -53,9 +58,5 @@
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.13.2" />
 		<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.13.2" />
 	</ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-  </ItemGroup>
 
 </Project>
