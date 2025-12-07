@@ -1,0 +1,50 @@
+﻿@using FluentUI.Blazor.Monaco.EditorPack.Shared.Services
+@inject PageTitleService PageTitleService
+@inherits LayoutComponentBase
+@implements IDisposable
+
+<FluentLayout>
+    <FluentHeader Fixed="true" Style="z-index: 998; background: var(--neutral-layer-4); padding: 16px;">
+        <FluentLabel Typo="Typography.H1" Style="margin: 0;">
+            @PageTitleService.CurrentTitle
+        </FluentLabel>
+        <FluentSpacer/>
+        <SiteSettings/>
+    </FluentHeader>
+    <FluentBodyContent Class="body-content">
+        <CookieConsent/>
+        <FluentMessageBarProvider Section="@MESSAGES_TOP" Style="padding-bottom: 1rem;"/>
+        @Body
+        <FluentToastProvider MaxToastCount="10"/>
+        <FluentDialogProvider/>
+        <FluentTooltipProvider/>
+        <FluentKeyCodeProvider/>
+        <FluentMenuProvider/>
+    </FluentBodyContent>
+</FluentLayout>
+ 
+@code
+{
+    public const string MESSAGES_NOTIFICATION_CENTER = "NOTIFICATION_CENTER";
+    public const string MESSAGES_TOP = "TOP";
+    public const string MESSAGES_DIALOG = "DIALOG";
+    public const string MESSAGES_CARD = "CARD";
+}
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        PageTitleService.OnTitleChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        PageTitleService.OnTitleChanged -= StateHasChanged;
+    }
+}

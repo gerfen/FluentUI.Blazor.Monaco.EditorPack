@@ -1,5 +1,6 @@
 using FluentUI.Blazor.Monaco.EditorPack.Extensions;
-using FluentUI.Blazor.Monaco.EditorPack.WasmDemo.Services;
+using FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Infrastructure;
+using FluentUI.Blazor.Monaco.EditorPack.Shared.Services;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.FluentUI.AspNetCore.Components;
@@ -18,10 +19,14 @@ builder.Services.AddScoped(sp =>
 // Add FluentUI Components
 builder.Services.AddFluentUIComponents();
 
+builder.Services.AddFluentUIServices();
+
+
 // Add Monaco Editor Pack services (includes HtmlSanitizer configuration)
 builder.Services.AddMonacoEditorPack();
 
 // Add PageTitle service
 builder.Services.AddScoped<PageTitleService>();
+
 
 await builder.Build().RunAsync();

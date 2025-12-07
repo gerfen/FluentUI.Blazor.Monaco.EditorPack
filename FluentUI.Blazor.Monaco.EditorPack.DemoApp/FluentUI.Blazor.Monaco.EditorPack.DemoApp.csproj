@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack.ServiceDefaults\FluentUI.Blazor.Monaco.EditorPack.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack.Shared\FluentUI.Blazor.Monaco.EditorPack.Shared.csproj" />
     <ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack\FluentUI.Blazor.Monaco.EditorPack.csproj" />
   </ItemGroup>
 </Project>

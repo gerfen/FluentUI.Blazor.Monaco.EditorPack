@@ -1,7 +1,7 @@
 using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Components;
-using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Components.Infrastructure;
-using FluentUI.Blazor.Monaco.EditorPack.DemoApp.Services;
 using FluentUI.Blazor.Monaco.EditorPack.Extensions;
+using FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Infrastructure;
+using FluentUI.Blazor.Monaco.EditorPack.Shared.Services;
 using Microsoft.FluentUI.AspNetCore.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,13 +34,15 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+// TEMPORARILY COMMENTED OUT TO DEBUG ROUTING
+// app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+    .AddInteractiveServerRenderMode()
+    .AddAdditionalAssemblies(typeof(FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Home).Assembly);
 
 app.Run();
