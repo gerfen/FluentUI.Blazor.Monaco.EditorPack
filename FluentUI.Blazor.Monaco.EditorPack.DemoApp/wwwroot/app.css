@@ -5,6 +5,7 @@ body {
     font-family: var(--body-font);
     font-size: var(--type-ramp-base-font-size);
     line-height: var(--type-ramp-base-line-height);
+    background: var(--neutral-layer-1);
     margin: 0;
 }
 

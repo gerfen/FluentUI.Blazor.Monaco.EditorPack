@@ -19,9 +19,10 @@ body {
 }
 
 .body-content {
+    padding: 0 1.5rem;
     align-self: stretch;
     height: calc(100dvh - 86px) !important;
-    display: flex;
+    overflow-y: auto;
 }
 
 .content {
