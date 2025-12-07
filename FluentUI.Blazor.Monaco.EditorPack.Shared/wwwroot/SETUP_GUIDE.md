@@ -31,9 +31,9 @@ Uncaught RangeError: Maximum call stack size exceeded
 The bug is triggered by certain FluentUI components (particularly `FluentCard`, `FluentAccordion`, and nested design system providers) that cause circular dependency chains in the color contrast calculation.
 
 **Status:** 
-- ? **Fixed** in FluentUI Web Components 2.6.9+
-- ?? **Will be resolved** in FluentUI Blazor 4.14+ (expected release)
-- ?? **Workaround required** for FluentUI Blazor 4.13.x
+- [FIXED] **Fixed** in FluentUI Web Components 2.6.9+
+- [PENDING] **Will be resolved** in FluentUI Blazor 4.14+ (expected release)
+- [!] **Workaround required** for FluentUI Blazor 4.13.x
 
 **Workarounds:**
 1. **Minimize FluentCard usage** - Replace with styled `<div>` elements where possible
@@ -104,22 +104,32 @@ Configure your `App.razor` to include required scripts and the global `FluentDes
    
     <script src="_framework/blazor.web.js"></script>
     
-    <!-- Monaco Editor Package - Required Scripts -->
+    <!-- Monaco Editor Package - Required Scripts (Simplified) -->
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/fluentUIDesignTokens.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/cssClassHarvester.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditorTheme.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditor.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownEditor.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownToolbar.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monaco-editor-pack.js"></script>
 </body>
 </html>
 ```
 
 **Key Points:**
-- ? Place `FluentDesignTheme` in `App.razor` (global scope)
-- ? Use `StorageName="theme"` to persist user preferences
-- ?? **DO NOT** add additional `FluentDesignTheme` components in other layouts or components
+- [OK] Place `FluentDesignTheme` in `App.razor` (global scope)
+- [OK] Use `StorageName="theme"` to persist user preferences
+- [!] **DO NOT** add additional `FluentDesignTheme` components in other layouts or components
+- [OK] **Simplified script loading** - Just 2 scripts instead of 7!
+
+**Alternative: Individual Script Loading**
+If you need fine-grained control, you can still load scripts individually:
+
+```html
+<!-- Monaco Editor Package - Individual Scripts -->
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/fluentUIDesignTokens.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/cssClassHarvester.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditorTheme.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditor.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownEditor.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownToolbar.js"></script>
+```
 
 ### 2. MainLayout.razor
 
@@ -145,8 +155,8 @@ Your `MainLayout.razor` should **NOT** contain a `FluentDesignTheme` component:
 ```
 
 **Key Points:**
-- ? **DO NOT** add `FluentDesignTheme` here (it's already in App.razor)
-- ? Add FluentUI providers (Toast, Dialog, etc.)
+- [!] **DO NOT** add `FluentDesignTheme` here (it's already in App.razor)
+- [OK] Add FluentUI providers (Toast, Dialog, etc.)
 
 ### 3. Using Monaco Editors
 
@@ -316,10 +326,10 @@ public partial class SiteSettingsPanel
 ```
 
 **Key Points:**
-- ? Use `@ref="_theme"` to reference the global theme instance
-- ? Bind to `@bind-Mode`, `@bind-OfficeColor`, and `@bind-NeutralBaseColor`
-- ? Use `SelectedOptionChanged` event (not `@bind-SelectedOption`) for color changes
-- ? Call `refreshAllEditorThemes()` to update Monaco editor color swatches
+- [OK] Use `@ref="_theme"` to reference the global theme instance
+- [OK] Bind to `@bind-Mode`, `@bind-OfficeColor`, and `@bind-NeutralBaseColor`
+- [OK] Use `SelectedOptionChanged` event (not `@bind-SelectedOption`) for color changes
+- [OK] Call `refreshAllEditorThemes()` to update Monaco editor color swatches
 
 ---
 
@@ -424,12 +434,7 @@ The refresh process:
 1. Verify all required scripts are included in `App.razor`:
    ```html
    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
-   <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/fluentUIDesignTokens.js"></script>
-   <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/cssClassHarvester.js"></script>
-   <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditorTheme.js"></script>
-   <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditor.js"></script>
-   <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownEditor.js"></script>
-   <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownToolbar.js"></script>
+   <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monaco-editor-pack.js"></script>
    ```
 
 2. Check that `AddMonacoEditorPack()` is called in `Program.cs`
@@ -460,24 +465,24 @@ This is expected behavior. The Monaco editors are configured to run language ser
 ## Best Practices
 
 ### 1. Theme Management
-- ? Use ONE `FluentDesignTheme` in `App.razor`
-- ? Use `StorageName="theme"` to persist user preferences
-- ? Don't create multiple theme providers
+- [OK] Use ONE `FluentDesignTheme` in `App.razor`
+- [OK] Use `StorageName="theme"` to persist user preferences
+- [OK] Don't create multiple theme providers
 
 ### 2. Color Customization
-- ? Update Monaco editors after color changes via `refreshAllEditorThemes()`
-- ? Add a small delay (100ms) before refreshing
-- ? Use `SelectedOptionChanged` event for color dropdowns
+- [OK] Update Monaco editors after color changes via `refreshAllEditorThemes()`
+- [OK] Add a small delay (100ms) before refreshing
+- [OK] Use `SelectedOptionChanged` event for color dropdowns
 
 ### 3. Component Usage
-- ? Prefer styled `<div>` elements over `FluentCard`
-- ? Use FluentUI design tokens in styles: `var(--accent-fill-rest)`
-- ? Avoid deeply nested FluentUI components
+- [OK] Prefer styled `<div>` elements over `FluentCard`
+- [OK] Use FluentUI design tokens in styles: `var(--accent-fill-rest)`
+- [OK] Avoid deeply nested FluentUI components
 
 ### 4. Performance
-- ? Design tokens are cached after first harvest
-- ? Monaco editors are lazy-loaded from local files
-- ? Theme observers are efficient MutationObservers
+- [OK] Design tokens are cached after first harvest
+- [OK] Monaco editors are lazy-loaded from local files
+- [OK] Theme observers are efficient MutationObservers
 
 ---
 

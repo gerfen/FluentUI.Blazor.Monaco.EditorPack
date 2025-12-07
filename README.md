@@ -63,6 +63,12 @@ Add the following inside of ```<body>```
 ```html
   <body>
     <!-- Monaco Editor Package - Required Scripts -->
+    <!-- Option 1: Simple - Use the loader script (Recommended) -->
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monaco-editor-pack.js"></script>
+
+    <!-- Option 2: Individual Scripts (if you need fine-grained control) -->
+    <!--
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/fluentUIDesignTokens.js"></script>
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/cssClassHarvester.js"></script>
@@ -70,7 +76,7 @@ Add the following inside of ```<body>```
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditor.js"></script>
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownEditor.js"></script>
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownToolbar.js"></script>
-    <script>
+    -->
   </body>
 ```
 

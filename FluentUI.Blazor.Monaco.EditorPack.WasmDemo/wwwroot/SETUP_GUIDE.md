@@ -60,9 +60,9 @@ await builder.Build().RunAsync();
 ```
 
 **Key Differences from Server:**
-- ? Uses `WebAssemblyHostBuilder` instead of `WebApplication.CreateBuilder`
-- ? No render modes needed (everything is client-side)
-- ? HttpClient configured with base address for fetching assets
+- [OK] Uses `WebAssemblyHostBuilder` instead of `WebApplication.CreateBuilder`
+- [OK] No render modes needed (everything is client-side)
+- [OK] HttpClient configured with base address for fetching assets
 
 ### 2. wwwroot/index.html Configuration
 
@@ -116,23 +116,32 @@ Create `wwwroot/index.html` with all required scripts:
     <!-- Blazor WebAssembly script -->
     <script src="_framework/blazor.webassembly.js"></script>
     
-    <!-- Monaco Editor Package - Required Scripts -->
+    <!-- Monaco Editor Package - Required Scripts (Simplified) -->
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/fluentUIDesignTokens.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/cssClassHarvester.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditorTheme.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditor.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownEditor.js"></script>
-    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownToolbar.js"></script>
+    <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monaco-editor-pack.js"></script>
 </body>
 </html>
 ```
 
 **Key Points:**
-- ? Place `FluentDesignTheme` in `index.html` (global scope)
-- ? Use `blazor.webassembly.js` instead of `blazor.web.js`
-- ? NO render modes needed (WASM is always client-side)
-- ? All Monaco scripts load after Blazor WASM framework
+- [OK] Place `FluentDesignTheme` in `index.html` (global scope)
+- [OK] Use `blazor.webassembly.js` instead of `blazor.web.js`
+- [OK] NO render modes needed (WASM is always client-side)
+- [OK] **Simplified script loading** - Just 2 scripts instead of 7!
+
+**Alternative: Individual Script Loading**
+If you need fine-grained control, you can still load scripts individually:
+
+```html
+<!-- Monaco Editor Package - Individual Scripts -->
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/fluentUIDesignTokens.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/cssClassHarvester.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditorTheme.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoCssEditor.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownEditor.js"></script>
+<script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monacoMarkdownToolbar.js"></script>
+```
 
 ### 3. App.razor (WASM Version)
 
@@ -189,9 +198,9 @@ Create `wwwroot/index.html` with all required scripts:
 ```
 
 **Key Points:**
-- ? NO `FluentDesignTheme` here (already in index.html)
-- ? Add FluentUI providers
-- ? Simple layout structure
+- [OK] NO `FluentDesignTheme` here (already in index.html)
+- [OK] Add FluentUI providers
+- [OK] Simple layout structure
 
 ---
 
@@ -323,9 +332,9 @@ Create `wwwroot/index.html` with all required scripts:
 ```
 
 **WASM-Specific Features:**
-- ? Uses `localStorage` for theme persistence (no server storage)
-- ? All JS interop runs in browser
-- ? Instant theme updates with no server round-trip
+- [OK] Uses `localStorage` for theme persistence (no server storage)
+- [OK] All JS interop runs in browser
+- [OK] Instant theme updates with no server round-trip
 
 ---
 
@@ -462,20 +471,20 @@ var saved = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "markdow
 ## Best Practices
 
 ### 1. WASM-Specific
-- ? Use browser `localStorage` for persistence
-- ? Enable PWA for offline support
-- ? Compress static assets with Brotli
-- ? Lazy-load editors to reduce initial bundle
+- [OK] Use browser `localStorage` for persistence
+- [OK] Enable PWA for offline support
+- [OK] Compress static assets with Brotli
+- [OK] Lazy-load editors to reduce initial bundle
 
 ### 2. Monaco Configuration
-- ? Place ONE `FluentDesignTheme` in `index.html`
-- ? Load Monaco scripts AFTER `blazor.webassembly.js`
-- ? Use FluentUI design tokens: `var(--accent-fill-rest)`
+- [OK] Place ONE `FluentDesignTheme` in `index.html`
+- [OK] Load Monaco scripts AFTER `blazor.webassembly.js`
+- [OK] Use FluentUI design tokens: `var(--accent-fill-rest)`
 
 ### 3. Performance
-- ? Monaco files are cached by browser
-- ? Design tokens harvested once per session
-- ? Editor instances reused when possible
+- [OK] Monaco files are cached by browser
+- [OK] Design tokens harvested once per session
+- [OK] Editor instances reused when possible
 
 ---
 
