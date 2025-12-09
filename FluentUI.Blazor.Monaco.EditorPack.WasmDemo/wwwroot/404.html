@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>FluentUI Blazor Monaco Editor Pack - WASM Demo</title>
+    <script type="text/javascript">
+        // GitHub Pages SPA redirect handler
+        // This handles deep linking by converting the path to a query parameter
+        // that the main index.html can process
+        var pathSegmentsToKeep = 1;
+        var l = window.location;
+        l.replace(
+            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+            l.hash
+        );
+    </script>
+</head>
+<body>
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+        <p style="font-family: 'Segoe UI', sans-serif; font-size: 18px; color: #0078d4;">
+            Redirecting...
+        </p>
+    </div>
+</body>
+</html>
