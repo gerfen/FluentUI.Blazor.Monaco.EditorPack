@@ -45,16 +45,36 @@ jobs:
         echo "Verifying change:"
         grep "base href" publish/wasm/wwwroot/index.html
       
+    - name: Add deployment timestamp
+      run: |
+        TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+        echo "<!-- Deployed: $TIMESTAMP -->" >> publish/wasm/wwwroot/index.html
+        echo "Deployment timestamp added: $TIMESTAMP"
+      
     - name: Verify deployment files
       run: |
+        echo "=== Deployment Verification ==="
+        echo ""
+        echo "Base href:"
+        grep "base href" publish/wasm/wwwroot/index.html
+        echo ""
+        echo "Deployment timestamp:"
+        grep "Deployed:" publish/wasm/wwwroot/index.html
+        echo ""
+        echo "Checking _framework directory (first 30 files):"
+        ls -lh publish/wasm/wwwroot/_framework/ | head -30
+        echo ""
         echo "Checking for .nojekyll:"
         ls -la publish/wasm/wwwroot/.nojekyll 2>/dev/null || echo ".nojekyll not found (will be created next)"
         echo ""
-        echo "Checking _framework directory:"
-        ls -la publish/wasm/wwwroot/_framework/ | head -20
-        echo ""
-        echo "Checking _content directory:"
-        ls -la publish/wasm/wwwroot/_content/ | head -10
+        echo "Checking blazor.boot.json hash:"
+        if [ -f publish/wasm/wwwroot/_framework/blazor.boot.json ]; then
+          echo "SHA256 of blazor.boot.json:"
+          sha256sum publish/wasm/wwwroot/_framework/blazor.boot.json
+          echo ""
+          echo "First 50 lines of blazor.boot.json:"
+          head -50 publish/wasm/wwwroot/_framework/blazor.boot.json
+        fi
       
     - name: Add .nojekyll file
       run: touch publish/wasm/wwwroot/.nojekyll
