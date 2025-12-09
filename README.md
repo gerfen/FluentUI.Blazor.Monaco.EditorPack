@@ -8,21 +8,21 @@ Monaco Editor integration for Blazor with FluentUI components - includes Markdow
 
 ### **[Try the interactive demo](https://gerfen.github.io/FluentUI.Blazor.Monaco.EditorPack/)**
 
----
+
 ## Screenshots
 
 ![Markdown Editor](assets/MarkdownEditor.png)
 
 ![CSS Editor](assets/CssEditor.png)
 
----
+
 ## Features
 
 - **Markdown Editor** - Live preview, CSS class IntelliSense, toolbar, undo/redo
 - **CSS Editor** - FluentUI design token IntelliSense, color swatches, auto-completion
 - **Theme Integration** - Automatic dark/light mode support
 
----
+
 ## Quick Start
 
 ### 1. Install Package
@@ -104,19 +104,19 @@ builder.Services.AddFluentUIComponents();
     }
 }
 ```
----
+
 ## Detailed Setup
 
 - **Blazor Server**: See [Demo App Setup Guide](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/master/FluentUI.Blazor.Monaco.EditorPack.DemoApp/wwwroot/SETUP_GUIDE.md)
 - **Blazor WebAssembly**: See [WASM Demo Setup Guide](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/master/FluentUI.Blazor.Monaco.EditorPack.WasmDemo/wwwroot/SETUP_GUIDE.md)
 
----
+
 ## Requirements
 
 - .NET 9.0 or .NET 10.0
 - Microsoft.FluentUI.AspNetCore.Components 4.13.2+
 
----
+
 ## License
 
 MIT License - see [LICENSE](LICENSE.txt)

@@ -37,6 +37,25 @@ jobs:
     - name: Publish WASM app
       run: dotnet publish FluentUI.Blazor.Monaco.EditorPack.WasmDemo/FluentUI.Blazor.Monaco.EditorPack.WasmDemo.csproj -c Release -o publish/wasm
       
+    - name: Update base href for GitHub Pages
+      run: |
+        # Replace base href="/" with base href="./" in index.html
+        sed -i 's|<base href="/" />|<base href="./" />|g' publish/wasm/wwwroot/index.html
+        echo "Base href updated!"
+        echo "Verifying change:"
+        grep "base href" publish/wasm/wwwroot/index.html
+      
+    - name: Verify deployment files
+      run: |
+        echo "Checking for .nojekyll:"
+        ls -la publish/wasm/wwwroot/.nojekyll 2>/dev/null || echo ".nojekyll not found (will be created next)"
+        echo ""
+        echo "Checking _framework directory:"
+        ls -la publish/wasm/wwwroot/_framework/ | head -20
+        echo ""
+        echo "Checking _content directory:"
+        ls -la publish/wasm/wwwroot/_content/ | head -10
+      
     - name: Add .nojekyll file
       run: touch publish/wasm/wwwroot/.nojekyll
       
