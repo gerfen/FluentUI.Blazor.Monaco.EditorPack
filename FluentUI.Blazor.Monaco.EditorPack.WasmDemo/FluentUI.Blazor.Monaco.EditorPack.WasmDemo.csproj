@@ -30,5 +30,33 @@
     <ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack.Shared\FluentUI.Blazor.Monaco.EditorPack.Shared.csproj" />
     <ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack\FluentUI.Blazor.Monaco.EditorPack.csproj" />
   </ItemGroup>
+  
+  <!-- Automatically update base href during RELEASE publish for GitHub Pages -->
+  <!-- Only runs when: Configuration=Release AND IsPublishing=true -->
+  <Target Name="UpdateBaseHrefForGitHubPages" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup>
+      <IndexHtmlPath>$(PublishDir)wwwroot\index.html</IndexHtmlPath>
+      <GitHubPagesBaseHref>/FluentUI.Blazor.Monaco.EditorPack/</GitHubPagesBaseHref>
+    </PropertyGroup>
+    
+    <Message Text="[GitHub Pages] Updating base href in index.html for deployment..." Importance="high" />
+    <Message Text="[GitHub Pages] Configuration: $(Configuration)" Importance="high" />
+    
+    <!-- Read index.html -->
+    <ReadLinesFromFile File="$(IndexHtmlPath)">
+      <Output TaskParameter="Lines" ItemName="IndexHtmlLines" />
+    </ReadLinesFromFile>
+    
+    <!-- Replace base href="/" with base href="/FluentUI.Blazor.Monaco.EditorPack/" -->
+    <PropertyGroup>
+      <UpdatedIndexHtml>@(IndexHtmlLines -> '%(Identity)', '%0D%0A')</UpdatedIndexHtml>
+      <UpdatedIndexHtml>$(UpdatedIndexHtml.Replace('&lt;base href="/" /&gt;', '&lt;base href="$(GitHubPagesBaseHref)" /&gt;'))</UpdatedIndexHtml>
+    </PropertyGroup>
+    
+    <!-- Write updated index.html -->
+    <WriteLinesToFile File="$(IndexHtmlPath)" Lines="$(UpdatedIndexHtml)" Overwrite="true" />
+    
+    <Message Text="[GitHub Pages] Base href updated to: $(GitHubPagesBaseHref)" Importance="high" />
+  </Target>
 
 </Project>

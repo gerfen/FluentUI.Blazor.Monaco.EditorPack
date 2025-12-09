@@ -7,7 +7,23 @@
 (function() {
     'use strict';
     
-    const basePath = '/_content/FluentUI.Blazor.Monaco.EditorPack/js/';
+    // Automatically detect base path from document's base href
+    // This supports both local development (/) and GitHub Pages (/repo-name/)
+    function getBasePath() {
+        const baseElement = document.querySelector('base');
+        const baseHref = baseElement ? baseElement.getAttribute('href') : '/';
+        
+        // If base href is just '/', we're in local dev - use absolute path
+        if (baseHref === '/') {
+            return '/_content/FluentUI.Blazor.Monaco.EditorPack/js/';
+        }
+        
+        // Otherwise (GitHub Pages, etc.) - use relative path to respect base href
+        return '_content/FluentUI.Blazor.Monaco.EditorPack/js/';
+    }
+    
+    const basePath = getBasePath();
+    console.log('[Monaco Editor Pack] Using base path:', basePath);
     
     // Scripts must load in this order (dependencies)
     const scripts = [
