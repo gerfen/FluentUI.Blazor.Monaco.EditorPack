@@ -4,6 +4,12 @@ Monaco Editor integration for Blazor with FluentUI components - includes Markdow
 
 [![NuGet](https://img.shields.io/nuget/v/FluentUI.Blazor.Monaco.EditorPack.svg)](https://www.nuget.org/packages/FluentUI.Blazor.Monaco.EditorPack/)
 
+## ?? Live Demo
+
+Try the interactive demo: **[https://gerfen.github.io/FluentUI.Blazor.Monaco.EditorPack/](https://gerfen.github.io/FluentUI.Blazor.Monaco.EditorPack/)**
+
+## Screenshots
+
 ![Markdown Editor](assets/MarkdownEditor.png)
 
 ![CSS Editor](assets/CssEditor.png)

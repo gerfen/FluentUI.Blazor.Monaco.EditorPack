@@ -137,10 +137,12 @@ The project file includes production optimizations and **automatic base href rep
 
 <!-- Automatically updates base href during RELEASE publish for GitHub Pages -->
 <!-- Only runs when: Configuration=Release AND IsPublishing=true -->
+<!-- Uses ./ for relative paths to work in subdirectory deployment -->
 <Target Name="UpdateBaseHrefForGitHubPages" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release'">
   <PropertyGroup>
     <IndexHtmlPath>$(PublishDir)wwwroot\index.html</IndexHtmlPath>
-    <GitHubPagesBaseHref>/FluentUI.Blazor.Monaco.EditorPack/</GitHubPagesBaseHref>
+    <!-- Use relative base href for GitHub Pages subdirectory deployment -->
+    <GitHubPagesBaseHref>./</GitHubPagesBaseHref>
   </PropertyGroup>
   
   <Message Text="[GitHub Pages] Updating base href in index.html for deployment..." Importance="high" />
@@ -150,7 +152,7 @@ The project file includes production optimizations and **automatic base href rep
     <Output TaskParameter="Lines" ItemName="IndexHtmlLines" />
   </ReadLinesFromFile>
   
-  <!-- Replace base href="/" with base href="/FluentUI.Blazor.Monaco.EditorPack/" -->
+  <!-- Replace base href="/" with base href="./" for GitHub Pages -->
   <PropertyGroup>
     <UpdatedIndexHtml>@(IndexHtmlLines -> '%(Identity)', '%0D%0A')</UpdatedIndexHtml>
     <UpdatedIndexHtml>$(UpdatedIndexHtml.Replace('&lt;base href="/" /&gt;', '&lt;base href="$(GitHubPagesBaseHref)" /&gt;'))</UpdatedIndexHtml>
@@ -164,10 +166,16 @@ The project file includes production optimizations and **automatic base href rep
 
 **This ensures:**
 - ✅ Debug builds (`dotnet run`, `dotnet publish -c Debug`) → Always use `<base href="/" />`
-- ✅ Release builds (`dotnet publish -c Release`) → Automatically updates to `<base href="/FluentUI.Blazor.Monaco.EditorPack/" />`
+- ✅ Release builds (`dotnet publish -c Release`) → Automatically updates to `<base href="./" />`
 - ✅ MSBuild target only runs in **Release mode** via `Condition="'$(Configuration)' == 'Release'"`
-- ✅ GitHub Pages base href is configurable via `<GitHubPagesBaseHref>` property
+- ✅ **Relative base href (`./`)** works for GitHub Pages subdirectory deployment
 - ✅ Source control always has `/` in index.html
+
+**Why use `./` instead of `/FluentUI.Blazor.Monaco.EditorPack/`?**
+- Relative paths (`./`) work regardless of deployment path
+- No hardcoding of repository name
+- Works for custom domains too
+- Blazor automatically resolves paths relative to `./`
 
 **Configuration Matrix:**
 
@@ -175,7 +183,7 @@ The project file includes production optimizations and **automatic base href rep
 |---------|--------------|-------------------|----------|
 | `dotnet run` | Debug | `/` | Local development (Aspire) |
 | `dotnet publish -c Debug` | Debug | `/` | Test published Debug build locally |
-| `dotnet publish -c Release` | Release | `/FluentUI.Blazor.Monaco.EditorPack/` | GitHub Pages deployment |
+| `dotnet publish -c Release` | Release | `./` | GitHub Pages deployment (subdirectory-safe) |
 
 
 ---

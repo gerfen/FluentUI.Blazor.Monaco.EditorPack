@@ -8,17 +8,18 @@
     'use strict';
     
     // Automatically detect base path from document's base href
-    // This supports both local development (/) and GitHub Pages (/repo-name/)
+    // This supports both local development (/) and GitHub Pages (./ or /repo-name/)
     function getBasePath() {
         const baseElement = document.querySelector('base');
         const baseHref = baseElement ? baseElement.getAttribute('href') : '/';
         
-        // If base href is just '/', we're in local dev - use absolute path
+        // If base href is just '/' or './', we're in local dev or relative deployment - use absolute path for local, relative for deployment
         if (baseHref === '/') {
+            // Local development - use absolute path
             return '/_content/FluentUI.Blazor.Monaco.EditorPack/js/';
         }
         
-        // Otherwise (GitHub Pages, etc.) - use relative path to respect base href
+        // GitHub Pages or other relative deployment - use relative path
         return '_content/FluentUI.Blazor.Monaco.EditorPack/js/';
     }
     

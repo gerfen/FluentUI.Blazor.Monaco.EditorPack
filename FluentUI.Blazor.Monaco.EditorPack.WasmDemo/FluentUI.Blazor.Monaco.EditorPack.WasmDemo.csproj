@@ -33,10 +33,12 @@
   
   <!-- Automatically update base href during RELEASE publish for GitHub Pages -->
   <!-- Only runs when: Configuration=Release AND IsPublishing=true -->
+  <!-- Uses ./ for relative paths to work in subdirectory deployment -->
   <Target Name="UpdateBaseHrefForGitHubPages" AfterTargets="Publish" Condition="'$(Configuration)' == 'Release'">
     <PropertyGroup>
       <IndexHtmlPath>$(PublishDir)wwwroot\index.html</IndexHtmlPath>
-      <GitHubPagesBaseHref>/FluentUI.Blazor.Monaco.EditorPack/</GitHubPagesBaseHref>
+      <!-- Use relative base href for GitHub Pages subdirectory deployment -->
+      <GitHubPagesBaseHref>./</GitHubPagesBaseHref>
     </PropertyGroup>
     
     <Message Text="[GitHub Pages] Updating base href in index.html for deployment..." Importance="high" />
@@ -47,7 +49,7 @@
       <Output TaskParameter="Lines" ItemName="IndexHtmlLines" />
     </ReadLinesFromFile>
     
-    <!-- Replace base href="/" with base href="/FluentUI.Blazor.Monaco.EditorPack/" -->
+    <!-- Replace base href="/" with base href="./" for GitHub Pages -->
     <PropertyGroup>
       <UpdatedIndexHtml>@(IndexHtmlLines -> '%(Identity)', '%0D%0A')</UpdatedIndexHtml>
       <UpdatedIndexHtml>$(UpdatedIndexHtml.Replace('&lt;base href="/" /&gt;', '&lt;base href="$(GitHubPagesBaseHref)" /&gt;'))</UpdatedIndexHtml>
