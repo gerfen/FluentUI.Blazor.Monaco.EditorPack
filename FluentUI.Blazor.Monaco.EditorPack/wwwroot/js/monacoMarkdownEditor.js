@@ -7,6 +7,22 @@ window.monacoMarkdownEditor = {
     monacoLoaded: false,
     cssClassProviderRegistered: false,
 
+    /**
+     * Get base path for _content resources (respects base href)
+     */
+    getContentBasePath: function() {
+        const baseElement = document.querySelector('base');
+        const baseHref = baseElement ? baseElement.getAttribute('href') : '/';
+        
+        // If base href is just '/', use absolute path (local dev)
+        if (baseHref === '/') {
+            return '/_content/FluentUI.Blazor.Monaco.EditorPack';
+        }
+        
+        // Otherwise use relative path (GitHub Pages, etc.)
+        return '_content/FluentUI.Blazor.Monaco.EditorPack';
+    },
+
     // Load Monaco Editor from LOCAL files (bundled in wwwroot)
     loadMonaco: async function() {
         if (this.monacoLoaded) {
@@ -18,23 +34,33 @@ window.monacoMarkdownEditor = {
         }
 
         this.monacoLoadPromise = new Promise((resolve, reject) => {
+            const contentBasePath = this.getContentBasePath();
+            const monacoBasePath = `${contentBasePath}/lib/monaco-editor/min/vs`;
+            
+            console.log('[MonacoMarkdown] Monaco base path:', monacoBasePath);
+            
             // Configure Monaco's AMD loader to use local files from RCL static assets
             require.config({ 
                 paths: { 
-                    'vs': '/_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs'
+                    'vs': monacoBasePath
                 }
             });
 
             require(['vs/editor/editor.main'], () => {
-                // Configure Monaco environment for web workers with absolute URL
+                // Configure Monaco environment for web workers with dynamic base URL
                 const baseUrl = window.location.origin;
+                const baseHref = document.querySelector('base')?.getAttribute('href') || '/';
+                const workerBasePath = baseHref === '/' 
+                    ? '/_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/'
+                    : `${baseUrl}${baseHref}_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/`;
+                
                 window.MonacoEnvironment = {
                     getWorkerUrl: function(workerId, label) {
                         return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
                             self.MonacoEnvironment = {
-                                baseUrl: '${baseUrl}/_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/'
+                                baseUrl: '${workerBasePath}'
                             };
-                            importScripts('${baseUrl}/_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/base/worker/workerMain.js');
+                            importScripts('${workerBasePath}vs/base/worker/workerMain.js');
                         `)}`;
                     }
                 };

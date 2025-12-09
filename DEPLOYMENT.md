@@ -320,6 +320,34 @@ After pushing to `master` (or manually deploying):
   <link href="/_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" rel="stylesheet" />
   ```
 
+### Issue: Monaco Editor not loading (404 on editor.main.js)
+
+**Cause**: Monaco's AMD loader (`require.config`) was using absolute paths which don't respect the base href.
+
+**Fix**:
+- Both `monacoCssEditor.js` and `monacoMarkdownEditor.js` now use smart path detection
+- They check the `<base href>` value and adjust Monaco's loader paths accordingly:
+
+```javascript
+getContentBasePath: function() {
+    const baseElement = document.querySelector('base');
+    const baseHref = baseElement ? baseElement.getAttribute('href') : '/';
+    
+    // If base href is just '/', use absolute path (local dev)
+    if (baseHref === '/') {
+        return '/_content/FluentUI.Blazor.Monaco.EditorPack';
+    }
+    
+    // Otherwise use relative path (GitHub Pages, etc.)
+    return '_content/FluentUI.Blazor.Monaco.EditorPack';
+}
+```
+
+**This fixes:**
+- ✅ Monaco AMD loader paths (`require.config`)
+- ✅ Monaco web worker paths (`MonacoEnvironment.getWorkerUrl`)
+- ✅ All Monaco static assets (editor.main.js, worker files, etc.)
+
 ---
 
 ## 📝 Local Testing with GitHub Pages Base Href
