@@ -21,6 +21,7 @@ Monaco Editor integration for Blazor with FluentUI components - includes Markdow
 - **Markdown Editor** - Live preview, CSS class IntelliSense, toolbar, undo/redo
 - **CSS Editor** - FluentUI design token IntelliSense, color swatches, auto-completion
 - **Theme Integration** - Automatic dark/light mode support
+- **Monaco lifecycle hooks (Markdown)** - Run code *before* Monaco is created and *after* the editor instance is available
 
 
 ## Quick Start
@@ -82,6 +83,42 @@ builder.Services.AddFluentUIComponents();
     private Task OnChanged(string newContent)
     {
         content = newContent;
+        return Task.CompletedTask;
+    }
+}
+```
+
+**Monaco lifecycle hooks (Markdown Editor):**
+
+`MonacoMarkdownEditor` exposes two optional hooks:
+
+- `OnBeforeMonacoCreated`: called once before the JS `init` creates Monaco. Use this to register languages, configure global Monaco settings, etc.
+- `OnMonacoInitialized`: called once after Monaco is initialized and the editor instance is available.
+
+```razor
+<MonacoMarkdownEditor Markdown="@content"
+                      MarkdownChanged="@OnChanged"
+                      OnBeforeMonacoCreated="@BeforeCreated"
+                      OnMonacoInitialized="@AfterInitialized" />
+
+@code {
+    private string content = "# Hello World";
+
+    private Task OnChanged(string newContent)
+    {
+        content = newContent;
+        return Task.CompletedTask;
+    }
+
+    private Task BeforeCreated(IJSRuntime js)
+    {
+        // Use JS interop to set up Monaco before creation (languages, themes, etc.)
+        return Task.CompletedTask;
+    }
+
+    private Task AfterInitialized(IJSObjectReference editor)
+    {
+        // JS editor instance is available (set options, add actions, etc.)
         return Task.CompletedTask;
     }
 }
