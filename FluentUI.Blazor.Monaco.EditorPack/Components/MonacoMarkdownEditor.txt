@@ -76,7 +76,7 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
         public Func<IJSObjectReference, Task>? OnMonacoInitialized { get; set; }
 
         [Parameter]
-        public Func<IJSRuntime, Task>? OnBeforeMonacoCreated { get; set; }
+        public Func<IJSRuntime, Task>? BeforeMonacoCreate { get; set; }
 
 
         private CancellationTokenSource? cancellationTokenSource_;
@@ -101,9 +101,9 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
             {
                 try
                 {
-                    if (OnBeforeMonacoCreated is not null)
+                    if (BeforeMonacoCreate is not null)
                     {
-                        await OnBeforeMonacoCreated.Invoke(JSRuntime);
+                        await BeforeMonacoCreate.Invoke(JSRuntime);
                     }
 
                     // Create .NET object reference for callbacks

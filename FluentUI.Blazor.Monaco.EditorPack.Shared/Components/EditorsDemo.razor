@@ -24,6 +24,8 @@
                     <MonacoMarkdownEditor @ref="markdownEditor_"
                                           Markdown="@MarkdownContent"
                                           MarkdownChanged="@OnMarkdownChanged"
+                                          OnMonacoInitialized="@InitExternalMonacoConfiguration"
+                                          OnBeforeMonacoCreated="@BeforeMonacoCreated"
                                           ExternalCss="@BuildAggregatedCss()"
                                           Css=""
                                           Id="test">
@@ -268,6 +270,17 @@ hr {
 
 ";
 
+    private async Task InitExternalMonacoConfiguration(IJSObjectReference editor)
+    {
+        Console.WriteLine("InitExternalMonacoConfiguration called.");
+    }
+
+    private Task BeforeMonacoCreated(IJSRuntime arg)
+    {
+        Console.WriteLine("BeforeMonacoCreated called.");
+        return Task.CompletedTask;
+    }
+
     private async Task OnMarkdownChanged(string? newValue)
     {
         if (newValue != null && MarkdownContent != newValue)
@@ -315,4 +328,7 @@ hr {
             await cssEditor_.CancelAsync();
         }
     }
+
+   
+
 }
