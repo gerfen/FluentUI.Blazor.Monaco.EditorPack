@@ -22,6 +22,7 @@ Monaco Editor integration for Blazor with FluentUI components - includes Markdow
 - **CSS Editor** - FluentUI design token IntelliSense, color swatches, auto-completion
 - **Theme Integration** - Automatic dark/light mode support
 - **Monaco lifecycle hooks (Markdown)** - Run code *before* Monaco is created and *after* the editor instance is available
+- **Configurable Markdig pipeline (Markdown)** - Toggle common Markdig extensions via `MarkdownOptions`
 
 
 ## Quick Start
@@ -80,6 +81,45 @@ builder.Services.AddFluentUIComponents();
     private MonacoMarkdownEditor? editor;
     private string content = "# Hello World";
     
+    private Task OnChanged(string newContent)
+    {
+        content = newContent;
+        return Task.CompletedTask;
+    }
+}
+```
+
+**Configure Markdig switches (Markdown preview):**
+
+`MonacoMarkdownEditor` uses Markdig to render the live preview. You can toggle common Markdig extensions by providing `MarkdownOptions`.
+
+```razor
+@using FluentUI.Blazor.Monaco.EditorPack.Markdown
+
+<MonacoMarkdownEditor Markdown="@content"
+                      MarkdownChanged="@OnChanged"
+                      MarkdownOptions="@options" />
+
+@code {
+    private string content = "# Hello World";
+
+    private readonly MarkdownOptions options = new()
+    {
+        EnableFrontMatter = true,
+        EnableTables = true,
+        EnableGridTables = false,
+        EnableTaskLists = true,
+        EnableFootnotes = false,
+        EnableGenericAttributes = true,
+        EnableAutoIdentifiers = true,
+        EnableAutoLinks = true,
+        EnableSmartyPants = false,
+        EnableFigures = false,
+        EnableEmphasisExtras = true,
+        EnableListExtras = true,
+        EnableFencedCodeBlocks = true
+    };
+
     private Task OnChanged(string newContent)
     {
         content = newContent;
