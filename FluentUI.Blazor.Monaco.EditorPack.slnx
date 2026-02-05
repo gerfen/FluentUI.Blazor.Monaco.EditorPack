@@ -2,10 +2,16 @@
   <Folder Name="/Documentation/">
     <File Path="README.md" />
   </Folder>
-  <Project Path="FluentUI.Blazor.Monaco.EditorPack.AppHost/FluentUI.Blazor.Monaco.EditorPack.AppHost.csproj" />
-  <Project Path="FluentUI.Blazor.Monaco.EditorPack.DemoApp/FluentUI.Blazor.Monaco.EditorPack.DemoApp.csproj" />
-  <Project Path="FluentUI.Blazor.Monaco.EditorPack.ServiceDefaults/FluentUI.Blazor.Monaco.EditorPack.ServiceDefaults.csproj" />
-  <Project Path="FluentUI.Blazor.Monaco.EditorPack.Shared/FluentUI.Blazor.Monaco.EditorPack.Shared.csproj" Id="9117261d-7b92-485a-b9be-7dc528aaf25c" />
-  <Project Path="FluentUI.Blazor.Monaco.EditorPack.WasmDemo/FluentUI.Blazor.Monaco.EditorPack.WasmDemo.csproj" />
-  <Project Path="FluentUI.Blazor.Monaco.EditorPack/FluentUI.Blazor.Monaco.EditorPack.csproj" />
+  <Folder Name="/src/">
+    <Project Path="FluentUI.Blazor.Monaco.EditorPack.AppHost/FluentUI.Blazor.Monaco.EditorPack.AppHost.csproj" />
+    <Project Path="FluentUI.Blazor.Monaco.EditorPack.DemoApp/FluentUI.Blazor.Monaco.EditorPack.DemoApp.csproj" />
+    <Project Path="FluentUI.Blazor.Monaco.EditorPack.ServiceDefaults/FluentUI.Blazor.Monaco.EditorPack.ServiceDefaults.csproj" />
+    <Project Path="FluentUI.Blazor.Monaco.EditorPack.Shared/FluentUI.Blazor.Monaco.EditorPack.Shared.csproj" Id="9117261d-7b92-485a-b9be-7dc528aaf25c" />
+    <Project Path="FluentUI.Blazor.Monaco.EditorPack.WasmDemo/FluentUI.Blazor.Monaco.EditorPack.WasmDemo.csproj" />
+    <Project Path="FluentUI.Blazor.Monaco.EditorPack/FluentUI.Blazor.Monaco.EditorPack.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="FluentUI.Blazor.Monaco.EditorPack.BUnitTests/FluentUI.Blazor.Monaco.EditorPack.BUnitTests.csproj" />
+    <Project Path="FluentUI.Blazor.Monaco.EditorPack.Tests/FluentUI.Blazor.Monaco.EditorPack.Tests.csproj" />
+  </Folder>
 </Solution>
