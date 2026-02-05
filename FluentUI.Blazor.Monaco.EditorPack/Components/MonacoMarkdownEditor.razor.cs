@@ -3,6 +3,7 @@ using Markdig;
 using Microsoft.AspNetCore.Components;
 using FluentUI.Blazor.Monaco.EditorPack.Memento;
 using Microsoft.JSInterop;
+using FluentUI.Blazor.Monaco.EditorPack.Markdown;
 
 namespace FluentUI.Blazor.Monaco.EditorPack.Components
 {
@@ -51,6 +52,9 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
 
         [Parameter]
         public string? Css { get; set; }
+
+        [Parameter]
+        public MarkdownOptions? MarkdownOptions { get; set; }
         
         /// <summary>
         /// External CSS content to provide IntelliSense for class names.
@@ -240,20 +244,28 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
             }
         }
 
-        private static MarkdownPipeline? markdownPipeline_;
-        private static MarkdownPipeline MarkdownPipeline
+        private static MarkdownPipeline? defaultMarkdownPipeline_;
+
+        private MarkdownPipeline GetMarkdownPipeline()
         {
-            get
+            // If no options provided, keep previous behavior deterministic by using the existing default pipeline.
+            if (MarkdownOptions is null)
             {
-                if (markdownPipeline_ == null)
-                {
-                    markdownPipeline_ = new MarkdownPipelineBuilder()
-                        .UseAdvancedExtensions() // Includes fenced code blocks, tables, etc.
-                        .UseGenericAttributes() // Allows setting classes on elements
-                        .Build();
-                }
-                return markdownPipeline_;
+                return defaultMarkdownPipeline_ ??= CreateLegacyDefaultPipeline();
             }
+
+            return MarkdownPipelineFactory.BuildPipeline(MarkdownOptions);
+        }
+
+        private static MarkdownPipeline CreateLegacyDefaultPipeline()
+        {
+            var pipeline = new MarkdownPipelineBuilder()
+                .UseAdvancedExtensions() // Includes fenced code blocks, tables, etc.
+                .UseGenericAttributes() // Allows setting classes on elements
+                .UseYamlFrontMatter()
+                .Build();
+
+            return pipeline;
         }
 
         private MarkupString CreateMarkupString()
@@ -265,7 +277,7 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
                 return new MarkupString(string.Empty);
             }
 
-            var html = Markdig.Markdown.ToHtml(content, MarkdownPipeline);
+            var html = Markdig.Markdown.ToHtml(content, GetMarkdownPipeline());
             
             // Always sanitize HTML if sanitizer is available (injected via DI)
             if (HtmlSanitizer != null)

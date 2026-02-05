@@ -8,7 +8,7 @@
     
     <!-- Package Metadata -->
     <PackageId>FluentUI.Blazor.Monaco.EditorPack</PackageId>
-    <Version>0.1.11-preview</Version>
+    <Version>0.1.12-preview</Version>
     <Authors>Michael Gerfen</Authors>
     <Company>Evolution Software Design, Inc.</Company>
     <Description>Monaco-based Markdown and CSS editors for Blazor with FluentUI integration. Includes IntelliSense, syntax highlighting, and theme support.</Description>
