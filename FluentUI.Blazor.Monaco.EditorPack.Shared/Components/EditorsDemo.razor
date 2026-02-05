@@ -1,6 +1,7 @@
 @page "/editors-demo"
 @namespace FluentUI.Blazor.Monaco.EditorPack.Shared.Components
 
+@using FluentUI.Blazor.Monaco.EditorPack.Markdown
 @using FluentUI.Blazor.Monaco.EditorPack.Shared.Services
 @inject IJSRuntime JsRuntime
 @inject PageTitleService PageTitleService
@@ -22,6 +23,9 @@
                 
                 <div style="height: calc(100vh - 200px); width: 100%; min-height: 500px;">
                     <MonacoMarkdownEditor @ref="markdownEditor_"
+                                          MarkdownOptions="new MarkdownOptions() {
+                                              EnableGridTables = true,
+                                          }"
                                           Markdown="@MarkdownContent"
                                           MarkdownChanged="@OnMarkdownChanged"
                                           OnMonacoInitialized="@InitExternalMonacoConfiguration"
@@ -172,7 +176,11 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    private string MarkdownContent { get; set; } = @"# Welcome to Monaco Editor Pack
+    private string MarkdownContent { get; set; } = @"---
+title: Hello
+tags: [a, b, c]
+---
+# Welcome to Monaco Editor Pack
 
 This is a **demo**{.theme-text} of the FluentUI Monaco Editor components for Blazor.
 
@@ -202,11 +210,20 @@ public class Demo
     public string Message { get; set; } = ""Hello, Monaco!"";
 }
 ```
-
+#### Render a table
 | Header 1 | Header 2 | Header 3 |
 | -------- | -------- | -------- |
 | Cell 1   | Cell 2   | Cell 3   |
 | Cell 4   | Cell 5   | Cell 6   |
+
+#### Render a GridTable
++-----------+---------------------------+
+| Header A  | Header B                  |
++===========+===========================+
+| Row 1     | Cell spanning two rows    |
++-----------+                           |
+| Row 2     |                           |
++-----------+---------------------------+
 
 > Programs are meant to be read by humans and only incidentally for computers to execute.  --Donald Knuth
 ---
