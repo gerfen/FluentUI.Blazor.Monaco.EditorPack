@@ -77,7 +77,7 @@ public class MonacoMarkdownEditorBUnitTests : TestContext
         var cut = RenderComponent<MonacoMarkdownEditor>(parameters =>
             parameters
                 .Add(p => p.Markdown, "Hello")
-                .Add(p => p.OnBeforeMonacoCreated, _ =>
+                .Add(p => p.BeforeCreated, _ =>
                 {
                     called++;
                     return Task.CompletedTask;

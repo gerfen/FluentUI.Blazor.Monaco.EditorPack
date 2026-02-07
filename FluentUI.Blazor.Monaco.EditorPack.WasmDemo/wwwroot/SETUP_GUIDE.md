@@ -146,7 +146,7 @@ await builder.Build().RunAsync();
 ```razor
 <div style="height: 600px;">
     <MonacoCssEditor @ref="cssEditor"
-                     Css="@cssContent"
+                     AdditionalCss="@cssContent"
                      CssChanged="@OnCssChanged" />
 </div>
 

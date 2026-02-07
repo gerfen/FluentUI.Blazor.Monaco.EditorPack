@@ -138,8 +138,8 @@ builder.Services.AddFluentUIComponents();
 ```razor
 <MonacoMarkdownEditor Markdown="@content"
                       MarkdownChanged="@OnChanged"
-                      OnBeforeMonacoCreated="@BeforeCreated"
-                      OnMonacoInitialized="@AfterInitialized" />
+                      BeforeCreated="@OnBeforeCreated"
+                      AfterInitialized="@OnAfterInitialized" />
 
 @code {
     private string content = "# Hello World";
@@ -150,13 +150,13 @@ builder.Services.AddFluentUIComponents();
         return Task.CompletedTask;
     }
 
-    private Task BeforeCreated(IJSRuntime js)
+    private Task OnBeforeCreated(IJSRuntime js)
     {
         // Use JS interop to set up Monaco before creation (languages, themes, etc.)
         return Task.CompletedTask;
     }
 
-    private Task AfterInitialized(IJSObjectReference editor)
+    private Task OnAfterInitialized(IJSObjectReference editor)
     {
         // JS editor instance is available (set options, add actions, etc.)
         return Task.CompletedTask;

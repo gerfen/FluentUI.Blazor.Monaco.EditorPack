@@ -28,10 +28,10 @@
                                           }"
                                           Markdown="@MarkdownContent"
                                           MarkdownChanged="@OnMarkdownChanged"
-                                          OnMonacoInitialized="@InitExternalMonacoConfiguration"
-                                          OnBeforeMonacoCreated="@BeforeMonacoCreated"
+                                          AfterInitialized="@InitExternalMonacoConfiguration"
+                                          BeforeCreated="@BeforeMonacoCreated"
                                           ExternalCss="@BuildAggregatedCss()"
-                                          Css=""
+                                          AdditionalCss=""
                                           Id="test">
                         <LeftContent>
                             <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Start" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
