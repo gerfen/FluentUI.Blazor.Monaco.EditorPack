@@ -1,13 +1,16 @@
-# FluentUI Blazor Monaco Editor Pack
+﻿# FluentUI Blazor Monaco Editor Pack
 
-Monaco Editor integration for Blazor with FluentUI components - includes Markdown and CSS editors with IntelliSense, live preview, and theme integration.
+Monaco Editor integration for Blazor with FluentUI components — includes Markdown and CSS editors with IntelliSense, live preview, and theme integration.
 
 [![NuGet](https://img.shields.io/nuget/v/FluentUI.Blazor.Monaco.EditorPack.svg)](https://www.nuget.org/packages/FluentUI.Blazor.Monaco.EditorPack/)
+
+---
 
 ## Live Demo
 
 ### **[Try the interactive demo](https://gerfen.github.io/FluentUI.Blazor.Monaco.EditorPack/)**
 
+---
 
 ## Screenshots
 
@@ -15,15 +18,26 @@ Monaco Editor integration for Blazor with FluentUI components - includes Markdow
 
 ![CSS Editor](assets/CssEditor.png)
 
+---
 
 ## Features
 
-- **Markdown Editor** - Live preview, CSS class IntelliSense, toolbar, undo/redo
-- **CSS Editor** - FluentUI design token IntelliSense, color swatches, auto-completion
-- **Theme Integration** - Automatic dark/light mode support
-- **Monaco lifecycle hooks (Markdown)** - Run code *before* Monaco is created and *after* the editor instance is available
-- **Configurable Markdig pipeline (Markdown)** - Toggle common Markdig extensions via `MarkdownOptions`
+- **Markdown Editor** — Live preview, CSS class IntelliSense, toolbar, undo/redo  
+- **CSS Editor** — FluentUI design token IntelliSense, color swatches, auto‑completion  
+- **Theme Integration** — Automatic dark/light mode support  
+- **Monaco lifecycle hooks** — Run code *before* Monaco is created and *after* the editor instance is available  
+- **Configurable Markdig pipeline** — Toggle common Markdig extensions via `MarkdownOptions`  
+- **Unified Monaco configuration** — Strongly‑typed `MonacoOptions` for editor behavior, theme, and front‑matter support  
 
+---
+
+## 📘 Migration Guide
+
+If you are upgrading from **0.1.x** to **0.2.0‑preview**, please read the migration guide:
+
+➡️ **[Migration Guide](MIGRATION_GUIDE.md)**
+
+---
 
 ## Quick Start
 
@@ -45,12 +59,13 @@ builder.Services.AddFluentUIComponents();
 ### 3. Add Scripts
 
 **Blazor Server** (`App.razor`):
+
 ```html
 <body>
     <FluentDesignTheme StorageName="theme" />
     <Routes @rendermode="new InteractiveServerRenderMode(prerender: true)" />
     <script src="_framework/blazor.web.js"></script>
-    
+
     <!-- Monaco Editor Scripts -->
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monaco-editor-pack.js"></script>
@@ -58,20 +73,24 @@ builder.Services.AddFluentUIComponents();
 ```
 
 **Blazor WebAssembly** (`index.html`):
+
 ```html
 <body>
     <div id="app">...</div>
     <script src="_framework/blazor.webassembly.js"></script>
-    
+
     <!-- Monaco Editor Scripts -->
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monaco-editor-pack.js"></script>
 </body>
 ```
 
-### 4. Use Components
+---
 
-**Markdown Editor:**
+## Using the Components
+
+### Markdown Editor
+
 ```razor
 <MonacoMarkdownEditor @ref="editor"
                       Markdown="@content"
@@ -80,7 +99,7 @@ builder.Services.AddFluentUIComponents();
 @code {
     private MonacoMarkdownEditor? editor;
     private string content = "# Hello World";
-    
+
     private Task OnChanged(string newContent)
     {
         content = newContent;
@@ -89,9 +108,7 @@ builder.Services.AddFluentUIComponents();
 }
 ```
 
-**Configure Markdig switches (Markdown preview):**
-
-`MonacoMarkdownEditor` uses Markdig to render the live preview. You can toggle common Markdig extensions by providing `MarkdownOptions`.
+### Configuring Markdig (Markdown Preview)
 
 ```razor
 @using FluentUI.Blazor.Monaco.EditorPack.Markdown
@@ -103,18 +120,13 @@ builder.Services.AddFluentUIComponents();
 @code {
     private string content = "# Hello World";
 
-    private readonly MarkdownOptions options = new()
-    {
+    private readonly MarkdownOptions options = new() {
         EnableFrontMatter = true,
         EnableTables = true,
-        EnableGridTables = false,
         EnableTaskLists = true,
-        EnableFootnotes = false,
         EnableGenericAttributes = true,
         EnableAutoIdentifiers = true,
         EnableAutoLinks = true,
-        EnableSmartyPants = false,
-        EnableFigures = false,
         EnableEmphasisExtras = true,
         EnableListExtras = true,
         EnableFencedCodeBlocks = true
@@ -128,12 +140,12 @@ builder.Services.AddFluentUIComponents();
 }
 ```
 
-**Monaco lifecycle hooks (Markdown Editor):**
+### Monaco Lifecycle Hooks
 
-`MonacoMarkdownEditor` exposes two optional hooks:
+`MonacoMarkdownEditor` exposes two optional lifecycle hooks:
 
-- `OnBeforeMonacoCreated`: called once before the JS `init` creates Monaco. Use this to register languages, configure global Monaco settings, etc.
-- `OnMonacoInitialized`: called once after Monaco is initialized and the editor instance is available.
+- `BeforeCreated` — called before Monaco is created  
+- `AfterInitialized` — called after the editor instance is available  
 
 ```razor
 <MonacoMarkdownEditor Markdown="@content"
@@ -152,19 +164,20 @@ builder.Services.AddFluentUIComponents();
 
     private Task OnBeforeCreated(IJSRuntime js)
     {
-        // Use JS interop to set up Monaco before creation (languages, themes, etc.)
+        // Configure Monaco before creation (languages, themes, etc.)
         return Task.CompletedTask;
     }
 
     private Task OnAfterInitialized(IJSObjectReference editor)
     {
-        // JS editor instance is available (set options, add actions, etc.)
+        // Editor instance is available
         return Task.CompletedTask;
     }
 }
 ```
 
-**CSS Editor:**
+### CSS Editor
+
 ```razor
 <MonacoCssEditor @ref="cssEditor"
                  Css="@cssContent"
@@ -173,7 +186,7 @@ builder.Services.AddFluentUIComponents();
 @code {
     private MonacoCssEditor? cssEditor;
     private string cssContent = ".my-class { color: var(--accent-fill-rest); }";
-    
+
     private Task OnCssChanged(string newCss)
     {
         cssContent = newCss;
@@ -182,18 +195,25 @@ builder.Services.AddFluentUIComponents();
 }
 ```
 
+---
+
 ## Detailed Setup
 
-- **Blazor Server**: See [Demo App Setup Guide](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/master/FluentUI.Blazor.Monaco.EditorPack.DemoApp/wwwroot/SETUP_GUIDE.md)
-- **Blazor WebAssembly**: See [WASM Demo Setup Guide](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/master/FluentUI.Blazor.Monaco.EditorPack.WasmDemo/wwwroot/SETUP_GUIDE.md)
+- **Blazor Server**:  
+  [Demo App Setup Guide](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/master/FluentUI.Blazor.Monaco.EditorPack.DemoApp/wwwroot/SETUP_GUIDE.md)
 
+- **Blazor WebAssembly**:  
+  [WASM Demo Setup Guide](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/master/FluentUI.Blazor.Monaco.EditorPack.WasmDemo/wwwroot/SETUP_GUIDE.md)
+
+---
 
 ## Requirements
 
-- .NET 9.0 or .NET 10.0
+- .NET 9.0 or .NET 10.0  
 - Microsoft.FluentUI.AspNetCore.Components 4.13.2+
 
+---
 
 ## License
 
-MIT License - see [LICENSE](LICENSE.txt)
+MIT License — see [LICENSE](LICENSE.txt)
