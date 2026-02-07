@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/FluentUI.Blazor.Monaco.EditorPack/wwwroot/js/monacoMarkdownEditor-part-1.txt
+/FluentUI.Blazor.Monaco.EditorPack/wwwroot/js/monacoMarkdownEditor-part-2.txt

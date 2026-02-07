@@ -13,6 +13,14 @@ window.monacoMarkdownEditor = {
     // NEW: Optional post-initialization hook
     onInitialized: null,
 
+    // NEW: front matter toggle (controlled by consuming code)
+    frontMatterEnabled: false,
+
+    enableFrontMatter: function (enabled) {
+        this.frontMatterEnabled = !!enabled;
+        console.log("[MonacoMarkdown] Front matter enabled:", this.frontMatterEnabled);
+    },
+
     /**
      * Get base path for _content resources (respects base href)
      */
@@ -805,6 +813,14 @@ window.monacoMarkdownEditor = {
             }
         }
         return false;
+    },
+
+    setOption: function (key, value) {
+        this.editors.forEach(state => {
+            if (state.editor) {
+                state.editor.updateOptions({ [key]: value });
+            }
+        });
     },
 
     /**

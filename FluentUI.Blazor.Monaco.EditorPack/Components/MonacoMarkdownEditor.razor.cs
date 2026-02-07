@@ -1,9 +1,10 @@
+using FluentUI.Blazor.Monaco.EditorPack.Markdown;
+using FluentUI.Blazor.Monaco.EditorPack.Memento;
+using FluentUI.Blazor.Monaco.EditorPack.Monaco;
 using Ganss.Xss;
 using Markdig;
 using Microsoft.AspNetCore.Components;
-using FluentUI.Blazor.Monaco.EditorPack.Memento;
 using Microsoft.JSInterop;
-using FluentUI.Blazor.Monaco.EditorPack.Markdown;
 
 namespace FluentUI.Blazor.Monaco.EditorPack.Components
 {
@@ -24,9 +25,18 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
         private string editorId_ = $"monaco-markdown-editor-{Guid.NewGuid():N}";
         private bool isInitialized_ = false;
 
+        // =======================================================
+        // CONTENT & DATA BINDING
+        // =======================================================
+
+        /// <summary>
+        /// The Markdown content displayed and edited within the Monaco editor.
+        /// Updating this parameter programmatically will update the editor content
+        /// unless the editor is currently initializing.
+        /// </summary>
         [Parameter]
-        public string? Markdown 
-        { 
+        public string? Markdown
+        {
             get => editorSession_?.Content;
             set
             {
@@ -37,50 +47,126 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
                 else if (editorSession_.Content != value)
                 {
                     editorSession_ = new TextEditorSession(value);
-                    
+
                     // Update editor content if initialized
                     if (isInitialized_)
                     {
-                        _ = JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setContent", editorId_, value ?? string.Empty);
+                        _ = JSRuntime.InvokeVoidAsync(
+                            "monacoMarkdownEditor.setContent",
+                            editorId_,
+                            value ?? string.Empty);
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Raised when the Markdown content changes.  
+        /// This event is throttled and chunked internally to support large documents.
+        /// </summary>
+        [Parameter]
+        public EventCallback<string> MarkdownChanged { get; set; }
+
+        /// <summary>
+        /// Optional DOM element ID for the editor container. If not provided,
+        /// a unique ID is generated automatically.
+        /// </summary>
         [Parameter]
         public string? Id { get; set; }
 
-        [Parameter]
-        public string? Css { get; set; }
 
+
+        // =======================================================
+        // EDITOR CONFIGURATION
+        // =======================================================
+
+        /// <summary>
+        /// Configuration options for Markdig Markdown processing.  
+        /// These options affect Markdown parsing and rendering, not the Monaco editor.
+        /// </summary>
         [Parameter]
         public MarkdownOptions? MarkdownOptions { get; set; }
-        
+
         /// <summary>
-        /// External CSS content to provide IntelliSense for class names.
-        /// Parent components should aggregate CSS from multiple sources (Global, Page, Project, Market)
-        /// and pass the combined CSS here.
+        /// Configuration options for the Monaco editor instance, including editor
+        /// behavior, theme, and optional front matter support.
+        /// </summary>
+        [Parameter]
+        public MonacoOptions Options { get; set; } = new();
+
+
+
+        // =======================================================
+        // CSS INTELLISENSE INPUTS
+        // =======================================================
+
+        /// <summary>
+        /// External CSS content used to provide IntelliSense for CSS class names.
+        /// Parent components should aggregate CSS from multiple sources and pass
+        /// the combined result here. This CSS is merged with <see cref="AdditionalCss"/>.
         /// </summary>
         [Parameter]
         public string? ExternalCss { get; set; }
 
+        /// <summary>
+        /// Additional CSS rules used to provide IntelliSense for CSS class names.
+        /// This CSS is merged with <see cref="ExternalCss"/> and passed to the
+        /// CSS class harvester for completion and hover support.
+        /// </summary>
+        [Parameter]
+        public string? AdditionalCss { get; set; }
+
+
+
+        // =======================================================
+        // UI COMPOSITION
+        // =======================================================
+
+        /// <summary>
+        /// Optional content rendered to the left of the editor toolbar area.
+        /// Useful for injecting custom UI elements or controls.
+        /// </summary>
         [Parameter]
         public RenderFragment? LeftContent { get; set; }
 
+        /// <summary>
+        /// Optional content rendered to the right of the editor toolbar area.
+        /// Useful for injecting custom UI elements or controls.
+        /// </summary>
         [Parameter]
         public RenderFragment? RightContent { get; set; }
 
-        [Parameter]
-        public EventCallback<string> MarkdownChanged { get; set; }
-
+        /// <summary>
+        /// Raised when the user cancels editing, if the hosting component
+        /// provides a cancel action.
+        /// </summary>
         [Parameter]
         public EventCallback OnCancelled { get; set; }
 
-        [Parameter]
-        public Func<IJSObjectReference, Task>? OnMonacoInitialized { get; set; }
 
+
+        // =======================================================
+        // LIFECYCLE EVENTS
+        // =======================================================
+
+        /// <summary>
+        /// Callback invoked before the Monaco editor is created.  
+        /// Provides access to the <see cref="IJSRuntime"/> so consumers may
+        /// register language features, schemas, or other Monaco extensions
+        /// prior to editor initialization.
+        /// </summary>
         [Parameter]
-        public Func<IJSRuntime, Task>? OnBeforeMonacoCreated { get; set; }
+        public Func<IJSRuntime, Task>? BeforeCreated { get; set; }
+
+        /// <summary>
+        /// Callback invoked after the Monaco editor has been fully initialized
+        /// and the underlying <see cref="IJSObjectReference"/> for the editor
+        /// instance is available.
+        /// </summary>
+        [Parameter]
+        public Func<IJSObjectReference, Task>? AfterInitialized { get; set; }
+
+
 
 
         private CancellationTokenSource? cancellationTokenSource_;
@@ -105,46 +191,80 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
             {
                 try
                 {
-                    if (OnBeforeMonacoCreated is not null)
+                    // 1. C# lifecycle hook BEFORE Monaco is created
+                    if (BeforeCreated is not null)
                     {
-                        await OnBeforeMonacoCreated.Invoke(JSRuntime);
+                        await BeforeCreated.Invoke(JSRuntime);
                     }
 
-                    // Create .NET object reference for callbacks
+                    // 2. Apply MonacoOptions BEFORE creating the editor
+                    await ApplyMonacoOptionsAsync();
+
+                    // 3. Create .NET object reference for callbacks
                     dotNetRef_ = DotNetObjectReference.Create(this);
-                    
-                    // Initialize the Monaco editor (FluentUI theme applied automatically in init)
+
+                    // 4. Initialize the Monaco editor
                     isInitialized_ = await JSRuntime.InvokeAsync<bool>(
-                        "monacoMarkdownEditor.init", 
+                        "monacoMarkdownEditor.init",
                         editorId_,
                         editorSession_?.Content ?? string.Empty,
                         dotNetRef_);
-                        
+
                     if (isInitialized_)
                     {
-                        // Initialize CSS IntelliSense with provided external CSS
+                        // 5. Initialize CSS IntelliSense
                         await UpdateCssIntelliSenseAsync();
                         await InvokeAsync(StateHasChanged);
 
-                        if (OnMonacoInitialized is not null)
+                        // 6. C# lifecycle hook AFTER Monaco is created
+                        if (AfterInitialized is not null)
                         {
                             var editorRef = await JSRuntime.InvokeAsync<IJSObjectReference>(
                                 "monacoMarkdownEditor.getEditor",
                                 editorId_);
 
-                            await OnMonacoInitialized.Invoke(editorRef);
+                            await AfterInitialized.Invoke(editorRef);
                         }
                     }
-
-                   
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"[MonacoMarkdownEditor] Error initializing: {ex.Message}");
                 }
             }
-            
+
             await base.OnAfterRenderAsync(firstRender);
+        }
+
+        private async Task ApplyMonacoOptionsAsync()
+        {
+            if (Options is null)
+                return;
+
+            // Front matter toggle
+            if (Options.EnableFrontMatter)
+            {
+                await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.enableFrontMatter", true);
+            }
+
+            // Core editor options
+            await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setOption", "wordWrap", Options.WordWrap);
+            await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setOption", "minimap", Options.Minimap);
+            await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setOption", "lineNumbers", Options.LineNumbers);
+            await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setOption", "fontSize", Options.FontSize);
+
+            if (!string.IsNullOrWhiteSpace(Options.FontFamily))
+            {
+                await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setOption", "fontFamily", Options.FontFamily);
+            }
+
+            if (Options.LineHeight is not null)
+            {
+                await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setOption", "lineHeight", Options.LineHeight);
+            }
+
+            // Theme
+            await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setTheme", editorId_, Options.Theme);
         }
 
         protected override async Task OnParametersSetAsync()
@@ -310,12 +430,12 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
                 cssBuilder.AppendLine(CleanCss(ExternalCss));
             }
             
-            if (!string.IsNullOrWhiteSpace(Css))
+            if (!string.IsNullOrWhiteSpace(AdditionalCss))
             {
                 if (cssBuilder.Length > 0)
                     cssBuilder.AppendLine();
                 cssBuilder.AppendLine("/* Additional CSS */");
-                cssBuilder.AppendLine(CleanCss(Css));
+                cssBuilder.AppendLine(CleanCss(AdditionalCss));
             }
             
             return cssBuilder.ToString();
