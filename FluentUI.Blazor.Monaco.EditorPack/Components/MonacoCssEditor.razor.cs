@@ -17,9 +17,18 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = default!;
 
+        // =======================================================
+        // CONTENT & DATA BINDING
+        // =======================================================
+
+        /// <summary>
+        /// The CSS content displayed and edited within the Monaco CSS editor.
+        /// Updating this parameter programmatically will update the editor content
+        /// unless the editor is currently initializing.
+        /// </summary>
         [Parameter]
-        public string? Css 
-        { 
+        public string? Css
+        {
             get => editorSession_?.Content;
             set
             {
@@ -27,22 +36,43 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
                 {
                     initialCss_ = value;
                     editorSession_ = new TextEditorSession(value);
-                    
+
                     // Update editor content if initialized
                     if (isInitialized_)
                     {
-                        _ = JSRuntime.InvokeVoidAsync("monacoCssEditor.setContent", editorId_, value ?? string.Empty);
+                        _ = JSRuntime.InvokeVoidAsync(
+                            "monacoCssEditor.setContent",
+                            editorId_,
+                            value ?? string.Empty);
                     }
                 }
             }
         }
 
-        [Parameter]
-        public string Placeholder { get; set; } = "/* Enter CSS here... */";
-
+        /// <summary>
+        /// Raised when the CSS content changes.  
+        /// This event is throttled and chunked internally to support large documents.
+        /// </summary>
         [Parameter]
         public EventCallback<string> CssChanged { get; set; }
 
+        /// <summary>
+        /// Placeholder text shown when the editor is empty.  
+        /// Defaults to <c>/* Enter CSS here... */</c>.
+        /// </summary>
+        [Parameter]
+        public string Placeholder { get; set; } = "/* Enter CSS here... */";
+
+
+
+        // =======================================================
+        // UI COMPOSITION
+        // =======================================================
+
+        /// <summary>
+        /// Raised when the user cancels editing, if the hosting component
+        /// provides a cancel action.
+        /// </summary>
         [Parameter]
         public EventCallback OnCancelled { get; set; }
 
