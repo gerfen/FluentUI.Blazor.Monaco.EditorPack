@@ -8,12 +8,12 @@
     <base href="/" />
     
     <!-- FluentUI Blazor CSS - REQUIRED -->
-    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" rel="stylesheet" />
+    <link href="/_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" rel="stylesheet" />
     
     <link rel="stylesheet" href="@Assets["app.css"]" />
     
     <!-- FluentUI.Blazor.Monaco.EditorPack - reference CSS -->
-    <link rel="stylesheet" href="_content/FluentUI.Blazor.Monaco.EditorPack/css/markdownPreview.css" />
+    <link rel="stylesheet" href="/_content/FluentUI.Blazor.Monaco.EditorPack/css/markdownPreview.css" />
    
     <link rel="stylesheet" href="@Assets["FluentUI.Blazor.Monaco.EditorPack.DemoApp.styles.css"]" />
     
@@ -46,6 +46,9 @@
             event.preventDefault();
         }
     </script>
+    
+    @* Ensure any host-only Monaco extensions are loaded after the Monaco Editor Pack *@
+    <script src="/js/frontMatterYamlHost.js"></script>
     
     </body>
 
