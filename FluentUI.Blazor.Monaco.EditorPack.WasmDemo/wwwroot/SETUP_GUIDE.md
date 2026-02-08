@@ -46,7 +46,7 @@ await builder.Build().RunAsync();
     <title>Your App</title>
     
     <!-- FluentUI CSS -->
-    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" rel="stylesheet" />
+    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="_content/FluentUI.Blazor.Monaco.EditorPack/css/markdownPreview.css" />
     
     <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
