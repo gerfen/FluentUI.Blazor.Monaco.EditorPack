@@ -20,18 +20,17 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     
     <!-- Copyright -->
-    <Copyright>Copyright © 2025 Michael Gerfen</Copyright>
+    <Copyright>Copyright © 2026 Michael Gerfen</Copyright>
 
     <!-- Release Notes -->
     <PackageReleaseNotes>
-	    Initial release.
-	    Supports ServerInteractive.
-    </PackageReleaseNotes>
+   </PackageReleaseNotes>
 
     
     <!-- Enable static web assets -->
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
     <StaticWebAssetBasePath>_content/FluentUI.Blazor.Monaco.EditorPack</StaticWebAssetBasePath>
+    <PackageIcon>simple-logo-256x256.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,6 +40,10 @@
   <!-- Include root README.md in package -->
   <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="\" />
+    <None Include="..\assets\simple-logo-256x256.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
