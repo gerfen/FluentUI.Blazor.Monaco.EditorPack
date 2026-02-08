@@ -56,6 +56,8 @@ Monaco configuration is now provided through a strongly‑typed options object.
 
 All Monaco‑related parameters must now be supplied through `Options`.
 
+> Theme is managed automatically (the editors adapt to FluentUI light/dark changes), so there is no theme property on `MonacoOptions`.
+
 ---
 
 ### 2. Lifecycle callback renames
