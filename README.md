@@ -1,5 +1,7 @@
 ﻿# FluentUI Blazor Monaco Editor Pack
 
+![Editor Pack](assets/editor-pack-logo.png)
+
 Monaco Editor integration for Blazor with FluentUI components — includes Markdown and CSS editors with IntelliSense, live preview, and theme integration.
 
 [![NuGet](https://img.shields.io/nuget/v/FluentUI.Blazor.Monaco.EditorPack.svg)](https://www.nuget.org/packages/FluentUI.Blazor.Monaco.EditorPack/)
