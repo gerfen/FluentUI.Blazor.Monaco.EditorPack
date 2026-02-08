@@ -787,7 +787,7 @@ window.monacoMarkdownEditor = {
 
     // Set theme
     setTheme: function(editorId, themeName = 'fluentui-auto') {
-        const editorData = this.editors[editorId];
+        const editorData = this.editors.get(editorId);
         if (!editorData?.editor) {
             console.error('[MonacoMarkdownEditor] Editor not found:', editorId);
             return;
@@ -949,7 +949,7 @@ window.monacoMarkdownEditor = {
         // Force refresh of color decorations to pick up new design token values
         this.refreshColorDecorations(state.editor);
         
-        console.log('[MonacoMarkdown] Theme updated for editor:', containerId);
+        console.log('[MonacoMarkdown] Theme updated for editor:', containerId, 'theme:', themeName);
     },
     
     /**
@@ -1005,7 +1005,7 @@ window.monacoMarkdownEditor = {
     },
 
     setValue(editorId, value) {
-        const editorData = this.editors[editorId];
+        const editorData = this.editors.get(editorId);
         if (!editorData?.editor) {
             console.error('[MonacoMarkdownEditor] Editor not found:', editorId);
             return;
@@ -1015,7 +1015,7 @@ window.monacoMarkdownEditor = {
     },
 
     getValue(editorId) {
-        const editorData = this.editors[editorId];
+        const editorData = this.editors.get(editorId);
         if (!editorData?.editor) {
             console.error('[MonacoMarkdownEditor] Editor not found:', editorId);
             return '';
@@ -1024,24 +1024,8 @@ window.monacoMarkdownEditor = {
         return editorData.editor.getValue();
     },
 
-    setTheme(editorId, themeName) {
-        const editorData = this.editors[editorId];
-        if (!editorData?.editor) {
-            console.error('[MonacoMarkdownEditor] Editor not found:', editorId);
-            return;
-        }
-
-        // If requesting FluentUI theme, define/update it first
-        if (themeName === 'fluentui-auto' || !themeName) {
-            themeName = this.defineFluentUITheme();
-        }
-
-        monaco.editor.setTheme(themeName);
-        console.log('[MonacoMarkdownEditor] Theme set to:', themeName);
-    },
-
     focus(editorId) {
-        const editorData = this.editors[editorId];
+        const editorData = this.editors.get(editorId);
         if (!editorData?.editor) {
             console.error('[MonacoMarkdownEditor] Editor not found:', editorId);
             return;
@@ -1051,10 +1035,10 @@ window.monacoMarkdownEditor = {
     },
 
     dispose(editorId) {
-        const editorData = this.editors[editorId];
+        const editorData = this.editors.get(editorId);
         if (editorData?.editor) {
             editorData.editor.dispose();
-            delete this.editors[editorId];
+            this.editors.delete(editorId);
             console.log('[MonacoMarkdownEditor] Editor disposed:', editorId);
         }
     },

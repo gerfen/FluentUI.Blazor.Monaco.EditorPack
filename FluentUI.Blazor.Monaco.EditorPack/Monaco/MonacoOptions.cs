@@ -19,9 +19,6 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Monaco
         public string? FontFamily { get; set; }
         public double? LineHeight { get; set; }
 
-        // --- Theme ---
-        public string Theme { get; set; } = "fluentui-auto";
-
         // --- Front Matter ---
         public bool EnableFrontMatter { get; set; } = false;
     }

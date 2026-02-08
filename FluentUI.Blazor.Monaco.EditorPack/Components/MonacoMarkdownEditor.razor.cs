@@ -240,6 +240,8 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
 
                     if (isInitialized_)
                     {
+                        // Theme is managed automatically by FluentUI token integration.
+
                         // 5. Initialize CSS IntelliSense
                         await UpdateCssIntelliSenseAsync();
                         await InvokeAsync(StateHasChanged);
@@ -291,8 +293,7 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
                 await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setOption", "lineHeight", Options.LineHeight);
             }
 
-            // Theme
-            await JSRuntime.InvokeVoidAsync("monacoMarkdownEditor.setTheme", editorId_, Options.Theme);
+            // Theme is applied after editor creation in OnAfterRenderAsync.
         }
 
         protected override async Task OnParametersSetAsync()
