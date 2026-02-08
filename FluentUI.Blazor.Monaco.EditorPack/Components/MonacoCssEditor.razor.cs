@@ -14,12 +14,18 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
         private List<string> contentChunks_ = new();
         private int expectedTotalChunks_ = 0;
 
+
         [Inject]
         private IJSRuntime JSRuntime { get; set; } = default!;
 
         // =======================================================
         // CONTENT & DATA BINDING
         // =======================================================
+
+        /// <summary>
+        /// Gets the unique editor ID used for DOM binding and JS interop.
+        /// </summary>
+        public string EditorId => editorId_;
 
         /// <summary>
         /// The CSS content displayed and edited within the Monaco CSS editor.

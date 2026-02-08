@@ -174,9 +174,37 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Components
         private List<string> contentChunks_ = new();
         private int expectedTotalChunks_ = 0;
 
+        /// <summary>
+        /// Gets the unique editor ID used for DOM binding and JS interop.
+        /// </summary>
+        public string EditorId => editorId_;
+        /// <summary>
+        /// Gets a value indicating whether the editor's content has been modified
+        /// since it was last loaded or saved. This reflects the state of the
+        /// underlying <see cref="TextEditorSession"/> and updates as the user
+        /// edits the document.
+        /// </summary>
         public bool IsModified => editorSession_?.IsModified ?? false;
+
+        /// <summary>
+        /// Gets a value indicating whether the editor has at least one undoable
+        /// operation available. This mirrors Monaco's internal undo stack and
+        /// enables UI elements to reflect undo availability.
+        /// </summary>
         public bool CanUndo => editorSession_?.CanUndo ?? false;
+
+        /// <summary>
+        /// Gets a value indicating whether the editor has at least one redoable
+        /// operation available. This mirrors Monaco's internal redo stack and
+        /// enables UI elements to reflect redo availability.
+        /// </summary>
         public bool CanRedo => editorSession_?.CanRedo ?? false;
+
+        /// <summary>
+        /// Gets the rendered HTML produced from the current Markdown content.
+        /// This value is updated whenever the Markdown changes and reflects the
+        /// output of the configured Markdig pipeline.
+        /// </summary>
         public MarkupString Html { get; private set; }
 
         protected override void OnParametersSet()
