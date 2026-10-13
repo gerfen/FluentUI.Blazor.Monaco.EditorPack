@@ -1,4 +1,4 @@
-@page "/editors-demo"
+ï»¿@page "/editors-demo"
 @namespace FluentUI.Blazor.Monaco.EditorPack.Shared.Components
 
 @using FluentUI.Blazor.Monaco.EditorPack.Markdown
@@ -13,12 +13,12 @@
 
 <FluentStack Orientation="Orientation.Vertical" VerticalGap="24">
     
-    <FluentLabel Typo="Typography.Body" Style="margin-top: 2rem">
+    <FluentText As="TextTag.Paragraph" Style="margin-top: 2rem">
         Explore the Markdown and CSS editors with live preview and IntelliSense.
-    </FluentLabel>
+    </FluentText>
 
-    <FluentTabs ActiveTabId="@activeTabId_" OnTabChange="HandleTabChange">
-        <FluentTab Id="markdown-tab" Label="Markdown Editor" Icon="@(new Icons.Regular.Size24.DocumentEdit())">
+    <FluentTabs ActiveTabId="@activeTabId_" ActiveTabChanged="HandleTabChange">
+        <FluentTab Id="markdown-tab" Header="Markdown Editor" IconStart="@(new Icons.Regular.Size24.DocumentEdit())">
             <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px;">
                 
                 <div style="height: calc(100vh - 200px); width: 100%; min-height: 500px;">
@@ -36,26 +36,26 @@
                         <LeftContent>
                             <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Start" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
                                 <FluentIcon Value="@(new Icons.Regular.Size20.DocumentEdit())" />
-                                <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                <FluentText As="TextTag.Paragraph" Weight="TextWeight.Bold">
                                     Markdown Content
-                                </FluentLabel>
+                                </FluentText>
                             </FluentStack>
                         </LeftContent>
                         <RightContent>
                             <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8" HorizontalAlignment="HorizontalAlignment.End">
                                 @if (markdownEditor_?.IsModified ?? false)
                                 {
-                                    <FluentBadge Appearance="Appearance.Accent" BackgroundColor="var(--accent-fill-rest)">
+                                    <FluentBadge Appearance="BadgeAppearance.Filled">
                                         Modified
                                     </FluentBadge>
                                 }
-                                <FluentButton Appearance="Appearance.Accent" 
+                                <FluentButton Appearance="ButtonAppearance.Primary" 
                                               OnClick="SaveMarkdown"
                                               IconStart="@(new Icons.Regular.Size20.Save())"
                                               Disabled="@(!(markdownEditor_?.IsModified ?? false))">
                                     Save
                                 </FluentButton>
-                                <FluentButton Appearance="Appearance.Neutral" 
+                                <FluentButton Appearance="ButtonAppearance.Default" 
                                               OnClick="ResetMarkdown"
                                               IconStart="@(new Icons.Regular.Size20.ArrowUndo())"
                                               Disabled="@(!(markdownEditor_?.IsModified ?? false))">
@@ -66,38 +66,38 @@
                     </MonacoMarkdownEditor>
                 </div>
                 
-                <div style="background: var(--neutral-layer-2); padding: 16px; border-radius: 4px;">
+                <div style="background: var(--colorNeutralBackground2); padding: 16px; border-radius: 4px;">
                     <FluentStack Orientation="Orientation.Vertical" VerticalGap="8">
                         <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
                             <FluentIcon Value="@(new Icons.Regular.Size24.Info())" Color="Color.Accent" />
-                            <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                            <FluentText As="TextTag.Paragraph" Weight="TextWeight.Bold">
                                 Markdown Editor Features:
-                            </FluentLabel>
+                            </FluentText>
                         </FluentStack>
                         <FluentStack Orientation="Orientation.Vertical" VerticalGap="4" Style="padding-left: 8px;">
-                            <FluentLabel Typo="Typography.Body">• Live preview with Markdig rendering</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• CSS class IntelliSense with <code>{`{.className}`}</code> syntax</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Color swatches for CSS classes with color properties</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Toolbar with formatting commands</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Undo/Redo with modified state tracking</FluentLabel>
+                            <FluentText As="TextTag.Paragraph">ï¿½ Live preview with Markdig rendering</FluentText>
+                            <FluentText As="TextTag.Paragraph">ï¿½ CSS class IntelliSense with <code>{`{.className}`}</code> syntax</FluentText>
+                            <FluentText As="TextTag.Paragraph">ï¿½ Color swatches for CSS classes with color properties</FluentText>
+                            <FluentText As="TextTag.Paragraph">ï¿½ Toolbar with formatting commands</FluentText>
+                            <FluentText As="TextTag.Paragraph">ï¿½ Undo/Redo with modified state tracking</FluentText>
                         </FluentStack>
                     </FluentStack>
                 </div>
             </FluentStack>
         </FluentTab>
 
-        <FluentTab Id="css-tab" Label="CSS Editor" Icon="@(new Icons.Regular.Size24.Code())">
+        <FluentTab Id="css-tab" Header="CSS Editor" IconStart="@(new Icons.Regular.Size24.Code())">
             <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px; width: 80vw; max-width: 80vw;">
-                <div style="width: 100%; max-width: none; background: var(--neutral-layer-1); padding: 16px; border-radius: 4px;">
+                <div style="width: 100%; max-width: none; background: var(--colorNeutralBackground1); padding: 16px; border-radius: 4px;">
                     <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
                         <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
                             <FluentIcon Value="@(new Icons.Regular.Size20.Code())" />
-                            <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                            <FluentText As="TextTag.Paragraph" Weight="TextWeight.Bold">
                                 Custom CSS Styles
-                            </FluentLabel>
+                            </FluentText>
                         </FluentStack>
                         
-                        <div style="height: 600px; width: 100%; border: 1px solid var(--neutral-stroke-rest); border-radius: var(--control-corner-radius);">
+                        <div style="height: 600px; width: 100%; border: 1px solid var(--colorNeutralStroke1); border-radius: var(--borderRadiusMedium);">
                             <MonacoCssEditor @ref="cssEditor_"
                                              Css="@customCss_"
                                              CssChanged="@OnCssChanged"
@@ -107,17 +107,17 @@
                         <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8">
                             @if (cssEditor_?.IsModified ?? false)
                             {
-                                <FluentBadge Appearance="Appearance.Accent" BackgroundColor="var(--accent-fill-rest)">
+                                <FluentBadge Appearance="BadgeAppearance.Filled">
                                     Modified
                                 </FluentBadge>
                             }
-                            <FluentButton Appearance="Appearance.Accent" 
+                            <FluentButton Appearance="ButtonAppearance.Primary" 
                                           OnClick="SaveCss"
                                           IconStart="@(new Icons.Regular.Size20.Save())"
                                           Disabled="@(!(cssEditor_?.IsModified ?? false))">
                                 Save CSS
                             </FluentButton>
-                            <FluentButton Appearance="Appearance.Neutral" 
+                            <FluentButton Appearance="ButtonAppearance.Default" 
                                           OnClick="ResetCss"
                                           IconStart="@(new Icons.Regular.Size20.ArrowUndo())"
                                           Disabled="@(!(cssEditor_?.IsModified ?? false))">
@@ -127,20 +127,20 @@
                     </FluentStack>
                 </div>
                 
-                <div style="background: var(--neutral-layer-2); padding: 16px; border-radius: 4px;">
+                <div style="background: var(--colorNeutralBackground2); padding: 16px; border-radius: 4px;">
                     <FluentStack Orientation="Orientation.Vertical" VerticalGap="8">
                         <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
                             <FluentIcon Value="@(new Icons.Regular.Size24.Info())" Color="Color.Accent" />
-                            <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                            <FluentText As="TextTag.Paragraph" Weight="TextWeight.Bold">
                                 CSS Editor Features:
-                            </FluentLabel>
+                            </FluentText>
                         </FluentStack>
                         <FluentStack Orientation="Orientation.Vertical" VerticalGap="4" Style="padding-left: 8px;">
-                            <FluentLabel Typo="Typography.Body">• FluentUI design token IntelliSense with <code>var(--token-name)</code></FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Color decorators and swatches for color values</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Auto-completion for CSS properties and values</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Theme-aware syntax highlighting</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Real-time CSS validation</FluentLabel>
+                            <FluentText As="TextTag.Paragraph">ï¿½ FluentUI design token IntelliSense with <code>var(--token-name)</code></FluentText>
+                            <FluentText As="TextTag.Paragraph">ï¿½ Color decorators and swatches for color values</FluentText>
+                            <FluentText As="TextTag.Paragraph">ï¿½ Auto-completion for CSS properties and values</FluentText>
+                            <FluentText As="TextTag.Paragraph">ï¿½ Theme-aware syntax highlighting</FluentText>
+                            <FluentText As="TextTag.Paragraph">ï¿½ Real-time CSS validation</FluentText>
                         </FluentStack>
                     </FluentStack>
                 </div>
@@ -160,9 +160,9 @@
         PageTitleService.CurrentTitle = "Editors Demo";
     }
 
-    private async Task HandleTabChange(FluentTab tab)
+    private async Task HandleTabChange(FluentTab? tab)
     {
-        activeTabId_ = tab.Id ?? "markdown-tab";
+        activeTabId_ = tab?.Id ?? "markdown-tab";
 
         // Force a small delay to ensure the tab content is rendered before initializing editors
         await Task.Delay(100);
@@ -233,19 +233,19 @@ public class Demo
     // Aggregate external CSS (simulating what a real app would do)
     private const string ExternalCss = @"
 /* Global CSS styles */
-body {{
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}}
+}
 
-h1 {{
-    color: var(--accent-fill-rest);
-}}
+h1 {
+    color: var(--colorBrandForeground1);
+}
 
 /* Page-specific CSS */
-.demo-container {{
+.demo-container {
     max-width: 1200px;
     margin: 0 auto;
-}}";
+}";
 
     // Build aggregated CSS combining external and custom CSS for IntelliSense
     private string BuildAggregatedCss()
@@ -255,32 +255,32 @@ h1 {{
 
     private string customCss_ = @"/* Custom CSS with FluentUI-Blazor design tokens */
 .highlight {
-    background-color: var(--accent-fill-rest);
-    color: var(--neutral-foreground-on-accent);
+    background-color: var(--colorBrandBackground);
+    color: var(--colorNeutralForegroundOnBrand);
     padding: 2px 4px;
     border-radius: 2px;
 }
 
 .theme-text {
-    color: var(--accent-fill-rest);
+    color: var(--colorBrandForeground1);
     font-weight: 600;
 }
 
 .error {
-    color: var(--error);
+    color: var(--colorPaletteRedForeground1);
     font-weight: bold;
 }
 
 .success {
-    color: var(--success);
+    color: var(--colorPaletteGreenForeground1);
 }
 
 .warning {
-    color: var(--warning);
+    color: var(--colorPaletteYellowForeground2);
 }
 
 hr {
-    background-color: var(--warning) !important;
+    background-color: var(--colorPaletteYellowForeground2) !important;
     height: 5px;
 }
 

@@ -14,65 +14,65 @@
 
 <FluentStack Orientation="Orientation.Vertical" VerticalGap="24">
 
-    <FluentLabel Typo="Typography.Body" Style="margin-top: 2rem">
+    <FluentText As="TextTag.Paragraph" Style="margin-top: 2rem">
         Markdown and CSS editors utilizing Monaco and FluentUI-Blazor
-    </FluentLabel>
+    </FluentText>
 
     <FluentTabs ActiveTabId="@activeTabId_">
-        <FluentTab Id="overview-tab" Label="Overview" Icon="@(new Icons.Regular.Size24.Info())">
+        <FluentTab Id="overview-tab" Header="Overview" IconStart="@(new Icons.Regular.Size24.Info())">
             <FluentStack Orientation="Orientation.Vertical" VerticalGap="24" Style="margin-top: 16px;">
                 <FluentCard>
                     <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
-                        <FluentLabel Typo="Typography.H3">
+                        <FluentText As="TextTag.H3">
                             Key Features
-                        </FluentLabel>
+                        </FluentText>
                         
                         <FluentStack Orientation="Orientation.Vertical" VerticalGap="16">
                             <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
                                 <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
                                 <FluentStack Orientation="Orientation.Vertical">
-                                    <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                    <FluentText As="TextTag.Paragraph" Weight="TextWeight.Bold">
                                         Markdown Editor
-                                    </FluentLabel>
-                                    <FluentLabel Typo="Typography.Body">
+                                    </FluentText>
+                                    <FluentText As="TextTag.Paragraph">
                                         Full-featured Markdown editing with live preview, syntax highlighting, and CSS class IntelliSense with color swatches
-                                    </FluentLabel>
+                                    </FluentText>
                                 </FluentStack>
                             </FluentStack>
                             
                             <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
                                 <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
                                 <FluentStack Orientation="Orientation.Vertical">
-                                    <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                    <FluentText As="TextTag.Paragraph" Weight="TextWeight.Bold">
                                         CSS Editor
-                                    </FluentLabel>
-                                    <FluentLabel Typo="Typography.Body">
+                                    </FluentText>
+                                    <FluentText As="TextTag.Paragraph">
                                         Advanced CSS editing with FluentUI design token IntelliSense, color decorators, and auto-completion
-                                    </FluentLabel>
+                                    </FluentText>
                                 </FluentStack>
                             </FluentStack>
                             
                             <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
                                 <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
                                 <FluentStack Orientation="Orientation.Vertical">
-                                    <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                    <FluentText As="TextTag.Paragraph" Weight="TextWeight.Bold">
                                         FluentUI Theme Integration
-                                    </FluentLabel>
-                                    <FluentLabel Typo="Typography.Body">
+                                    </FluentText>
+                                    <FluentText As="TextTag.Paragraph">
                                         Automatically adapts to FluentUI light/dark themes with design token harvesting
-                                    </FluentLabel>
+                                    </FluentText>
                                 </FluentStack>
                             </FluentStack>
                             
                             <FluentStack Orientation="Orientation.Horizontal" VerticalGap="8">
                                 <FluentIcon Value="@(new Icons.Regular.Size24.CheckmarkCircle())" Color="Color.Success" />
                                 <FluentStack Orientation="Orientation.Vertical">
-                                    <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                                    <FluentText As="TextTag.Paragraph" Weight="TextWeight.Bold">
                                         State Management
-                                    </FluentLabel>
-                                    <FluentLabel Typo="Typography.Body">
+                                    </FluentText>
+                                    <FluentText As="TextTag.Paragraph">
                                         Built-in Memento pattern for undo/redo support and modified state tracking
-                                    </FluentLabel>
+                                    </FluentText>
                                 </FluentStack>
                             </FluentStack>
                         </FluentStack>
@@ -83,48 +83,48 @@
                     <FluentStack Orientation="Orientation.Vertical" VerticalGap="12">
                         <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="8">
                             <FluentIcon Value="@(new Icons.Regular.Size24.Info())" Color="Color.Accent" />
-                            <FluentLabel Typo="Typography.H4">
+                            <FluentText As="TextTag.H4">
                                 Test the Editors
-                            </FluentLabel>
+                            </FluentText>
                         </FluentStack>
                         
-                        <FluentLabel>
-                            Navigate to the <FluentAnchor Href="editors-demo" Appearance="Appearance.Hypertext">Editors Demo</FluentAnchor> page to test the Markdown and CSS editors.
-                        </FluentLabel>
+                        <FluentText>
+                            <FluentLink Href="editors-demo">Editors Demo</FluentLink>
+                        </FluentText>
                         
                         <FluentDivider />
                         
-                        <FluentLabel Typo="Typography.Body" Weight="FontWeight.Bold">
+                        <FluentText As="TextTag.Paragraph" Weight="TextWeight.Bold">
                             Features to test:
-                        </FluentLabel>
+                        </FluentText>
                         
                         <FluentStack Orientation="Orientation.Vertical" VerticalGap="4" Style="padding-left: 8px;">
-                            <FluentLabel Typo="Typography.Body">• Monaco Markdown Editor with live preview</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Monaco CSS Editor with FluentUI design token IntelliSense</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Toolbar commands and keyboard shortcuts</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• Modified state tracking and undo/redo</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• FluentUI theme integration with automatic dark/light mode</FluentLabel>
-                            <FluentLabel Typo="Typography.Body">• CSS class IntelliSense with color swatches</FluentLabel>
+                            <FluentText As="TextTag.Paragraph">• Monaco Markdown Editor with live preview</FluentText>
+                            <FluentText As="TextTag.Paragraph">• Monaco CSS Editor with FluentUI design token IntelliSense</FluentText>
+                            <FluentText As="TextTag.Paragraph">• Toolbar commands and keyboard shortcuts</FluentText>
+                            <FluentText As="TextTag.Paragraph">• Modified state tracking and undo/redo</FluentText>
+                            <FluentText As="TextTag.Paragraph">• FluentUI theme integration with automatic dark/light mode</FluentText>
+                            <FluentText As="TextTag.Paragraph">• CSS class IntelliSense with color swatches</FluentText>
                         </FluentStack>
                     </FluentStack>
                 </FluentCard>
             </FluentStack>
         </FluentTab>
 
-        <FluentTab Id="setup-tab" Label="Setup Instructions" Icon="@(new Icons.Regular.Size24.Settings())">
-            <div style="margin-top: 16px; padding: 20px; background: var(--neutral-layer-1); border-radius: 4px;">
-                @if (setupGuideHtml != null)
+        <FluentTab Id="setup-tab" Header="Setup Instructions" IconStart="@(new Icons.Regular.Size24.Settings())">
+            <div style="margin-top: 16px; padding: 20px; background: var(--colorNeutralBackground1); border-radius: 4px;">
+                @if (setupGuideHtml.HasValue)
                 {
-                    @setupGuideHtml
+                    @setupGuideHtml.Value
                 }
                 else if (isLoadingSetupGuide_)
                 {
                     <FluentProgressRing />
-                    <FluentLabel>Loading setup guide...</FluentLabel>
+                    <FluentText>Loading setup guide...</FluentText>
                 }
                 else if (setupGuideError_ != null)
                 {
-                    <FluentMessageBar Intent="MessageIntent.Error" Style="margin: 12px 0; background-color: var(--neutral-layer-3); color: var(--neutral-foreground-rest);">
+                    <FluentMessageBar Intent="MessageBarIntent.Error" Style="margin: 12px 0;">
                         <strong>Error loading setup guide:</strong> @setupGuideError_
                     </FluentMessageBar>
                 }

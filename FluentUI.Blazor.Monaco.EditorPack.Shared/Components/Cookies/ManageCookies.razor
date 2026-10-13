@@ -1,5 +1,5 @@
-﻿@namespace FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Cookies
-@implements IDialogContentComponent<CookieState>
+@namespace FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Cookies
+@inherits FluentDialogInstance
 
 <FluentDialogBody Style="height: 446px; overflow: auto;">
     <p class="explainer">
@@ -15,56 +15,55 @@
         <dt aria-label="Analytics">
             <h4>Analytics</h4>
             <p class="explainer">We allow third parties to use analytics cookies to understand how you use our websites so we can make them better and the third parties can develop and improve their products, which they may use on websites that are not owned or operated by Microsoft. For example, they're used to gather information about the pages you visit and how many clicks you need to accomplish a task. We use some analytics cookies for advertising.</p>
-            <FluentRadioGroup Class="choices" Name="AcceptAnalytics" @bind-Value="@Content.AcceptAnalytics">
-                <FluentRadio Value="true">Accept</FluentRadio>
-                <FluentRadio Value="false">Reject</FluentRadio>
+            <FluentRadioGroup TValue="bool?" Class="choices" Name="AcceptAnalytics" @bind-Value="@Content.AcceptAnalytics">
+                <FluentRadio TValue="bool?" Value="@((bool?)true)">Accept</FluentRadio>
+                <FluentRadio TValue="bool?" Value="@((bool?)false)">Reject</FluentRadio>
             </FluentRadioGroup>
         </dt>
 
         <dt aria-label="Social Media">
             <h4>Social Media</h4>
             <p class="explainer">We and third parties use social media cookies to show you ads and content based on your social media profiles and activity on our websites. They’re used to connect your activity on our websites to your social media profiles so the ads and content you see on our websites and on social media will better reflect your interests.</p>
-            <FluentRadioGroup Class="choices" Name="AcceptAnalytics" @bind-Value="@Content.AcceptSocialMedia">
-                <FluentRadio Value="true">Accept</FluentRadio>
-                <FluentRadio Value="false">Reject</FluentRadio>
+            <FluentRadioGroup TValue="bool?" Class="choices" Name="AcceptSocialMedia" @bind-Value="@Content.AcceptSocialMedia">
+                <FluentRadio TValue="bool?" Value="@((bool?)true)">Accept</FluentRadio>
+                <FluentRadio TValue="bool?" Value="@((bool?)false)">Reject</FluentRadio>
             </FluentRadioGroup>
         </dt>
 
         <dt aria-label="Advertising">
             <h4>Advertising</h4>
             <p class="explainer">We and third parties use advertising cookies to show you new ads by recording which ads you've already seen. They're also used to track which ads you click on or purchases you make after clicking on an ad for payment purposes, and to show you ads that are more relevant to you. For example, they're used to detect when you click on an ad and show you ads based on your social media interests and website browsing history.</p>
-            <FluentRadioGroup Class="choices" Name="AcceptAnalytics" @bind-Value="@Content.AcceptAdvertising">
-                <FluentRadio Value="true">Accept</FluentRadio>
-                <FluentRadio Value="false">Reject</FluentRadio>
+            <FluentRadioGroup TValue="bool?" Class="choices" Name="AcceptAdvertising" @bind-Value="@Content.AcceptAdvertising">
+                <FluentRadio TValue="bool?" Value="@((bool?)true)">Accept</FluentRadio>
+                <FluentRadio TValue="bool?" Value="@((bool?)false)">Reject</FluentRadio>
             </FluentRadioGroup>
         </dt>
     </dl>
 </FluentDialogBody>
-<FluentDialogFooter>
-    <FluentButton Style="min-width: 150px;" Disabled="@_buttonsDisabled" @onclick="HandleSaveAsync" Appearance="Appearance.Accent">Save changes</FluentButton>
-    <FluentButton Style="min-width: 150px;" Disabled="@_buttonsDisabled" @onclick="HandleCancelAsync">Cancel</FluentButton>
-</FluentDialogFooter>
-
 @code {
-    private bool _buttonsDisabled => Content.AcceptAnalytics is null && Content.AcceptSocialMedia is null && Content.AcceptAdvertising is null;
-
     [Parameter]
     public CookieState Content { get; set; } = default!;
 
-    [CascadingParameter]
-    public FluentDialog Dialog { get; set; } = default!;
-
-
-    private async Task HandleSaveAsync()
+    protected override void OnInitializeDialog(DialogOptionsHeader header, DialogOptionsFooter footer)
     {
-        await Dialog.CloseAsync(Content);
+        header.Title = "Manage cookie preferences";
+        footer.PrimaryAction.Label = "Save changes";
+        footer.SecondaryAction.Label = "Reset all";
+        footer.SecondaryAction.Visible = true;
     }
 
-    private async Task HandleCancelAsync()
+    protected override async Task OnActionClickedAsync(bool primary)
     {
-        Content.AcceptAnalytics = null;
-        Content.AcceptSocialMedia = null;
-        Content.AcceptAdvertising = null;
-        await Dialog.CancelAsync();
+        if (primary)
+        {
+            await DialogInstance.CloseAsync(Content);
+        }
+        else
+        {
+            Content.AcceptAnalytics = null;
+            Content.AcceptSocialMedia = null;
+            Content.AcceptAdvertising = null;
+            await DialogInstance.CancelAsync();
+        }
     }
 }
