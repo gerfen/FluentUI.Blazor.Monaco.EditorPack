@@ -1,0 +1,7 @@
+{
+    "servers": {
+        "fluent-ui-blazor": {
+            "command": "fluentui-mcp"
+        }
+    }
+}
