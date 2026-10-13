@@ -34,7 +34,7 @@ window.fluentUIDesignTokens = {
             // Get all computed styles from document root
             const rootStyles = getComputedStyle(document.documentElement);
             
-            // Also check body element (FluentDesignTheme applies to body)
+            // Also check body element (5.x may scope tokens to body or a provider element)
             const bodyStyles = getComputedStyle(document.body);
             
             // Combine both style sources
@@ -162,7 +162,10 @@ window.fluentUIDesignTokens = {
     /**
      * Categorize a token based on its name
      */
-    _categorizeToken(name) {
+    _categorizeToken(rawName) {
+        // 5.x tokens are camelCase (e.g. --colorNeutralForeground1); 4.x tokens are kebab-case
+        const name = rawName.toLowerCase();
+        if (name.includes('brand')) return 'Brand Colors';
         if (name.includes('neutral')) return 'Neutral Colors';
         if (name.includes('accent')) return 'Accent Colors';
         if (name.includes('font') || name.includes('type-ramp') || name.includes('body-font')) return 'Typography';
@@ -178,7 +181,7 @@ window.fluentUIDesignTokens = {
         if (name.includes('opacity')) return 'Opacity';
         if (name.includes('direction')) return 'Direction';
         if (name.includes('duration') || name.includes('timing')) return 'Animation';
-        if (name.includes('Status') || name.includes('Success') || name.includes('Warning') || name.includes('Danger') || name.includes('Error')) return 'Status Colors';
+        if (name.includes('status') || name.includes('success') || name.includes('warning') || name.includes('danger') || name.includes('error')) return 'Status Colors';
         
         return 'Other';
     },
@@ -191,7 +194,7 @@ window.fluentUIDesignTokens = {
         const cleanName = name.replace(/^--/, '');
         
         // Split by hyphens and capitalize
-        const words = cleanName.split('-').map(word => 
+        const words = cleanName.replace(/([a-z0-9])([A-Z])/g, '$1-$2').split('-').map(word => 
             word.charAt(0).toUpperCase() + word.slice(1)
         );
 
@@ -283,7 +286,7 @@ window.fluentUIDesignTokens = {
 
     /**
      * Get token value by name
-     * @param {string} tokenName - Token name (e.g., '--accent-fill-rest')
+     * @param {string} tokenName - Token name (e.g., '--colorBrandBackground')
      * @returns {string|null} Token value or null
      */
     async getTokenValue(tokenName) {

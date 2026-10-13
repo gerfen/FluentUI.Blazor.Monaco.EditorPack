@@ -10,8 +10,7 @@
         min-height: 400px; /* Keep as safety fallback */
     }
 
-    /* Ensure FluentLayout fills container */
-    .monaco-markdown-editor-container > fluent-layout {
+    .monaco-markdown-editor-container > .editor-layout {
         flex: 1 1 auto;
         display: flex;
         flex-direction: column;
@@ -19,25 +18,22 @@
         height: 100%;
     }
 
-    /* Header stays at top */
-    .monaco-markdown-editor-container > fluent-layout > fluent-header {
-        flex: 0 0 auto;
-    }
-
     .editor-header {
-        background: var(--neutral-layer-1) !important;
-        border-bottom: 1px solid var(--neutral-stroke-rest);
+        flex: 0 0 auto;
+        background: var(--colorNeutralBackground1);
+        border-bottom: 1px solid var(--colorNeutralStroke2);
         min-height: 48px;
         padding: 8px 12px;
         display: flex;
         align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
     }
 
-    /* Splitter fills remaining space */
-    .monaco-markdown-editor-container > fluent-layout > fluent-splitter {
+    .monaco-markdown-editor-container .editor-splitter {
         flex: 1 1 auto;
         min-height: 0;
-        height: 100%; /* Explicit height for splitter */
+        width: 100%;
     }
 
     /* Both panels should fill splitter height */
@@ -122,30 +118,7 @@
         background: rgba(0, 0, 0, 0.05) !important;
     }
 
-    /* Dark theme scrollbar adjustments */
-    @@media (prefers-color-scheme: dark) {
-        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
-            background: rgba(191, 191, 191, 0.4) !important;
-        }
-        
-        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
-            background: rgba(191, 191, 191, 0.6) !important;
-        }
-        
-        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:active {
-            background: rgba(255, 255, 255, 0.8) !important;
-        }
-        
-        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
-            background: rgba(255, 255, 255, 0.02) !important;
-        }
-        
-        .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar:hover {
-            background: rgba(255, 255, 255, 0.05) !important;
-        }
-    }
-
-    /* Explicit dark theme support via data attribute */
+    /* Dark theme scrollbars follow the in-app theme (data-theme set by siteTheme.js) */
     body[data-theme="dark"] .monaco-markdown-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
         background: rgba(191, 191, 191, 0.4) !important;
     }
@@ -189,9 +162,9 @@
     .monaco-markdown-editor-container .monaco-hover-content code {
         padding: 2px 4px;
         border-radius: 3px;
-        background-color: var(--neutral-layer-3);
+        background-color: var(--colorNeutralBackground3);
     }
-    
+
     /* Color value highlighting */
     .monaco-markdown-editor-container .monaco-hover-content strong:has(+ code) {
         display: inline-flex;
@@ -208,8 +181,8 @@
     .preview-panel-header {
         flex: 0 0 auto;
         width: 100%;
-        background: var(--neutral-layer-1);
-        border-bottom: 1px solid var(--neutral-stroke-rest);
+        background: var(--colorNeutralBackground1);
+        border-bottom: 1px solid var(--colorNeutralStroke1);
         padding: 8px 12px;
         min-height: 48px;
         display: flex;
@@ -222,13 +195,13 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding: 1rem;
-        background-color: var(--neutral-fill-layer-rest);
+        background-color: var(--colorNeutralBackground1);
     }
 
     /* Markdown Preview Styles */
     .preview-panel-content pre {
-        background-color: var(--neutral-layer-3, #f5f5f5);
-        border: 1px solid var(--neutral-stroke-rest, #e0e0e0);
+        background-color: var(--colorNeutralBackground3);
+        border: 1px solid var(--colorNeutralStroke1);
         border-radius: 4px;
         padding: 1rem;
         overflow-x: auto;
@@ -249,69 +222,28 @@
     }
 
     .preview-panel-content :not(pre) > code {
-        background-color: var(--neutral-layer-3, #f5f5f5);
-        border: 1px solid var(--neutral-stroke-rest, #e0e0e0);
+        background-color: var(--colorNeutralBackground3);
+        border: 1px solid var(--colorNeutralStroke1);
         border-radius: 3px;
         padding: 0.2em 0.4em;
     }
 
     .preview-panel-content hr {
         border: none;
-        border-top: 2px solid var(--neutral-stroke-divider-rest, #d0d0d0);
+        border-top: 2px solid var(--colorNeutralStroke2);
         margin: 2rem 0;
     }
 
-    /* Dark theme support */
-    @@media (prefers-color-scheme: dark) {
-        .preview-panel-content pre {
-            background-color: var(--neutral-layer-3, #2d2d2d);
-            border-color: var(--neutral-stroke-rest, #3d3d3d);
-        }
-
-        .preview-panel-content :not(pre) > code {
-            background-color: var(--neutral-layer-3, #2d2d2d);
-            border-color: var(--neutral-stroke-rest, #3d3d3d);
-        }
-
-        .preview-panel-content hr {
-            border-top-color: var(--neutral-stroke-divider-rest, #4d4d4d);
-        }
-    }
-
-    body[data-theme="dark"] .preview-panel-content pre {
-        
-        background-color: var(--neutral-layer-3);
-        border-color: var(--neutral-stroke-rest);
-    }
-
-    body[data-theme="dark"] .preview-panel-content :not(pre) > code {
-        background-color: var(--neutral-layer-3);
-        border-color: var(--neutral-stroke-rest);
-    }
-
-    body[data-theme="dark"] .preview-panel-content hr {
-        border-top-color: var(--neutral-stroke-divider-rest);
-    }
-</style>
+    </style>
 
 <div class="monaco-markdown-editor-container">
-    <FluentLayout>
-        <FluentHeader Class="editor-header">
-            <FluentGrid Style="width: 99%">
-                <FluentGridItem xs="6">
-                    @LeftContent
-                </FluentGridItem>
-                <FluentGridItem xs="6">
-                    @RightContent
-                </FluentGridItem>
-            </FluentGrid>
-        </FluentHeader>
-        <FluentSplitter Orientation="Orientation.Horizontal" 
-                        BarSize="6" 
-                        Panel1Size="55%"
-                        Panel1MinSize="10%" 
-                        Panel2MinSize="10%">
-            <Panel1>
+    <div class="editor-layout">
+        <div class="editor-header">
+            <div class="editor-header-left">@LeftContent</div>
+            <div class="editor-header-right">@RightContent</div>
+        </div>
+        <FluentMultiSplitter Orientation="Orientation.Horizontal" BarSize="6px" Class="editor-splitter">
+            <FluentMultiSplitterPane Size="55%" Min="10%">
                 <div class="monaco-editor-panel">
                     @* Markdown Toolbar *@
                     <MarkdownToolbar EditorId="@editorId_" />
@@ -328,19 +260,17 @@
                     }
                     <div id="@editorId_" class="monaco-editor-container"></div>
                 </div>
-            </Panel1>
-            <Panel2>
+            </FluentMultiSplitterPane>
+            <FluentMultiSplitterPane Min="10%">
                 <div class="preview-panel">
                     <div class="preview-panel-header">
-                        <FluentLabel Style="font-weight: 600; font-size: 0.875rem;">
-                            Preview
-                        </FluentLabel>
+                        <FluentText Weight="TextWeight.Bold">Preview</FluentText>
                     </div>
                     <div class="preview-panel-content">
                         @Html
                     </div>
                 </div>
-            </Panel2>
-        </FluentSplitter>
-    </FluentLayout>
+            </FluentMultiSplitterPane>
+        </FluentMultiSplitter>
+    </div>
 </div>

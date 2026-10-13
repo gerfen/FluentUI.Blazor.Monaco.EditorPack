@@ -251,22 +251,18 @@ window.monacoCssEditor = {
      * Get FluentUI design token value from computed styles
      */
     getFluentUIToken: function(tokenName) {
-        const rootStyles = getComputedStyle(document.documentElement);
-        const bodyStyles = getComputedStyle(document.body);
-        
-        // Try root first, then body
-        let value = rootStyles.getPropertyValue(tokenName).trim();
-        if (!value) {
-            value = bodyStyles.getPropertyValue(tokenName).trim();
-        }
-        
-        return value || null;
+        return window.fluentThemeTokens.get(tokenName);
     },
 
     /**
      * Get luminance to determine if theme is light or dark
      */
     getGlobalLuminance: async function() {
+        // Returns true when the Fluent theme is light (FluentDesignTheme.razor.js no longer exists in 5.x)
+        return window.fluentThemeTokens.isLight();
+    },
+
+    _unusedLegacyGetGlobalLuminance: async function() {
         try {
             // Use FluentUI's luminance calculation
             const fluentModule = await import('/_content/Microsoft.FluentUI.AspNetCore.Components/Components/DesignSystemProvider/FluentDesignTheme.razor.js');
@@ -305,19 +301,19 @@ window.monacoCssEditor = {
         const baseTheme = isLightMode ? 'vs' : 'vs-dark';
         
         // Get FluentUI colors from CSS custom properties
-        const backgroundColor = this.getFluentUIToken('--neutral-layer-1') || (isLightMode ? '#ffffff' : '#1e1e1e');
-        const foregroundColor = this.getFluentUIToken('--neutral-foreground-rest') || (isLightMode ? '#000000' : '#d4d4d4');
-        const editorBackground = this.getFluentUIToken('--neutral-fill-layer-rest') || (isLightMode ? '#ffffff' : '#1e1e1e');
-        const lineNumberColor = this.getFluentUIToken('--neutral-foreground-hint') || (isLightMode ? '#6e6e6e' : '#858585');
-        const selectionBackground = this.getFluentUIToken('--accent-fill-rest') || (isLightMode ? '#0078d4' : '#264f78');
-        const cursorColor = this.getFluentUIToken('--accent-fill-rest') || (isLightMode ? '#000000' : '#aeafad');
-        const commentColor = this.getFluentUIToken('--neutral-foreground-hint') || (isLightMode ? '#008000' : '#6a9955');
+        const backgroundColor = this.getFluentUIToken('background') || (isLightMode ? '#ffffff' : '#1e1e1e');
+        const foregroundColor = this.getFluentUIToken('foreground') || (isLightMode ? '#000000' : '#d4d4d4');
+        const editorBackground = this.getFluentUIToken('background') || (isLightMode ? '#ffffff' : '#1e1e1e');
+        const lineNumberColor = this.getFluentUIToken('foregroundMuted') || (isLightMode ? '#6e6e6e' : '#858585');
+        const selectionBackground = this.getFluentUIToken('brandBackground') || (isLightMode ? '#0078d4' : '#264f78');
+        const cursorColor = this.getFluentUIToken('brandBackground') || (isLightMode ? '#000000' : '#aeafad');
+        const commentColor = this.getFluentUIToken('foregroundMuted') || (isLightMode ? '#008000' : '#6a9955');
         // Use the most subtle hover state for IntelliSense selection - try multiple tokens in order of preference
-        const hoverBackground = this.getFluentUIToken('--neutral-fill-hover') || 
-                                this.getFluentUIToken('--neutral-fill-secondary-hover') || 
-                                this.getFluentUIToken('--neutral-layer-card-container') ||
+        const hoverBackground = this.getFluentUIToken('backgroundHover') || 
+                                this.getFluentUIToken('backgroundHoverAlt') || 
+                                this.getFluentUIToken('backgroundCard') ||
                                 (isLightMode ? '#f5f5f5' : '#2a2a2a');
-        const borderColor = this.getFluentUIToken('--neutral-stroke-layer-rest') || (isLightMode ? '#8a8886' : '#454545');
+        const borderColor = this.getFluentUIToken('stroke') || (isLightMode ? '#8a8886' : '#454545');
         
         // Define custom theme for CSS editor
         monaco.editor.defineTheme(themeName, {
@@ -325,11 +321,11 @@ window.monacoCssEditor = {
             inherit: true,
             rules: [
                 { token: 'comment.css', foreground: commentColor.replace('#', ''), fontStyle: 'italic' },
-                { token: 'keyword.css', foreground: (this.getFluentUIToken('--accent-fill-rest') || (isLightMode ? '#0078d4' : '#569cd6')).replace('#', '') },
+                { token: 'keyword.css', foreground: (this.getFluentUIToken('brandBackground') || (isLightMode ? '#0078d4' : '#569cd6')).replace('#', '') },
                 { token: 'string.css', foreground: (this.getFluentUIToken('--colorStatusSuccessForeground1') || (isLightMode ? '#a31515' : '#ce9178')).replace('#', '') },
-                { token: 'number.css', foreground: (this.getFluentUIToken('--accent-foreground-rest') || (isLightMode ? '#09885a' : '#b5cea8')).replace('#', '') },
+                { token: 'number.css', foreground: (this.getFluentUIToken('brandForeground') || (isLightMode ? '#09885a' : '#b5cea8')).replace('#', '') },
                 { token: 'variable.css', foreground: (this.getFluentUIToken('--colorStatusSuccessForeground1') || (isLightMode ? '#001080' : '#9cdcfe')).replace('#', '') },
-                { token: 'tag.css', foreground: (this.getFluentUIToken('--accent-fill-rest') || (isLightMode ? '#800000' : '#569cd6')).replace('#', '') },
+                { token: 'tag.css', foreground: (this.getFluentUIToken('brandBackground') || (isLightMode ? '#800000' : '#569cd6')).replace('#', '') },
                 // Make punctuation (including curly braces) more visible in light mode
                 { token: 'delimiter.curly.css', foreground: isLightMode ? '000000' : 'dcdcdc', fontStyle: 'bold' },
                 { token: 'delimiter.bracket.css', foreground: isLightMode ? '000000' : 'dcdcdc' },
@@ -343,10 +339,10 @@ window.monacoCssEditor = {
                 'editorCursor.foreground': cursorColor,
                 'editor.selectionBackground': selectionBackground + (isLightMode ? '50' : '40'),
                 'editor.inactiveSelectionBackground': selectionBackground + (isLightMode ? '30' : '20'),
-                'editor.lineHighlightBackground': this.getFluentUIToken('--neutral-fill-hover') || (isLightMode ? '#f3f2f1' : '#2a2d2e'),
-                'scrollbarSlider.background': (this.getFluentUIToken('--neutral-fill-stealth-rest') || (isLightMode ? '#c8c6c4' : '#797979')) + (isLightMode ? '60' : '40'),
-                'scrollbarSlider.hoverBackground': (this.getFluentUIToken('--neutral-fill-stealth-hover') || (isLightMode ? '#a19f9d' : '#646464')) + (isLightMode ? '80' : '60'),
-                'scrollbarSlider.activeBackground': (this.getFluentUIToken('--neutral-fill-stealth-active') || (isLightMode ? '#605e5c' : '#bfbfbf')) + (isLightMode ? '90' : '80'),
+                'editor.lineHighlightBackground': this.getFluentUIToken('backgroundHover') || (isLightMode ? '#f3f2f1' : '#2a2d2e'),
+                'scrollbarSlider.background': (this.getFluentUIToken('scrollbar') || (isLightMode ? '#c8c6c4' : '#797979')) + (isLightMode ? '60' : '40'),
+                'scrollbarSlider.hoverBackground': (this.getFluentUIToken('scrollbarHover') || (isLightMode ? '#a19f9d' : '#646464')) + (isLightMode ? '80' : '60'),
+                'scrollbarSlider.activeBackground': (this.getFluentUIToken('scrollbarActive') || (isLightMode ? '#605e5c' : '#bfbfbf')) + (isLightMode ? '90' : '80'),
                 'editorGutter.background': editorBackground,
                 'editorWhitespace.foreground': lineNumberColor + (isLightMode ? '50' : '40'),
                 'editorIndentGuide.background': lineNumberColor + (isLightMode ? '30' : '20'),
@@ -538,7 +534,7 @@ window.monacoCssEditor = {
                 minimap: { enabled: false },
                 scrollBeyondLastLine: false,
                 fontSize: 14,
-                fontFamily: this.getFluentUIToken('--body-font') || "'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace",
+                fontFamily: this.getFluentUIToken('fontFamily') || "'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace",
                 tabSize: 2,
                 insertSpaces: true,
                 renderWhitespace: 'selection',
@@ -895,40 +891,13 @@ window.addEventListener('beforeunload', () => {
 });
 
 // Auto-refresh Monaco theme when FluentUI theme changes
-// Listen for changes to the <body> data-theme attribute
-const cssThemeObserver = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-        if (mutation.type === 'attributes' && 
-            (mutation.attributeName === 'data-theme' || mutation.attributeName === 'class')) {
-            console.log('[MonacoCss] FluentUI theme changed, refreshing all CSS editors');
-            
-            // Refresh theme for all active editors (async)
-            window.monacoCssEditor.editors.forEach(async (state, containerId) => {
-                if (state?.editor) {
-                    await window.monacoCssEditor.updateTheme(containerId);
-                }
-            });
-            break;
+window.fluentThemeTokens.onChange(() => {
+    console.log('[MonacoCss] FluentUI theme changed, refreshing all CSS editors');
+    window.monacoCssEditor.editors.forEach(async (state, containerId) => {
+        if (state?.editor) {
+            await window.monacoCssEditor.updateTheme(containerId);
         }
-    }
+    });
 });
-
-// Start observing <body> for theme changes
-if (document.body) {
-    cssThemeObserver.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['data-theme', 'class']
-    });
-    console.log('[MonacoCss] Theme change observer activated');
-} else {
-    // If body not ready, wait for DOM
-    document.addEventListener('DOMContentLoaded', () => {
-        cssThemeObserver.observe(document.body, {
-            attributes: true,
-            attributeFilter: ['data-theme', 'class']
-        });
-        console.log('[MonacoCss] Theme change observer activated (after DOM load)');
-    });
-}
 
 console.log('[MonacoCss] Module loaded');

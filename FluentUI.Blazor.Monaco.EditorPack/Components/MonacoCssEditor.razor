@@ -5,7 +5,7 @@
     <div id="@editorId_" class="monaco-editor-wrapper"></div>
     @if (editorSession_?.IsModified == true)
     {
-        <FluentBadge Content="•" color="Accent" class="modified-indicator" />
+        <FluentBadge Content="@("â—")" Color="BadgeColor.Brand" class="modified-indicator" />
     }
     @if (!isInitialized_)
     {
@@ -121,30 +121,7 @@
         background: rgba(0, 0, 0, 0.05) !important;
     }
 
-    /* Dark theme scrollbar adjustments */
-    @@media (prefers-color-scheme: dark) {
-        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
-            background: rgba(191, 191, 191, 0.4) !important;
-        }
-        
-        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:hover {
-            background: rgba(191, 191, 191, 0.6) !important;
-        }
-        
-        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider:active {
-            background: rgba(255, 255, 255, 0.8) !important;
-        }
-        
-        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar {
-            background: rgba(255, 255, 255, 0.02) !important;
-        }
-        
-        .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar:hover {
-            background: rgba(255, 255, 255, 0.05) !important;
-        }
-    }
-
-    /* Explicit dark theme support via data attribute */
+    /* Dark theme scrollbars follow the in-app theme (data-theme set by siteTheme.js) */
     body[data-theme="dark"] .css-editor-container .monaco-editor .monaco-scrollable-element > .scrollbar > .slider {
         background: rgba(191, 191, 191, 0.4) !important;
     }

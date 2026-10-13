@@ -28,7 +28,8 @@
     
     // Scripts must load in this order (dependencies)
     const scripts = [
-        'fluentUIDesignTokens.js',      // Must load first (used by editors)
+        'fluentThemeTokens.js',         // Must load first (Fluent 5.x token bridge, light/dark detection)
+        'fluentUIDesignTokens.js',      // Token harvester for IntelliSense
         'cssClassHarvester.js',          // Used by editors
         'monacoCssEditorTheme.js',       // CSS editor theme
         'monacoCssEditor.js',            // CSS editor

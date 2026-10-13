@@ -12,7 +12,7 @@ public class MonacoMarkdownEditorBUnitTests : TestContext
     public MonacoMarkdownEditorBUnitTests()
     {
         Services.AddSingleton<IHtmlSanitizer>(_ => new HtmlSanitizer());
-        Services.AddSingleton(new LibraryConfiguration());
+        Services.AddFluentUIComponents();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 

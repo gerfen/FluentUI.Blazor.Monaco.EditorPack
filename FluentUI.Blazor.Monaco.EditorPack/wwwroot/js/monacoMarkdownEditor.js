@@ -95,16 +95,7 @@ window.monacoMarkdownEditor = {
      * Get FluentUI design token value from computed styles
      */
     getFluentUIToken: function(tokenName) {
-        const rootStyles = getComputedStyle(document.documentElement);
-        const bodyStyles = getComputedStyle(document.body);
-        
-        // Try root first, then body
-        let value = rootStyles.getPropertyValue(tokenName).trim();
-        if (!value) {
-            value = bodyStyles.getPropertyValue(tokenName).trim();
-        }
-        
-        return value || null;
+        return window.fluentThemeTokens.get(tokenName);
     },
 
     /**
@@ -117,25 +108,25 @@ window.monacoMarkdownEditor = {
         }
 
         // Get FluentUI colors from CSS custom properties
-        const backgroundColor = this.getFluentUIToken('--neutral-layer-1') || '#1e1e1e';
-        const foregroundColor = this.getFluentUIToken('--neutral-foreground-rest') || '#d4d4d4';
-        const editorBackground = this.getFluentUIToken('--neutral-fill-layer-rest') || '#1e1e1e';
-        const lineNumberColor = this.getFluentUIToken('--neutral-foreground-hint') || '#858585';
-        const selectionBackground = this.getFluentUIToken('--accent-fill-rest') || '#264f78';
-        const cursorColor = this.getFluentUIToken('--accent-fill-rest') || '#aeafad';
-        const commentColor = this.getFluentUIToken('--neutral-foreground-hint') || '#6a9955';
-        const hoverBackground = this.getFluentUIToken('--neutral-fill-secondary-hover') || '#2a2d2e';
-        const borderColor = this.getFluentUIToken('--neutral-stroke-layer-rest') || '#454545';
+        const backgroundColor = this.getFluentUIToken('background') || '#1e1e1e';
+        const foregroundColor = this.getFluentUIToken('foreground') || '#d4d4d4';
+        const editorBackground = this.getFluentUIToken('background') || '#1e1e1e';
+        const lineNumberColor = this.getFluentUIToken('foregroundMuted') || '#858585';
+        const selectionBackground = this.getFluentUIToken('brandBackground') || '#264f78';
+        const cursorColor = this.getFluentUIToken('brandBackground') || '#aeafad';
+        const commentColor = this.getFluentUIToken('foregroundMuted') || '#6a9955';
+        const hoverBackground = this.getFluentUIToken('backgroundHoverAlt') || '#2a2d2e';
+        const borderColor = this.getFluentUIToken('stroke') || '#454545';
         
         // Define custom theme
         monaco.editor.defineTheme(themeName, {
-            base: 'vs-dark',
+            base: window.fluentThemeTokens.isLight() ? 'vs' : 'vs-dark',
             inherit: true,
             rules: [
                 { token: 'comment', foreground: commentColor.replace('#', ''), fontStyle: 'italic' },
-                { token: 'keyword', foreground: (this.getFluentUIToken('--accent-fill-rest') || '#569cd6').replace('#', '') },
-                { token: 'string', foreground: (this.getFluentUIToken('--colorStatusSuccessForeground1') || '#ce9178').replace('#', '') },
-                { token: 'number', foreground: (this.getFluentUIToken('--accent-foreground-rest') || '#b5cea8').replace('#', '') },
+                { token: 'keyword', foreground: (this.getFluentUIToken('brandBackground') || '#569cd6').replace('#', '') },
+                { token: 'string', foreground: (this.getFluentUIToken('successForeground') || '#ce9178').replace('#', '') },
+                { token: 'number', foreground: (this.getFluentUIToken('brandForeground') || '#b5cea8').replace('#', '') },
             ],
             colors: {
                 'editor.background': editorBackground,
@@ -145,11 +136,11 @@ window.monacoMarkdownEditor = {
                 'editorCursor.foreground': cursorColor,
                 'editor.selectionBackground': selectionBackground + '40',
                 'editor.inactiveSelectionBackground': selectionBackground + '20',
-                'editor.lineHighlightBackground': this.getFluentUIToken('--neutral-fill-hover') || '#2a2d2e',
+                'editor.lineHighlightBackground': this.getFluentUIToken('backgroundHover') || '#2a2d2e',
                 // Match scrollbar colors from CSS editor using FluentUI tokens
-                'scrollbarSlider.background': (this.getFluentUIToken('--neutral-fill-stealth-rest') || '#797979') + '40',
-                'scrollbarSlider.hoverBackground': (this.getFluentUIToken('--neutral-fill-stealth-hover') || '#646464') + '60',
-                'scrollbarSlider.activeBackground': (this.getFluentUIToken('--neutral-fill-stealth-active') || '#bfbfbf') + '80',
+                'scrollbarSlider.background': (this.getFluentUIToken('scrollbar') || '#797979') + '40',
+                'scrollbarSlider.hoverBackground': (this.getFluentUIToken('scrollbarHover') || '#646464') + '60',
+                'scrollbarSlider.activeBackground': (this.getFluentUIToken('scrollbarActive') || '#bfbfbf') + '80',
                 'scrollbar.shadow': '#00000033',
                 'editorGutter.background': editorBackground,
                 'editorWhitespace.foreground': lineNumberColor + '40',
@@ -188,7 +179,7 @@ window.monacoMarkdownEditor = {
     registerCustomTheme: function() {
         // Clear any existing theme
         if (window.monaco) {
-            window.monaco.editor.setTheme('vs-dark');
+            window.monaco.editor.setTheme(window.fluentThemeTokens.isLight() ? 'vs' : 'vs-dark');
         }
         
         // Register new theme
@@ -577,7 +568,7 @@ window.monacoMarkdownEditor = {
                 minimap: { enabled: false },
                 scrollBeyondLastLine: false,
                 fontSize: 14,
-                fontFamily: this.getFluentUIToken('--body-font') || "'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace",
+                fontFamily: this.getFluentUIToken('fontFamily') || "'Cascadia Code', 'Fira Code', 'Consolas', 'Monaco', monospace",
                 tabSize: 2,
                 insertSpaces: true,
                 renderWhitespace: 'selection',
@@ -850,7 +841,7 @@ window.monacoMarkdownEditor = {
                 minimap: { enabled: false },
                 scrollBeyondLastLine: false,
                 fontSize: 14,
-                fontFamily: this.getFluentUIToken('--body-font') || 'Consolas, "Courier New", monospace',
+                fontFamily: this.getFluentUIToken('fontFamily') || 'Consolas, "Courier New", monospace',
                 lineHeight: 1.6,
                 padding: { top: 10, bottom: 10 },
                 renderWhitespace: 'selection',
@@ -1082,41 +1073,15 @@ window.addEventListener('beforeunload', () => {
     window.monacoMarkdownEditor.disposeAll();
 });
 
-// Auto-refresh Monaco theme when FluentUI theme changes
-// Listen for changes to the <body> data-theme attribute
-const themeObserver = new MutationObserver((mutations) => {
-    for (const mutation of mutations) {
-        if (mutation.type === 'attributes' && 
-            (mutation.attributeName === 'data-theme' || mutation.attributeName === 'class')) {
-            console.log('[MonacoMarkdown] FluentUI theme changed, refreshing all Monaco editors');
-            
-            // Refresh theme for all active editors
-            window.monacoMarkdownEditor.editors.forEach((state, containerId) => {
-                if (state?.editor) {
-                    window.monacoMarkdownEditor.updateTheme(containerId);
-                }
-            });
-            break;
+// Auto-refresh Monaco theme when the Fluent UI 5.x theme changes
+// (data-theme / class / style / color-scheme / prefers-color-scheme, only when resolved values change)
+window.fluentThemeTokens.onChange(() => {
+    console.log('[MonacoMarkdown] FluentUI theme changed, refreshing all Monaco editors');
+    window.monacoMarkdownEditor.editors.forEach((state, containerId) => {
+        if (state?.editor) {
+            window.monacoMarkdownEditor.updateTheme(containerId);
         }
-    }
+    });
 });
-
-// Start observing <body> for theme changes
-if (document.body) {
-    themeObserver.observe(document.body, {
-        attributes: true,
-        attributeFilter: ['data-theme', 'class']
-    });
-    console.log('[MonacoMarkdown] Theme change observer activated');
-} else {
-    // If body not ready, wait for DOM
-    document.addEventListener('DOMContentLoaded', () => {
-        themeObserver.observe(document.body, {
-            attributes: true,
-            attributeFilter: ['data-theme', 'class']
-        });
-        console.log('[MonacoMarkdown] Theme change observer activated (after DOM load)');
-    });
-}
 
 console.log('[MonacoMarkdownEditor] Module loaded');

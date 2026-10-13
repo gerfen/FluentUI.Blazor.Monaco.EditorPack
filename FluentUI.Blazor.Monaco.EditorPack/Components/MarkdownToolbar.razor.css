@@ -5,8 +5,8 @@
     flex-wrap: wrap;
     gap: 4px;
     padding: 8px 12px;
-    background: var(--neutral-layer-1) !important;
-    border-bottom: 1px solid var(--neutral-stroke-rest);
+    background: var(--colorNeutralBackground1) !important;
+    border-bottom: 1px solid var(--colorNeutralStroke2);
     min-height: 44px;
     align-items: center;
 }
