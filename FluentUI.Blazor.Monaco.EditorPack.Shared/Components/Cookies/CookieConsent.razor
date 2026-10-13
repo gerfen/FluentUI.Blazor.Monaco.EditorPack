@@ -1,4 +1,4 @@
-﻿@if (_showBanner)
+@if (_showBanner)
 {
     <div id="cookieconsent" role="alert">
         <FluentGrid Spacing="0" Justify="JustifyContent.Center">
@@ -15,13 +15,13 @@
             <FluentGridItem Justify="JustifyContent.Center" Gap="10px" Class="buttons" sm="4" xs="12">
                 <FluentGrid Spacing="3">
                     <FluentGridItem sm="4" xs="12">
-                        <FluentButton Class="button" @onclick="AcceptPolicyAsync" Title="Accept" Appearance="Appearance.Outline">Accept</FluentButton>
+                        <FluentButton Class="button" @onclick="AcceptPolicyAsync" Title="Accept" Appearance="ButtonAppearance.Outline">Accept</FluentButton>
                     </FluentGridItem>
                     <FluentGridItem sm="4" xs="12">
-                        <FluentButton Class="button" @onclick="RejectPolicyAsync" Title="Reject" Appearance="Appearance.Outline">Reject</FluentButton>
+                        <FluentButton Class="button" @onclick="RejectPolicyAsync" Title="Reject" Appearance="ButtonAppearance.Outline">Reject</FluentButton>
                     </FluentGridItem>
                     <FluentGridItem sm="4" xs="12">
-                        <FluentButton Class="button" @onclick="ManageCookiesAsync" Title="Manage cookies" Appearance="Appearance.Outline">Manage cookies</FluentButton>
+                        <FluentButton Class="button" @onclick="ManageCookiesAsync" Title="Manage cookies" Appearance="ButtonAppearance.Outline">Manage cookies</FluentButton>
                     </FluentGridItem>
                 </FluentGrid>
             </FluentGridItem>

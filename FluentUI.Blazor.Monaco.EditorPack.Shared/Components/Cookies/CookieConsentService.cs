@@ -2,7 +2,7 @@
 // MIT License - Copyright (c) Microsoft Corporation. All rights reserved.
 // ------------------------------------------------------------------------
 
-using Microsoft.FluentUI.AspNetCore.Components.Utilities;
+using FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Infrastructure;
 using Microsoft.JSInterop;
 
 namespace FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Cookies;

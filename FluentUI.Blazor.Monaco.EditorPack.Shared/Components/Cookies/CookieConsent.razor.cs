@@ -18,7 +18,6 @@ public partial class CookieConsent()
     [Inject]
     public IDialogService DialogService { get; set; } = default!;
 
-    private IDialogReference? _dialog;
     private bool _showBanner = false;
     private CookieState? _cookieState;
 
@@ -57,23 +56,17 @@ public partial class CookieConsent()
     {
         _cookieState ??= await CookieConsentService.GetCookieStateAsync() ?? new();
 
-        _dialog = await DialogService.ShowDialogAsync(DialogHelper.From<ManageCookies>(), _cookieState, new DialogParameters()
+        var result = await DialogService.ShowDialogAsync<ManageCookies>(options =>
         {
-            Title = $"Manage cookie preferences",
-            PrimaryAction = "Save changes",
-            SecondaryAction = "Reset all",
-            ShowDismiss = true,
-            Width = "640px",
-            Height = "610px",
-            PreventDismissOnOverlayClick = true,
-            PreventScroll = true,
-
+            options.Header.Title = "Manage cookie preferences";
+            options.Header.CloseAction.Visible = true;
+            options.Modal = true;
+            options.Parameters.Add(nameof(ManageCookies.Content), _cookieState);
         });
-        var result = await _dialog.Result;
 
-        if (!result.Cancelled && result.Data is not null)
+        if (!result.Cancelled && result.Value is CookieState state)
         {
-            _cookieState = (CookieState)result.Data;
+            _cookieState = state;
 
             await CookieConsentService.SetCookieStateAsync(_cookieState);
             await InitAnalyticsAsync();

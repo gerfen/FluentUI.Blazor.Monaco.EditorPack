@@ -5,9 +5,10 @@
     width: 100%;
     justify-content: space-between;
     text-align: left;
-    background-color: var(--neutral-layer-2);
+    background-color: var(--colorNeutralBackground2);
+    color: var(--colorNeutralForeground1);
     font-size: 13px;
-    line-height: var(--type-ramp-minus-1-line-height);
+    line-height: var(--lineHeightBase200);
 }
 
 ::deep .info {
@@ -29,10 +30,10 @@
     vertical-align: middle !important;
     padding: 0 !important;
     font-size: 13px;
-    line-height: var(--type-ramp-minus-1-line-height);
+    line-height: var(--lineHeightBase200);
 }
 
-::deep .buttons {
+::deep .buttons
     display: inline-block;
     margin-left: 5%;
     margin-right: 5%;
