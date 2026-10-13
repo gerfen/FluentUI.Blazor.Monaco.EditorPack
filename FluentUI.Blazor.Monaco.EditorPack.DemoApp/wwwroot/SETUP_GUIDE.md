@@ -26,8 +26,14 @@ builder.Services.AddFluentUIComponents();
 builder.Services.AddMonacoEditorPack();
 
 var app = builder.Build();
+
+app.UseHttpsRedirection();
+app.UseAntiforgery();
+app.MapStaticAssets();
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
 app.Run();
 ```
 
@@ -40,17 +46,15 @@ app.Run();
     <meta charset="utf-8" />
     <base href="/" />
     
-    <!-- FluentUI CSS -->
-    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" rel="stylesheet" />
+    <!-- Fluent UI v5 CSS and module -->
+    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css" rel="stylesheet" />
     <link rel="stylesheet" href="_content/FluentUI.Blazor.Monaco.EditorPack/css/markdownPreview.css" />
-    
+    <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
+
     <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: true)" />
 </head>
 
 <body>
-    <!-- Single FluentDesignTheme (required) -->
-    <FluentDesignTheme StorageName="theme" />
-    
     <Routes @rendermode="new InteractiveServerRenderMode(prerender: true)" />
     
     <script src="_framework/blazor.web.js"></script>
@@ -62,7 +66,39 @@ app.Run();
 </html>
 ```
 
-**Important:** Place `FluentDesignTheme` in `App.razor` only - do NOT add it to layouts or other components.
+### 3. Routes.razor
+
+```razor
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+</Router>
+```
+
+### 4. MainLayout.razor
+
+Fluent UI v5 requires `<FluentProviders />` once, at the end of your main layout (it replaces `FluentDesignTheme` and the v4 provider components). Without it, dialogs, toasts and tooltips will not work.
+
+```razor
+@inherits LayoutComponentBase
+
+@Body
+
+<FluentProviders />
+```
+
+Migrating from Fluent UI v4? See the [Upgrade Guide](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/HEAD/UPGRADE_GUIDE_FLUENTUI_V5.md).
+
+### 5. _Imports.razor
+
+```razor
+@using Microsoft.FluentUI.AspNetCore.Components
+@using FluentUI.Blazor.Monaco.EditorPack.Components
+```
+
+> Only `AddFluentUIComponents()` and `AddMonacoEditorPack()` are required in `Program.cs`. Fluent UI Blazor v5 also requires an interactive render mode.
 
 ## Usage Examples
 
@@ -92,9 +128,10 @@ app.Run();
     private string content = "# Hello World";
     private string customCss = ".highlight { background: yellow; }";
     
-    private async Task OnMarkdownChanged(string newContent)
+    private Task OnMarkdownChanged(string newContent)
     {
         content = newContent;
+        return Task.CompletedTask;
     }
     
     private void Save()
@@ -118,14 +155,15 @@ app.Run();
     private MonacoCssEditor? cssEditor;
     private string cssContent = @"
         .my-class {
-            color: var(--accent-fill-rest);
-            background: var(--neutral-layer-1);
+            color: var(--colorBrandForeground1);
+            background: var(--colorNeutralBackground1);
         }
     ";
     
-    private async Task OnCssChanged(string newCss)
+    private Task OnCssChanged(string newCss)
     {
         cssContent = newCss;
+        return Task.CompletedTask;
     }
 }
 ```
@@ -153,19 +191,11 @@ The editors automatically adapt to FluentUI theme changes (light/dark mode).
 To allow users to change themes:
 
 ```razor
-<FluentDesignTheme @ref="theme"
-                   @bind-Mode="@mode"
-                   @bind-OfficeColor="@color"
-                   StorageName="theme" />
+@inject IThemeService ThemeService
 
-<FluentSelect Items="@modes" @bind-SelectedOption="@mode" />
-
-@code {
-    private FluentDesignTheme? theme;
-    private DesignThemeModes mode = DesignThemeModes.System;
-    private OfficeColor? color = OfficeColor.Default;
-    private IEnumerable<DesignThemeModes> modes => Enum.GetValues<DesignThemeModes>();
-}
+<FluentButton OnClick="@(() => ThemeService.SetThemeAsync(ThemeMode.Dark))">Dark</FluentButton>
+<FluentButton OnClick="@(() => ThemeService.SetThemeAsync(ThemeMode.Light))">Light</FluentButton>
+<FluentButton OnClick="@(() => ThemeService.SetThemeAsync(ThemeMode.System))">System</FluentButton>
 ```
 
 ## Troubleshooting
@@ -176,8 +206,9 @@ To allow users to change themes:
 - Ensure `AddMonacoEditorPack()` is called in `Program.cs`
 
 ### Theme Not Applied
-- Ensure only ONE `FluentDesignTheme` exists (in `App.razor`)
-- Check `StorageName="theme"` is set
+- Ensure `<FluentProviders />` is in the main layout
+- Verify the Fluent UI v5 CSS bundle and `lib.module.js` are referenced
+- If the console reports a `ThemeSettings` deserialization error, clear the `theme` entry in browser localStorage
 
 ### IntelliSense Not Working
 - Design tokens are harvested on first editor load

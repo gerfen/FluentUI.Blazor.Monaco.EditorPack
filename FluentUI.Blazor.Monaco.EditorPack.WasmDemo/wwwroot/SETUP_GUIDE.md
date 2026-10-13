@@ -45,17 +45,14 @@ await builder.Build().RunAsync();
     <base href="/" />
     <title>Your App</title>
     
-    <!-- FluentUI CSS -->
-    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.min.css" rel="stylesheet" />
+    <!-- Fluent UI v5 CSS -->
+    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css" rel="stylesheet" />
     <link rel="stylesheet" href="_content/FluentUI.Blazor.Monaco.EditorPack/css/markdownPreview.css" />
     
     <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
 </head>
 
 <body>
-    <!-- Single FluentDesignTheme (required) -->
-    <FluentDesignTheme StorageName="theme" />
-    
     <div id="app">
         <!-- Loading indicator -->
         <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
@@ -66,7 +63,7 @@ await builder.Build().RunAsync();
     <div id="blazor-error-ui">
         An error has occurred.
         <a href="" class="reload">Reload</a>
-        <a class="dismiss">??</a>
+        <a class="dismiss">&times;</a>
     </div>
     
     <script src="_framework/blazor.webassembly.js"></script>
@@ -88,17 +85,44 @@ await builder.Build().RunAsync();
 ```razor
 @using Microsoft.AspNetCore.Components.Routing
 
-<Router AppAssembly="typeof(Program).Assembly">
+<Router AppAssembly="@typeof(Program).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
     </Found>
     <NotFound>
-        <p>Page not found</p>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(Layout.MainLayout)">
+            <p>Page not found</p>
+        </LayoutView>
     </NotFound>
 </Router>
 ```
 
 **Important:** NO `@rendermode` needed in WASM - everything runs client-side.
+
+### 4. MainLayout.razor
+
+Fluent UI v5 requires `<FluentProviders />` once, at the end of your main layout (it replaces `FluentDesignTheme` and the v4 provider components). Without it, dialogs, toasts and tooltips will not work.
+
+```razor
+@inherits LayoutComponentBase
+
+@Body
+
+<FluentProviders />
+```
+
+Migrating from Fluent UI v4? See the [Upgrade Guide](https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack/blob/HEAD/UPGRADE_GUIDE_FLUENTUI_V5.md).
+
+### 5. _Imports.razor
+
+```razor
+@using Microsoft.FluentUI.AspNetCore.Components
+@using FluentUI.Blazor.Monaco.EditorPack.Components
+```
+
+> Only `AddFluentUIComponents()` and `AddMonacoEditorPack()` are required in `Program.cs`.
 
 ## Usage Examples
 
@@ -128,9 +152,10 @@ await builder.Build().RunAsync();
     private string content = "# Hello WASM!";
     private string customCss = ".highlight { background: yellow; }";
     
-    private async Task OnMarkdownChanged(string newContent)
+    private Task OnMarkdownChanged(string newContent)
     {
         content = newContent;
+        return Task.CompletedTask;
     }
     
     private void Save()
@@ -146,7 +171,7 @@ await builder.Build().RunAsync();
 ```razor
 <div style="height: 600px;">
     <MonacoCssEditor @ref="cssEditor"
-                     AdditionalCss="@cssContent"
+                     Css="@cssContent"
                      CssChanged="@OnCssChanged" />
 </div>
 
@@ -154,14 +179,15 @@ await builder.Build().RunAsync();
     private MonacoCssEditor? cssEditor;
     private string cssContent = @"
         .my-class {
-            color: var(--accent-fill-rest);
-            background: var(--neutral-layer-1);
+            color: var(--colorBrandForeground1);
+            background: var(--colorNeutralBackground1);
         }
     ";
     
-    private async Task OnCssChanged(string newCss)
+    private Task OnCssChanged(string newCss)
     {
         cssContent = newCss;
+        return Task.CompletedTask;
     }
 }
 ```
@@ -181,6 +207,18 @@ await builder.Build().RunAsync();
 - CSS property auto-completion
 - Real-time validation
 - Theme-aware syntax highlighting
+
+## Theme Support
+
+The editors automatically adapt to Fluent UI theme changes (light/dark mode). To let users change the theme:
+
+```razor
+@inject IThemeService ThemeService
+
+<FluentButton OnClick="@(() => ThemeService.SetThemeAsync(ThemeMode.Dark))">Dark</FluentButton>
+<FluentButton OnClick="@(() => ThemeService.SetThemeAsync(ThemeMode.Light))">Light</FluentButton>
+<FluentButton OnClick="@(() => ThemeService.SetThemeAsync(ThemeMode.System))">System</FluentButton>
+```
 
 ## WASM-Specific Features
 
@@ -217,9 +255,9 @@ Enable offline support by adding Monaco files to service worker cache manifest.
 - Ensure `AddMonacoEditorPack()` is called in `Program.cs`
 
 ### Theme Not Applied
-- Ensure `FluentDesignTheme` is in `index.html` body
-- Check `StorageName="theme"` is set
-- Verify FluentUI scripts are loaded
+- Ensure `<FluentProviders />` is in the main layout
+- Verify the Fluent UI v5 CSS bundle and `lib.module.js` are loaded
+- If the console reports a `ThemeSettings` deserialization error, clear the `theme` entry in browser localStorage
 
 ### IntelliSense Not Working
 - Design tokens are harvested on first editor load
