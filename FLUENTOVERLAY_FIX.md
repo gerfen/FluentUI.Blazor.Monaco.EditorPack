@@ -1,5 +1,7 @@
 # FluentOverlay API Fix
 
+> **Historical note:** This fix was written against Fluent UI Blazor 4.13.2. The project is now on v5; see [UPGRADE_GUIDE_FLUENTUI_V5.md](UPGRADE_GUIDE_FLUENTUI_V5.md). `FluentOverlay` v5 properties were not re-verified here.
+
 ## Issue
 Runtime error in WASM demo:
 ```

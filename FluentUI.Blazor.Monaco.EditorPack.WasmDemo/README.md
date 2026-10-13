@@ -2,6 +2,8 @@
 
 This is a **Blazor WebAssembly** demo application showcasing the FluentUI.Blazor.Monaco.EditorPack library running entirely in the browser with no server-side dependencies.
 
+> Built on **Fluent UI Blazor v5** (`Microsoft.FluentUI.AspNetCore.Components` 5.x). See the [Upgrade Guide](../UPGRADE_GUIDE_FLUENTUI_V5.md).
+
 ## Features
 
 ? **Full Monaco Editor Integration** - VS Code-powered editors in Blazor WASM  

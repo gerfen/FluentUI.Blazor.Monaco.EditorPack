@@ -314,7 +314,7 @@ After pushing to `master` (or manually deploying):
 - Check browser console for specific 404 errors
 - Ensure `monaco-editor-pack.js` uses relative basePath
 
-### Issue: FluentUI CSS (reboot.css) not loading
+### Issue: FluentUI CSS not loading
 
 **Cause**: Absolute path in CSS reference.
 
@@ -322,10 +322,10 @@ After pushing to `master` (or manually deploying):
 - All CSS `<link>` tags in `index.html` should use relative paths:
   ```html
   <!-- Correct (relative) -->
-  <link href="_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" rel="stylesheet" />
-  
+  <link href="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css" rel="stylesheet" />
+
   <!-- Wrong (absolute) -->
-  <link href="/_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" rel="stylesheet" />
+  <link href="/_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css" rel="stylesheet" />
   ```
 
 ### Issue: Monaco Editor not loading (404 on editor.main.js)

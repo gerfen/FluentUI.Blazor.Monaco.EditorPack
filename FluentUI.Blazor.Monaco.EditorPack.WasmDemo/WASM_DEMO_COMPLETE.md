@@ -117,8 +117,8 @@ The WASM demo uses:
 ```xml
 <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.0" />
 <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.0" />
-<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.13.2" />
-<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.13.2" />
+Version="5.0.0" />
+<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="5.0.0" />
 ```
 
 Plus project reference:
@@ -139,12 +139,14 @@ Users can switch between:
 Theme persisted in browser `localStorage` and automatically applies to Monaco editors.
 
 ### Theme Storage
+Fluent UI v5 `IThemeService` stores a JSON `ThemeSettings` object (including `mode`) under the `theme` localStorage key, and the site applies `data-theme` to the DOM:
+
 ```javascript
-// Saved to localStorage
-localStorage.setItem('theme', 'Dark');
+// Saved to localStorage (managed by IThemeService)
+// {"mode":"Dark", ...}
 
 // Applied to DOM
-document.body.setAttribute('data-theme', 'dark');
+document.documentElement.setAttribute('data-theme', 'dark');
 ```
 
 ---
@@ -209,8 +211,9 @@ await builder.Build().RunAsync();
 
 ### index.html Key Sections
 ```html
-<!-- FluentUI Theme (in body, not head) -->
-<FluentDesignTheme StorageName="theme" />
+<!-- Fluent UI v5 CSS bundle and module (in head) -->
+<link href="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css" rel="stylesheet" />
+<script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
 
 <!-- App container -->
 <div id="app">
