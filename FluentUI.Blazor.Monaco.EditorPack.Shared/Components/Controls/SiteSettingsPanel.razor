@@ -1,69 +1,35 @@
-﻿@implements IDialogContentComponent
+@namespace FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Controls
+@inherits FluentDialogInstance
 
-<div>
-    <FluentDesignTheme @ref=_theme
-                       @bind-Mode="@Mode"
-                       @bind-OfficeColor="@OfficeColor"
-                       @bind-NeutralBaseColor="@NeutralColor"
-                       Direction="@Direction"
-                       StorageName="theme" />
-
-    <FluentStack Orientation="Orientation.Vertical" VerticalGap="5">
-        <FluentSelect Label="Theme"
+<FluentDialogBody>
+    <FluentStack Orientation="Orientation.Vertical" VerticalGap="20">
+        <FluentSelect TOption="string"
+                      TValue="string"
+                      Label="Theme"
                       Width="100%"
-                      Style="margin-bottom: 30px;"
                       Items="@AllModes"
-                      @bind-SelectedOption="@Mode" />
+                      Value="@Mode"
+                      ValueChanged="@OnModeChangedAsync" />
 
-        <FluentSelect Label="Color"
-                      Style="margin-bottom: 30px;"
+        <FluentSelect TOption="string"
+                      TValue="string"
+                      Label="Color"
                       Width="100%"
-                      Items="@(OfficeColorUtilities.AllColors.Cast<OfficeColor?>())"
-                      Height="200px"
-                      SelectedOption="@OfficeColor"
-                      SelectedOptionChanged="@(async (OfficeColor? newColor) => await OnColorChangedAsync(newColor))">
-            <OptionTemplate>
-                <FluentStack>
-                    <FluentIcon Value="@(new Icons.Filled.Size20.RectangleLandscape())"
-                                Color="Color.Custom"
-                                CustomColor="@GetCustomColor(@context)" />
-                    <FluentLabel>@context</FluentLabel>
-                </FluentStack>
-            </OptionTemplate>
-        </FluentSelect>
+                      Items="@AllColors"
+                      Value="@ColorName"
+                      ValueChanged="@OnColorChangedAsync" />
 
         <FluentDivider Style="width: 100%; margin: 1rem 0" />
-        
-        <FluentPopover Style="width: 350px;" AnchorId="info" FixedPlacement="true" @bind-Open="@_popVisible">
-            <Header>Reset site settings</Header>
-            <Body>
-                <p>
-                    This site stores settings for the theme and color and downloaded samples, emoji and icons in the browser' cache and local storage.
-                </p>
-                <p>
-                    You can check the contents of the cache and storage in the browser's developer tools. If you are using Edge or Chrome, you can do this by
-                    going to the Application tab and then clicking on the Cache Storage or Local Storage section.<br />
-                    In Firefox, you can do this by going to the Storage tab and then clicking on the Cache Storage or Local Storage section.
-                </p>
 
-                <p>
-                    If you feel like you're not seeing the latest and greatest of samples, emoji or icons, or you want to clear out the stored theme and color,
-                    click the button below to clear the cache and reset to system theme with a random color.
-                </p>
-                <p>
-                    <strong>Don't worry, this will <strong>only</strong> reset stored data for <strong>this</strong> site. It will not clear any of your browser's cache for other sites!</strong>
-                </p>
-            </Body>
-        </FluentPopover>
+        <p>
+            This site stores settings for the theme and color and downloaded samples in the browser's cache and local storage.
+            Use the button below to clear them and reset to the system theme.
+        </p>
 
-        <FluentStack VerticalAlignment="VerticalAlignment.Center">
-            <FluentButton Style="width: 125px;" OnClick="@ResetSiteAsync">Reset settings</FluentButton>
-            <FluentIcon Id="info" Value="@(new Icons.Regular.Size24.Info())" OnClick="@(() => _popVisible = !_popVisible)" />
-        </FluentStack>
-        <FluentButton Style="width: 125px;" OnClick="@ManageCookieSettingsAsync">Manage cookies</FluentButton>
-        
+        <FluentButton Style="width: 125px;" OnClick="@ResetSiteAsync">Reset settings</FluentButton>
+
         <p style="margin-top: 1rem;">
             <em><strong>@_status</strong></em>
         </p>
     </FluentStack>
-</div>
+</FluentDialogBody>

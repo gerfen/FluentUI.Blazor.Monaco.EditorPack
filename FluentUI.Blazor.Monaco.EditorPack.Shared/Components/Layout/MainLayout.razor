@@ -4,23 +4,21 @@
 @implements IDisposable
 
 <FluentLayout>
-    <FluentHeader Fixed="true" Style="z-index: 998; background: var(--neutral-layer-4); padding: 16px;">
-        <FluentLabel Typo="Typography.H1" Style="margin: 0;">
-            @PageTitleService.CurrentTitle
-        </FluentLabel>
-        <FluentSpacer/>
-        <SiteSettings/>
-    </FluentHeader>
-    <FluentBodyContent Class="body-content">
-        <CookieConsent/>
-        <FluentMessageBarProvider Section="@MESSAGES_TOP" Style="padding-bottom: 1rem;"/>
+    <FluentLayoutItem Area="LayoutArea.Header" Style="z-index: 998; background: var(--colorNeutralBackground3); padding: 16px;">
+        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center">
+            <FluentText As="TextTag.H1" Style="margin: 0; color: var(--colorNeutralForeground1);">
+                @PageTitleService.CurrentTitle
+            </FluentText>
+            <FluentSpacer />
+            <SiteSettings />
+        </FluentStack>
+    </FluentLayoutItem>
+    <FluentLayoutItem Area="LayoutArea.Content" Class="body-content">
+        <CookieConsent />
+        <FluentMessageBarProvider Section="@MESSAGES_TOP" Style="padding-bottom: 1rem;" />
         @Body
-        <FluentToastProvider MaxToastCount="10"/>
-        <FluentDialogProvider/>
-        <FluentTooltipProvider/>
-        <FluentKeyCodeProvider/>
-        <FluentMenuProvider/>
-    </FluentBodyContent>
+        <FluentProviders />
+    </FluentLayoutItem>
 </FluentLayout>
  
 @code

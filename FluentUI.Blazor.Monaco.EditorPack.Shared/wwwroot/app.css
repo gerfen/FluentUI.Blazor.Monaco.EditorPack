@@ -7,23 +7,23 @@
 /* Body and Typography */
 body {
     --body-font: "Segoe UI Variable", "Segoe UI", sans-serif;
-    font-family: var(--body-font);
-    font-size: var(--type-ramp-base-font-size);
-    line-height: var(--type-ramp-base-line-height);
-    background: var(--neutral-layer-1);
-    color: var(--neutral-foreground-rest);
+    font-family: var(--fontFamilyBase, var(--body-font));
+    font-size: var(--fontSizeBase300);
+    line-height: var(--lineHeightBase300);
+    background: var(--colorNeutralBackground1);
+    color: var(--colorNeutralForeground1);
     margin: 0;
 }
 
 code {
-    color: var(--accent-fill-rest);
+    color: var(--colorBrandForeground1);
     font-size: 1.0rem;
 }
 
 /* Layout */
 .main {
     min-height: calc(100dvh - 86px);
-    color: var(--neutral-foreground-rest);
+    color: var(--colorNeutralForeground1);
     align-items: stretch !important;
 }
 
@@ -42,14 +42,14 @@ code {
 
 /* Footer */
 footer {
-    background: var(--neutral-layer-4);
-    color: var(--neutral-foreground-rest);
+    background: var(--colorNeutralBackground4);
+    color: var(--colorNeutralForeground1);
     align-items: center;
     padding: 10px 10px;
 }
 
 footer a {
-    color: var(--neutral-foreground-rest);
+    color: var(--colorNeutralForeground1);
     text-decoration: none;
 }
 
@@ -146,13 +146,13 @@ footer a:hover {
 
 .markdown-preview h1 {
     font-size: 2rem;
-    border-bottom: 1px solid var(--neutral-stroke-divider-rest);
+    border-bottom: 1px solid var(--colorNeutralStroke2);
     padding-bottom: 0.3rem;
 }
 
 .markdown-preview h2 {
     font-size: 1.5rem;
-    border-bottom: 1px solid var(--neutral-stroke-divider-rest);
+    border-bottom: 1px solid var(--colorNeutralStroke2);
     padding-bottom: 0.3rem;
 }
 
@@ -175,7 +175,7 @@ footer a:hover {
 }
 
 .markdown-preview code {
-    background-color: var(--neutral-layer-3);
+    background-color: var(--colorNeutralBackground3);
     padding: 0.2rem 0.4rem;
     border-radius: 3px;
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
@@ -183,7 +183,7 @@ footer a:hover {
 }
 
 .markdown-preview pre {
-    background-color: var(--neutral-layer-3);
+    background-color: var(--colorNeutralBackground3);
     padding: 1rem;
     border-radius: 4px;
     overflow-x: auto;
@@ -196,10 +196,10 @@ footer a:hover {
 }
 
 .markdown-preview blockquote {
-    border-left: 4px solid var(--accent-fill-rest);
+    border-left: 4px solid var(--colorBrandBackground);
     margin: 1rem 0;
     padding-left: 1rem;
-    color: var(--neutral-foreground-rest);
+    color: var(--colorNeutralForeground1);
     opacity: 0.8;
 }
 
@@ -211,18 +211,18 @@ footer a:hover {
 
 .markdown-preview th,
 .markdown-preview td {
-    border: 1px solid var(--neutral-stroke-rest);
+    border: 1px solid var(--colorNeutralStroke2);
     padding: 0.5rem;
     text-align: left;
 }
 
 .markdown-preview th {
-    background-color: var(--neutral-layer-2);
+    background-color: var(--colorNeutralBackground2);
     font-weight: 600;
 }
 
 .markdown-preview a {
-    color: var(--accent-fill-rest);
+    color: var(--colorBrandForeground1);
     text-decoration: none;
 }
 
@@ -232,7 +232,7 @@ footer a:hover {
 
 .markdown-preview hr {
     border: none;
-    border-top: 1px solid var(--neutral-stroke-divider-rest);
+    border-top: 1px solid var(--colorNeutralStroke2);
     margin: 2rem 0;
 }
 
@@ -253,7 +253,7 @@ table th {
     padding: var(--spacingVerticalS) var(--spacingHorizontalM);
     text-align: left;
     vertical-align: middle;
-    border-bottom: calc(var(--stroke-width) * 1px) solid var(--neutral-stroke-divider-rest);
+    border-bottom: var(--strokeWidthThin) solid var(--colorNeutralStroke2);
 }
 
 /* Navigation (Server-specific but shared to MainLayout) */

@@ -4,21 +4,15 @@ namespace FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Controls;
 
 public partial class SiteSettings
 {
-    private IDialogReference? _dialog;
-
     private async Task OpenSiteSettingsAsync()
     {
-       // DemoLogger.WriteLine($"Open site settings");
-        _dialog = await DialogService.ShowPanelAsync<SiteSettingsPanel>(new DialogParameters()
+        await DialogService.ShowDialogAsync<SiteSettingsPanel>(options =>
         {
-            ShowTitle = true,
-            Title = "Site settings",
-            Alignment = HorizontalAlignment.Right,
-            PrimaryAction = "OK",
-            SecondaryAction = null,
-            ShowDismiss = true
+            options.Alignment = DialogAlignment.End;
+            options.Header.Title = "Site settings";
+            options.Header.CloseAction.Visible = true;
+            options.Footer.PrimaryAction.Label = "OK";
+            options.Footer.SecondaryAction.Visible = false;
         });
-
-        DialogResult result = await _dialog.Result;
     }
 }

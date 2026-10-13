@@ -1,85 +1,85 @@
-﻿// ------------------------------------------------------------------------
-// MIT License - Copyright (c) Microsoft Corporation. All rights reserved.
-// ------------------------------------------------------------------------
-
 using FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Infrastructure;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.FluentUI.AspNetCore.Components;
-using Microsoft.FluentUI.AspNetCore.Components.Extensions;
-using Microsoft.JSInterop;
 
 namespace FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Controls;
 
 public partial class SiteSettingsPanel
 {
-    private const string DEFAULT_NEUTRAL_COLOR = "#808080";
+    private static readonly Dictionary<string, string?> Colors = new()
+    {
+        ["Default"] = null,
+        ["Blue"] = "#0f6cbd",
+        ["Teal"] = "#038387",
+        ["Green"] = "#107c10",
+        ["Orange"] = "#da3b01",
+        ["Red"] = "#c50f1f",
+        ["Purple"] = "#8764b8",
+    };
 
     private string? _status;
-    private bool _popVisible;
-    private bool _ltr = true;
-    private FluentDesignTheme? _theme;
 
     [Inject] public required ILogger<SiteSettingsPanel> Logger { get; set; }
 
     [Inject] public required CacheStorageAccessor CacheStorageAccessor { get; set; }
 
-    [Inject] public required GlobalState GlobalState { get; set; }
+    [Inject] public required SiteThemeService ThemeService { get; set; }
 
+    public string Mode { get; set; } = "System";
 
+    public string ColorName { get; set; } = "Default";
 
-    [Inject]
-    public required IJSRuntime JsRuntime { get; set; }
+    private static IEnumerable<string> AllModes => ["System", "Light", "Dark"];
 
-    public DesignThemeModes Mode { get; set; }
-
-    public OfficeColor? OfficeColor { get; set; }
-
-    public string? NeutralColor { get; set; }
-
-    public LocalizationDirection? Direction { get; set; }
-
-    private static IEnumerable<DesignThemeModes> AllModes => Enum.GetValues<DesignThemeModes>();
+    private static IEnumerable<string> AllColors => Colors.Keys;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            Direction = GlobalState.Dir;
-            _ltr = !Direction.HasValue || Direction.Value == LocalizationDirection.LeftToRight;
-
-            NeutralColor = GlobalState.NeutralColor;
-            // Same default values is used for light and dark theme
-            NeutralColor ??= DEFAULT_NEUTRAL_COLOR;
+            var state = await ThemeService.LoadAsync();
+            Mode = state.Mode;
+            ColorName = Colors.FirstOrDefault(c => string.Equals(c.Value, state.Color, StringComparison.OrdinalIgnoreCase)).Key ?? "Default";
+            StateHasChanged();
         }
 
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    protected void HandleDirectionChanged(bool isLeftToRight)
+    private async Task OnModeChangedAsync(string? mode)
     {
-        _ltr = isLeftToRight;
-        Direction = isLeftToRight ? LocalizationDirection.LeftToRight : LocalizationDirection.RightToLeft;
+        Mode = mode ?? "System";
+        await ApplyAsync();
+    }
+
+    private async Task OnColorChangedAsync(string? name)
+    {
+        ColorName = name ?? "Default";
+        await ApplyAsync();
+    }
+
+    private async Task ApplyAsync()
+    {
+        try
+        {
+            await ThemeService.ApplyAsync(Mode, Colors.GetValueOrDefault(ColorName));
+        }
+        catch (Exception ex)
+        {
+            Logger.LogWarning(ex, "Failed to apply theme");
+        }
     }
 
     private async Task ResetSiteAsync()
     {
-        var msg = "Site settings reset and cache cleared!";
-
         try
         {
             await CacheStorageAccessor.RemoveAllAsync();
-
-            if (_theme != null)
-            {
-                await _theme.ClearLocalStorageAsync();
-            }
-
-            Logger.LogInformation(msg);
-            _status = msg;
-
-            // Reload page to apply reset
-            await JsRuntime.InvokeVoidAsync("location.reload");
+            await ThemeService.ResetAsync();
+            Mode = "System";
+            ColorName = "Default";
+            _status = "Site settings reset and cache cleared!";
         }
         catch (Exception ex)
         {
@@ -88,46 +88,5 @@ public partial class SiteSettingsPanel
         }
     }
 
-    private async Task ManageCookieSettingsAsync()
-    {
-        // CookieConsent is now in MainLayout, not in this panel
-        // We need to access it differently or handle this through a service
-        Logger.LogInformation("Manage cookies requested");
-        await Task.CompletedTask;
-    }
-
-    private static string? GetCustomColor(OfficeColor? color)
-    {
-        return color switch
-        {
-            null => OfficeColorUtilities.GetRandom(true).ToAttributeValue(),
-            Microsoft.FluentUI.AspNetCore.Components.OfficeColor.Default => "#036ac4",
-            _ => color.ToAttributeValue(),
-        };
-    }
-
-
-    private async Task OnColorChangedAsync(OfficeColor? newColor)
-    {
-        // Update the bound property
-        OfficeColor = newColor;
-        
-        // Give FluentDesignTheme time to apply the new color
-        await Task.Delay(100);
-
-        try
-        {
-            // Trigger Monaco Markdown editor theme refresh
-            await JsRuntime.InvokeVoidAsync("monacoMarkdownEditor.refreshAllEditorThemes");
-            Logger.LogInformation("Monaco Markdown editor themes refreshed after color change");
-            
-            // Trigger Monaco CSS editor theme refresh
-            await JsRuntime.InvokeVoidAsync("monacoCssEditor.refreshAllEditorThemes");
-            Logger.LogInformation("Monaco CSS editor themes refreshed after color change");
-        }
-        catch (Exception ex)
-        {
-            Logger.LogWarning(ex, "Failed to refresh Monaco editor themes");
-        }
-    }
+    protected override Task OnActionClickedAsync(bool primary) => DialogInstance.CloseAsync();
 }

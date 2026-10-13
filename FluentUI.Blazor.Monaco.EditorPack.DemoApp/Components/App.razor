@@ -10,7 +10,7 @@
      <link rel="icon" type="image/x-icon" href="images/favicon.ico" />
     
     <!-- FluentUI Blazor CSS - REQUIRED -->
-    <link href="/_content/Microsoft.FluentUI.AspNetCore.Components/css/reboot.css" rel="stylesheet" />
+    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css" rel="stylesheet" />
     
     <link rel="stylesheet" href="@Assets["app.css"]" />
     
@@ -20,7 +20,16 @@
     <link rel="stylesheet" href="@Assets["FluentUI.Blazor.Monaco.EditorPack.DemoApp.styles.css"]" />
     
      <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
-    <script src="_content/Microsoft.FluentUI.AspNetCore.Components/js/loading-theme.js" type="text/javascript"></script>
+    <script>
+        (function () {
+            try {
+                var t = JSON.parse(localStorage.getItem('theme') || 'null') || {};
+                var dark = t.mode === 'Dark' || (t.mode !== 'Light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+            } catch (e) { }
+        })();
+    </script>
    
     <!-- FluentUI.Blazor.Monaco.EditorPack - set render mode -->
     <HeadOutlet @rendermode="new InteractiveServerRenderMode(prerender: true)" />
@@ -28,8 +37,6 @@
 
 <body>
    
-    <FluentDesignTheme StorageName="theme" />
-    <loading-theme storage-name="theme" random-color="true"></loading-theme>
     
     <!-- FluentUI.Blazor.Monaco.EditorPack - set render mode -->
     <Routes @rendermode="new InteractiveServerRenderMode(prerender: true)" />

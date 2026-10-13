@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IAppVersionService, AppVersionService>();
         services.AddScoped<CacheStorageAccessor>();
         services.AddScoped<CookieConsentService>();
+        services.AddScoped<SiteThemeService>();
         services.AddHttpClient<IStaticAssetService, HttpBasedStaticAssetService>();
        // services.AddSingleton<DemoNavProvider>();
 
@@ -36,6 +37,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAppVersionService, AppVersionService>();
         services.AddScoped<CacheStorageAccessor>();
         services.AddScoped<CookieConsentService>();
+        services.AddScoped<SiteThemeService>();
         services.AddHttpClient<IStaticAssetService, ServerStaticAssetService>();
        // services.AddSingleton<DemoNavProvider>();
 
@@ -52,6 +54,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAppVersionService, AppVersionService>();
         services.AddScoped<CacheStorageAccessor>();
         services.AddScoped<CookieConsentService>();
+        services.AddScoped<SiteThemeService>();
         services.AddHttpClient<IStaticAssetService, ServerStaticAssetService>();
         // services.AddSingleton<DemoNavProvider>();
 
