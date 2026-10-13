@@ -4,8 +4,6 @@
 @using Microsoft.FluentUI.AspNetCore.Components
 @using MainLayout = FluentUI.Blazor.Monaco.EditorPack.Shared.Components.Layout.MainLayout
 
-<FluentDesignTheme StorageName="theme" Mode="DesignThemeModes.System" />
-
 <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="[typeof(FluentUI.Blazor.Monaco.EditorPack.Shared.Components._Imports).Assembly]">
     <Found Context="routeData">
        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)"/>
