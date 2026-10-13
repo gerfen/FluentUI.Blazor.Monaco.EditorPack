@@ -34,6 +34,10 @@ Monaco Editor integration for Blazor with FluentUI components — includes Markd
 
 ## 📘 Migration Guide
 
+> **Fluent UI Blazor v5:** This version is built on **Microsoft.FluentUI.AspNetCore.Components 5.x**. Fluent UI Blazor v5 contains breaking changes, so your application must also be on v5.
+
+➡️ **[Upgrade Guide: Fluent UI Blazor v4 → v5](UPGRADE_GUIDE_FLUENTUI_V5.md)**
+
 If you are upgrading from **0.1.x** to **0.2.0‑preview**, please read the migration guide:
 
 ➡️ **[Migration Guide](MIGRATION_GUIDE.md)**
@@ -57,13 +61,16 @@ builder.Services.AddMonacoEditorPack();
 builder.Services.AddFluentUIComponents();
 ```
 
-### 3. Add Scripts
+### 3. Add Styles and Scripts
 
 **Blazor Server** (`App.razor`):
 
 ```html
+<head>
+    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css" rel="stylesheet" />
+    <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
+</head>
 <body>
-    <FluentDesignTheme StorageName="theme" />
     <Routes @rendermode="new InteractiveServerRenderMode(prerender: true)" />
     <script src="_framework/blazor.web.js"></script>
 
@@ -76,6 +83,10 @@ builder.Services.AddFluentUIComponents();
 **Blazor WebAssembly** (`index.html`):
 
 ```html
+<head>
+    <link href="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css" rel="stylesheet" />
+    <script src="_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.lib.module.js" type="module" async></script>
+</head>
 <body>
     <div id="app">...</div>
     <script src="_framework/blazor.webassembly.js"></script>
@@ -84,6 +95,16 @@ builder.Services.AddFluentUIComponents();
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/vs/loader.js"></script>
     <script src="_content/FluentUI.Blazor.Monaco.EditorPack/js/monaco-editor-pack.js"></script>
 </body>
+```
+
+### 4. Add `FluentProviders`
+
+Fluent UI Blazor v5 requires `FluentProviders` at the end of your main layout (it replaces the v4 provider components and `FluentDesignTheme`):
+
+```razor
+@* MainLayout.razor *@
+@Body
+<FluentProviders />
 ```
 
 ---
@@ -211,7 +232,7 @@ builder.Services.AddFluentUIComponents();
 ## Requirements
 
 - .NET 9.0 or .NET 10.0  
-- Microsoft.FluentUI.AspNetCore.Components 4.13.2+
+- Microsoft.FluentUI.AspNetCore.Components 5.0.0+ (Fluent UI Blazor v5)
 
 ---
 
