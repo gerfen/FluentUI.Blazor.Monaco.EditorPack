@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack\FluentUI.Blazor.Monaco.EditorPack.csproj" />
+    <ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack.Wysiwyg\FluentUI.Blazor.Monaco.EditorPack.Wysiwyg.csproj" />
   </ItemGroup>
 
 </Project>

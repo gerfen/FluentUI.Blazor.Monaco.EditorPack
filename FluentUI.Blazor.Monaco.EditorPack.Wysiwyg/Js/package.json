@@ -1,0 +1,17 @@
+{
+  "name": "editorpack-wysiwyg-bundle",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs", "test": "node --test test/"
+  },
+  "dependencies": {
+    "@milkdown/crepe": "7.22.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "playwright": "^1.64.0"
+  }
+}
+

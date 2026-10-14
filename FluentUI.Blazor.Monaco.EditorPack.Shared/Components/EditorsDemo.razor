@@ -146,6 +146,22 @@
                 </div>
             </FluentStack>
         </FluentTab>
+
+        <FluentTab Id="wysiwyg-tab" Header="WYSIWYG Editor" IconStart="@(new Icons.Regular.Size24.TextEditStyle())">
+            <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px;">
+                <FluentText As="TextTag.Paragraph">
+                    Edit the same Markdown visually. Changes here are shared with the Markdown Editor tab.
+                </FluentText>
+                <div style="height: calc(100vh - 260px); width: 100%; min-height: 500px;">
+                    @if (activeTabId_ == "wysiwyg-tab")
+                    {
+                        <WysiwygMarkdownEditor Value="@MarkdownContent"
+                                               ValueChanged="@OnMarkdownChanged"
+                                               Placeholder="Start writing..." />
+                    }
+                </div>
+            </FluentStack>
+        </FluentTab>
     </FluentTabs>
 
 </FluentStack>

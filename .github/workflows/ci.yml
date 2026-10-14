@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            9.0.x
+            10.0.x
+
+      - name: Build
+        run: dotnet build FluentUI.Blazor.Monaco.EditorPack.slnx -c Release
+
+      - name: Test
+        run: >
+          dotnet test FluentUI.Blazor.Monaco.EditorPack.slnx -c Release --no-build
+
+  wysiwyg-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Rebuild bundle
+        working-directory: FluentUI.Blazor.Monaco.EditorPack.Wysiwyg/Js
+        run: |
+          npm ci || npm install
+          npm run build
+
+      - name: Round-trip tests (headless Chromium)
+        working-directory: FluentUI.Blazor.Monaco.EditorPack.Wysiwyg/Js
+        run: |
+          npx playwright install --with-deps chromium
+          npm test
+
+      - name: Verify committed bundle is current
+        run: git diff --exit-code -- FluentUI.Blazor.Monaco.EditorPack.Wysiwyg/wwwroot/js

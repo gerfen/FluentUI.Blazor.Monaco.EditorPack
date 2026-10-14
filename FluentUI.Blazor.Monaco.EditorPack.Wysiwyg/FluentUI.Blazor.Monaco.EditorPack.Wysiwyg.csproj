@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+	<TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+	<!-- Package Metadata -->
+	<PackageId>FluentUI.Blazor.Monaco.EditorPack.Wysiwyg</PackageId>
+	<Version>0.1.0-preview.1</Version>
+	<Authors>Michael Gerfen</Authors>
+	<Company>Evolution Software Design, Inc.</Company>
+	<Description>WYSIWYG Markdown editor for Blazor with Fluent UI v5 theming, built on Milkdown. Companion to FluentUI.Blazor.Monaco.EditorPack.</Description>
+	<PackageTags>blazor;markdown;wysiwyg;editor;milkdown;fluentui</PackageTags>
+	<PackageProjectUrl>https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack</PackageProjectUrl>
+	<RepositoryUrl>https://github.com/gerfen/FluentUI.Blazor.Monaco.EditorPack</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+	<Copyright>Copyright © 2026 Michael Gerfen</Copyright>
+	<PackageReleaseNotes>0.1.0-preview.1: Initial preview. Requires Microsoft.FluentUI.AspNetCore.Components v5.</PackageReleaseNotes>
+
+	<!-- Static web assets -->
+	<StaticWebAssetBasePath>_content/FluentUI.Blazor.Monaco.EditorPack.Wysiwyg</StaticWebAssetBasePath>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<None Include="README.md" Pack="true" PackagePath="\" />
+	<None Include="THIRD-PARTY-NOTICES.txt" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <!-- JS bundle sources are not part of the package -->
+  <ItemGroup>
+	<Content Remove="Js\**" />
+	<None Remove="Js\**" />
+	<Compile Remove="Js\**" />
+	<EmbeddedResource Remove="Js\**" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.20" />
+	<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.12" />
+	<PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\FluentUI.Blazor.Monaco.EditorPack\FluentUI.Blazor.Monaco.EditorPack.csproj" />
+  </ItemGroup>
+
+</Project>

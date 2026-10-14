@@ -28,6 +28,7 @@ Monaco Editor integration for Blazor with FluentUI components — includes Markd
 - **Theme Integration** — Automatic dark/light mode support  
 - **Monaco lifecycle hooks** — Run code *before* Monaco is created and *after* the editor instance is available  
 - **Configurable Markdig pipeline** — Toggle common Markdig extensions via `MarkdownOptions`  
+- **WYSIWYG editor (separate package)** — [FluentUI.Blazor.Monaco.EditorPack.Wysiwyg](FluentUI.Blazor.Monaco.EditorPack.Wysiwyg/README.md) adds a Milkdown-based visual Markdown editor with Fluent theming  
 - **Unified Monaco configuration** — Strongly‑typed `MonacoOptions` for editor behavior, theme, and front‑matter support  
 
 ---
