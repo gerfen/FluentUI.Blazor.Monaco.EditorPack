@@ -51,11 +51,8 @@ window.monacoCssEditor = {
 
             require(['vs/editor/editor.main'], () => {
                 // Configure Monaco environment for web workers with dynamic base URL
-                const baseUrl = window.location.origin;
-                const baseHref = document.querySelector('base')?.getAttribute('href') || '/';
-                const workerBasePath = baseHref === '/' 
-                    ? '/_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/'
-                    : `${baseUrl}${baseHref}_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/`;
+                // Must be absolute: a data: URL worker cannot resolve root-relative paths.
+                const workerBasePath = new URL('_content/FluentUI.Blazor.Monaco.EditorPack/lib/monaco-editor/min/', document.baseURI).href;
                 
                 window.MonacoEnvironment = {
                     getWorkerUrl: function(workerId, label) {

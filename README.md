@@ -61,6 +61,16 @@ builder.Services.AddMonacoEditorPack();
 builder.Services.AddFluentUIComponents();
 ```
 
+The Markdown preview is sanitized. Raw `<style>` and `<iframe>` elements in Markdown are removed by default; if your authors are trusted, opt in:
+
+```csharp
+builder.Services.AddMonacoEditorPack(o =>
+{
+    o.AllowStyleTags = true;
+    o.AllowIframes = true;
+});
+```
+
 ### 3. Add Styles and Scripts
 
 **Blazor Server** (`App.razor`):
