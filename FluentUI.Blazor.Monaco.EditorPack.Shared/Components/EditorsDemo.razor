@@ -17,7 +17,7 @@
         Explore the Markdown and CSS editors with live preview and IntelliSense.
     </FluentText>
 
-    <FluentTabs ActiveTabId="@activeTabId_" ActiveTabChanged="HandleTabChange">
+    <FluentTabs @bind-ActiveTabId="activeTabId_" @bind-ActiveTabId:after="HandleTabChange">
         <FluentTab Id="markdown-tab" Header="Markdown Editor" IconStart="@(new Icons.Regular.Size24.DocumentEdit())">
             <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="margin-top: 16px;">
                 
@@ -176,10 +176,8 @@
         PageTitleService.CurrentTitle = "Editors Demo";
     }
 
-    private async Task HandleTabChange(FluentTab? tab)
+    private async Task HandleTabChange()
     {
-        activeTabId_ = tab?.Id ?? "markdown-tab";
-
         // Force a small delay to ensure the tab content is rendered before initializing editors
         await Task.Delay(100);
 
