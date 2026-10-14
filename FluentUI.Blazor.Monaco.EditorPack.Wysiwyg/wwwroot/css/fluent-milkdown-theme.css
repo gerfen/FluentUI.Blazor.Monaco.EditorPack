@@ -54,10 +54,17 @@
   fill: var(--colorNeutralForeground2);
 }
 
-.fluent-milkdown-host .milkdown .milkdown-code-block .cm-gutters {
-  color: var(--colorNeutralForeground3);
+.fluent-milkdown-host .milkdown .milkdown-code-block .cm-gutters,
+.fluent-milkdown-host .milkdown .milkdown-code-block .cm-gutters .cm-gutterElement {
+  color: var(--colorNeutralForeground3) !important;
 }
 
 .fluent-milkdown-host .milkdown {
   --crepe-color-inline-code: var(--colorPaletteRedForeground2);
+}
+
+.fluent-milkdown-host .milkdown .milkdown-code-block .cm-gutters,
+.fluent-milkdown-host .milkdown .milkdown-code-block .cm-gutters .cm-gutterElement,
+.fluent-milkdown-host .milkdown .milkdown-code-block .cm-activeLineGutter {
+  background-color: var(--colorNeutralBackground2) !important;
 }
