@@ -134,3 +134,12 @@ test('pasted HTML is reduced to schema nodes (no scripts, handlers or styles)', 
     await page.evaluate(() => window.__ed.destroy());
 });
 
+test('grid tables are preserved verbatim', async () => {
+    const md = '#### Grid\n\n+-----------+-----------+\n| Header A  | Header B  |\n+===========+===========+\n| Row 1     | Cell      |\n+-----------+-----------+\n\nafter';
+    assert.equal(norm(await roundTrip(md)), md);
+});
+
+test('grid table inside a fenced block is left alone', async () => {
+    const md = '```text\n+--+--+\n| a| b|\n+--+--+\n```';
+    assert.equal(norm(await roundTrip(md)), md);
+});

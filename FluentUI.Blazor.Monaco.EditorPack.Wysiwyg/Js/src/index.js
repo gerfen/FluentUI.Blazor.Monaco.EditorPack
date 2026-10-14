@@ -32,12 +32,42 @@ const FRONT_MATTER = /^---[ \t]*\r?\n[\s\S]*?\r?\n---[ \t]*(?:\r?\n|$)/;
 function splitFrontMatter(markdown) {
     const text = markdown ?? '';
     const match = FRONT_MATTER.exec(text);
-    if (!match) return { frontMatter: '', body: text };
+    if (!match) return { frontMatter: '', body: wrapGridTables(text) };
 
     // Normalize to exactly one blank line between front matter and body on output.
-    return { frontMatter: match[0].replace(/\s+$/, '') + '\n', body: text.slice(match[0].length).replace(/^(?:\r?\n)+/, '') };
+    return { frontMatter: match[0].replace(/\s+$/, '') + '\n', body: wrapGridTables(text.slice(match[0].length).replace(/^(?:\r?\n)+/, '')) };
 }
 
+// Markdig grid tables (+---+ ... | cell |) are not understood by the editor and would be mangled into escaped text.
+// They are shown as a monospace code block and unwrapped verbatim on the way out.
+const GRID_FENCE = 'gridtable';
+const GRID_LINE = /^[+|].*[+|][ \t]*$/;
+const GRID_BORDER = /^\+[-=:+]+\+[ \t]*$/;
+
+function wrapGridTables(body) {
+    const lines = body.split(/\r?\n/);
+    const out = [];
+    let fence = false;
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (/^\s*(```|~~~)/.test(line)) fence = !fence;
+        if (!fence && GRID_BORDER.test(line)) {
+            let j = i;
+            while (j < lines.length && GRID_LINE.test(lines[j])) j++;
+            if (j - i >= 3) {
+                out.push('```' + GRID_FENCE, ...lines.slice(i, j), '```');
+                i = j - 1;
+                continue;
+            }
+        }
+        out.push(line);
+    }
+    return out.join('\n');
+}
+
+function unwrapGridTables(markdown) {
+    return markdown.replace(new RegExp('^```' + GRID_FENCE + '[ \\t]*\\n([\\s\\S]*?)\\n```[ \\t]*$', 'gm'), (_m, table) => table);
+}
 // Stylesheets are resolved relative to this module so base href / _content paths just work.
 // The Fluent theme is appended last so its variable mapping overrides Crepe's defaults.
 function ensureStyles() {
@@ -64,7 +94,10 @@ export async function create(element, options, dotNetRef) {
 
     const initial = splitFrontMatter(options.value);
     let frontMatter = initial.frontMatter;
-    const compose = body => (frontMatter ? frontMatter + (body ? '\n' + body : '') : body);
+    const compose = raw => {
+        const body = unwrapGridTables(raw);
+        return frontMatter ? frontMatter + (body ? '\n' + body : '') : body;
+    };
 
     const builder = new CrepeBuilder({ root: element, defaultValue: initial.body });
 
